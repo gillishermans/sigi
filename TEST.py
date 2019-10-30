@@ -45,7 +45,6 @@ def search(grammar,con):
 		s = generate_sentence(grammar)
 		if check_constraints(s,con) == True:
 			return s
-			f = True
 			
 def check_constraints(s,con):
 	for c in con:
@@ -144,7 +143,7 @@ def buildWall(level, box, options):
 					
 	#Build the second wall (2 levels) on the ground (leave out first corner)
 	
-	for i in range(1,len(frags2)): #range(0,min(len(frags2),len(frags))):
+	for i in range(1,len(frags2)-1): #range(0,min(len(frags2),len(frags))):
 		for y in xrange(box.maxy, box.miny-1, -1):
 				# get this block
 				tempBlock = level.blockAt(box.minx + i, y, box.maxz + len(frags1)-1)
@@ -154,7 +153,7 @@ def buildWall(level, box, options):
 					utilityFunctions.setBlock(level, (chooseBlock(frags2[i]), newValue), box.minx + i, y+2, box.maxz + len(frags1)-1)
 					break;
 
-    #Generate a wall sentence out of the grammar
+	#Generate a wall sentence out of the grammar
 	x = "l"+str(len(frags1))
 	y = "d"
 	con = [x,y]

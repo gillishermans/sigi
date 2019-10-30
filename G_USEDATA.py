@@ -127,7 +127,7 @@ def perform(level, box, options):
 
 def readData():
     prob = []
-    file = open("C:/Users/Gilli/GDMC/stock-filters/g_data.txt", "r")
+    file = open("C:/Users/Gilli/GDMC/stock-filters/thesis_filters/thesis_filters/g_data.txt", "r")
     for l in file:
         prob.append([int(l.split(" ")[0]),int(l.split(" ")[1]),float(l.split(" ")[2])])
     file.close()
@@ -181,7 +181,7 @@ def buildWall(level, box, options,prob):
 
     # Build the second wall (2 levels) on the ground (leave out first corner)
 
-    for i in range(1, len(frags2)):  # range(0,min(len(frags2),len(frags))):
+    for i in range(1, len(frags2)-1):  # range(0,min(len(frags2),len(frags))):
         for y in xrange(box.maxy, box.miny - 1, -1):
             # get this block
             tempBlock = level.blockAt(box.minx + i, y, box.maxz + len(frags1) - 1)

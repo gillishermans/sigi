@@ -31,7 +31,7 @@ def addBlock(nb,prob,blockid,dmg):
 	prob.append([blockid,1.0,1.0/nb,dmg])
 
 def writeToFile(prob):
-	file = open("C:/Users/Gilli/GDMC/stock-filters/g_data.txt","w")
+	file = open("C:/Users/Gilli/GDMC/stock-filters/thesis_filters/thesis_filters/g_data.txt","w")
 	print(" ".join(str(x) for x in prob))
 	for p in prob:
 		file.write(str(p[0])+" "+str(p[3])+" "+str(p[2])+"\n")
