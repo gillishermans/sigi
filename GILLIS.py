@@ -26,7 +26,7 @@ furniture_set = [Block(26,0),Block(30,0),Block(47,0),Block(54,0),Block(58,0),Blo
 				 Block(116,0),Block(117,0),Block(118,0),Block(130,0),Block(145,0),Block(321,0),]
 carpet_set = [Block(171,0),Block(171,1),Block(171,2),Block(171,3),Block(171,4),Block(171,5),Block(171,6),Block(171,7),Block(171,8),
 				Block(171,9),Block(171,10),Block(171,11),Block(171,12),Block(171,13),Block(171,14),Block(171,15)]
-light_set = [Block(50,0,)Block(123,0),Block(89,0)]
+light_set = [Block(50,0,),Block(123,0),Block(89,0)]
 flower_set = [Block(37,0),Block(38,0),Block(38,1),Block(38,2),Block(38,3),Block(38,4),Block(38,5),Block(38,6),Block(38,7),Block(38,8)]
 double_flower_set = [Block(175,0),Block(175,1),Block(175,2),Block(175,3),Block(175,4),Block(175,5)]
 slab_set = [Block(44,0),Block(44,1),Block(44,2),Block(44,3),Block(44,4),Block(44,5),Block(44,6),Block(44,7),

@@ -127,7 +127,10 @@ def perform(level, box, options):
 
 def readData():
     prob = []
-    file = open("C:/Users/Gilli/GDMC/stock-filters/thesis_filters/thesis_filters/g_data.txt", "r")
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    file_to_open = os.path.join(__location__, 'g_data.txt')
+    file = open(file_to_open, "r")
     for l in file:
         prob.append([int(l.split(" ")[0]),int(l.split(" ")[1]),float(l.split(" ")[2])])
     file.close()

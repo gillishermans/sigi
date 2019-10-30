@@ -8,6 +8,7 @@ from nltk import CFG, PCFG, ProbabilisticProduction, Nonterminal
 from nltk.parse.generate import generate
 import random
 import utilityFunctions as utilityFunctions
+import sys
 
 #inputs are taken from the user. Here I've just showing labels, as well as letting the user define
 # what the main creation material for the structures is
@@ -31,9 +32,12 @@ def addBlock(nb,prob,blockid,dmg):
 	prob.append([blockid,1.0,1.0/nb,dmg])
 
 def writeToFile(prob):
-	file = open("C:/Users/Gilli/GDMC/stock-filters/thesis_filters/thesis_filters/g_data.txt","w")
-	print(" ".join(str(x) for x in prob))
+	__location__ = os.path.realpath(
+		os.path.join(os.getcwd(), os.path.dirname(__file__)))
+	file_to_open = os.path.join(__location__, 'g_data.txt')
+	file = open(file_to_open,"w")
 	for p in prob:
+		print(str(p[0]) + " " + str(p[3]) + " " + str(p[2]) + "\n")
 		file.write(str(p[0])+" "+str(p[3])+" "+str(p[2])+"\n")
 	file.close()
 
