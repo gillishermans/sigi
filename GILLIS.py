@@ -16,6 +16,21 @@ class Block:
 		self.dmg = dmg
 
 #blockid and dmg pairs
+
+plank_set = [Block(5,0),Block(5,1),Block(5,2),Block(5,3),Block(5,4),Block(5,5)]
+log_set = [Block(17,0),Block(17,1),Block(17,2),Block(17,3),Block(162,0),Block(162,1)]
+stair_set = [Block(163,0),Block(164,0),Block(53,0),Block(67,0),Block(108,0),Block(109,0),Block(114,0),Block(128,0),
+			 Block(134,0),Block(135,0),Block(136,0),Block(156,0),Block(180,0),Block(103,0)]
+fence_set = [Block(85,0),Block(101,0),Block(113,0),Block(188,0),Block(189,0),Block(190,0),Block(191,0),Block(192,0)]
+furniture_set = [Block(26,0),Block(30,0),Block(47,0),Block(54,0),Block(58,0),Block(61,0),Block(84,0),Block(92,0),
+				 Block(116,0),Block(117,0),Block(118,0),Block(130,0),Block(145,0),Block(321,0),]
+carpet_set = [Block(171,0),Block(171,1),Block(171,2),Block(171,3),Block(171,4),Block(171,5),Block(171,6),Block(171,7),Block(171,8),
+				Block(171,9),Block(171,10),Block(171,11),Block(171,12),Block(171,13),Block(171,14),Block(171,15)]
+light_set = [Block(50,0,)Block(123,0),Block(89,0)]
+flower_set = [Block(37,0),Block(38,0),Block(38,1),Block(38,2),Block(38,3),Block(38,4),Block(38,5),Block(38,6),Block(38,7),Block(38,8)]
+double_flower_set = [Block(175,0),Block(175,1),Block(175,2),Block(175,3),Block(175,4),Block(175,5)]
+slab_set = [Block(44,0),Block(44,1),Block(44,2),Block(44,3),Block(44,4),Block(44,5),Block(44,6),Block(44,7),
+			Block(126,0),Block(126,1),Block(126,2),Block(126,3),Block(126,4),Block(126,5),Block(182,0),Block(205,0)]
 door_set = [Block(64,0),Block(71,0),Block(107,0),Block(183,0),Block(184,0),Block(185,0),Block(186,0),Block(187,0),
             Block(193,0),Block(194,0),Block(195,0),Block(196,0),Block(197,0)]
 corner_set = []
