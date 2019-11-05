@@ -1,7 +1,7 @@
 import time # for timing
 from math import sqrt, tan, sin, cos, pi, ceil, floor, acos, atan, asin, degrees, radians, log, atan2, acos, asin
 from random import *
-from numpy import *
+import numpy as np
 from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
 from mcplatform import *
 from nltk import CFG, PCFG, ProbabilisticProduction, Nonterminal
@@ -21,7 +21,9 @@ inputs = (
 # Every agent must have a "perform" function, which has three parameters
 # 1: the level (aka the minecraft world). 2: the selected box from mcedit. 3: User defined inputs from mcedit
 def perform(level, box, options):
-	prob = scanStructure(level,box,options)
+	print("EXTRACT")
+	m = scanStructure(level,box,options)
+	print(m)
 
 def addBlock(nb,prob,blockid,dmg):
 	for b in prob:
@@ -44,17 +46,27 @@ def writeToFile(prob):
 def scanStructure(level,box,options):
 	nb=0
 	prob=[]
+	m = np.zeros((box.maxx-box.minx,box.maxy-box.miny,box.maxz-box.minz))
 
 	for x in range(box.minx,box.maxx):
 		for y in range(box.miny,box.maxy):
 			for z in range(box.minz,box.maxz):
 				blockid = level.blockAt(x,y,z)
 				dmg = level.blockDataAt(x,y,z)
+				m[x-box.minx][y-box.miny][z-box.minz] = blockid
 				if blockid != 0 and blockid != 2 and blockid != 3:
 					nb = nb+1
 					addBlock(nb,prob,blockid,dmg)
 	writeToFile(prob)
+	return m
 
+
+def scanForWalls(level,box,options):
+	for x in range(box.minx,box.maxx):
+		for y in range(box.miny,box.maxy):
+			for z in range(box.minz,box.maxz):
+				blockid = level.blockAt(x, y, z)
+				dmg = level.blockDataAt(x, y, z)
 
 
 

@@ -51,6 +51,9 @@ cb = random.choice(wall_set)
 wb = random.choice(wall_set)
 wib = random.choice(window_set)
 db = random.choice(door_set)
+floor_trim = random.choice(wall_set)
+floor_a = random.choice(wall_set)
+floor_b = random.choice(wall_set)
 
 def rewrite_at(index, replacements, the_list):
 	del the_list[index]
@@ -116,6 +119,13 @@ grammar = PCFG.fromstring("""
     C -> 'corner' [1.0]
 """)
 
+floor_grammar = PCFG.fromstring("""
+    S -> A [0.5] | B [0.5]
+    A -> A A [0.5] | 'a' [0.5]
+    B -> 'r' S [0.9] | 'b' [0.1]
+    D -> 'b' [1.0]
+""")
+
 print('A Grammar:', grammar)
 print('grammar.start()   =>', grammar.start())
 print('grammar.productions() =>')
@@ -135,6 +145,18 @@ inputs = (
 # 1: the level (aka the minecraft world). 2: the selected box from mcedit. 3: User defined inputs from mcedit
 def perform(level, box, options):
 	buildWall(level,box,options)
+
+#Build floor
+def buildFloor(level,box,options,xd,zd):
+	floor = generate_sentence(floor_grammar)
+	print( ' '.join(floor))
+
+	for f in floor:
+		if f == 'r': #trim
+
+			xd = xd-1
+			zd = zd-1
+
 
 #Build a wall
 def buildWall(level, box, options):
@@ -210,7 +232,10 @@ def buildWall(level, box, options):
 					b = chooseBlock(frags3[i])
 					utilityFunctions.setBlock(level, (b.id,b.dmg), box.minx, y+1, box.maxz + i)
 					utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx, y+2, box.maxz + i)
-					break;                 
+					break;
+
+	#Dimensions of the room are str(len(frags)) and str(len(frags1))
+	#buildFloor(level,box,options,str(len(frags)),str(len(frags1)))
 
 def chooseBlockProb(prob):
 	r = random.uniform(0,1)
