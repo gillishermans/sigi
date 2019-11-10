@@ -82,36 +82,35 @@ def rewrite_at(index, replacements, the_list):
     del the_list[index]
     the_list[index:index] = replacements
 
+def markovTest():
+    # Print five randomly-generated sentences
+    print("RANDOM")
+    for i in range(30):
+        print(text_model.make_sentence(tries=100))
 
-def generate_sentence(grammar):
-    sentence_list = [grammar.start()]
-    all_terminals = False
-    while not all_terminals:
-        all_terminals = True
-        for position, symbol in enumerate(sentence_list):
-            if symbol in grammar._lhs_index:
-                all_terminals = False
-                derivations = grammar._lhs_index[symbol]
-                derivation = weighted_choice(
-                    derivations)  # or weighted_choice(derivations) if you have a function for that
-                rewrite_at(position, derivation.rhs(), sentence_list)
-    return sentence_list
+    # Print three randomly-generated sentences of no more than 280 characters
+    print("SHORT")
+    for i in range(3):
+        print(text_model.make_short_sentence(10))
 
+def markovModel():
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    file_to_open = os.path.join(__location__, 'markov.txt')
+    # Get raw text as string.
+    with open(file_to_open) as f:
+        text = f.read()
 
-# Choose a derivation depending on the probabilities of the grammar
-def weighted_choice(derivations):
-    r = random.uniform(0, 1)
-    t = 0
-    for der in derivations:
-        t = t + der.prob()
-        if t > r:
-            return der
+    # Build the model.
+    model = markovify.NewlineText(text, state_size=1)
+    return model
 
-
-def search(grammar, con):
+def search(model, con):
     f = False
     while f == False:
-        s = generate_sentence(grammar)
+        s = model.make_sentence(tries=10)
+        while s == None:
+            s = model.make_sentence(tries=10)
         if check_constraints(s, con) == True:
             return s
 
@@ -142,26 +141,6 @@ def door_constraint(s, a):
     else:
         return False
 
-
-grammar = PCFG.fromstring("""
-    S -> C B A [1.0]
-    A -> B A [0.9] | C [0.1]
-    B -> 'wall' [0.6] | 'window' [0.2] | 'door' [0.2]
-    C -> 'corner' [1.0]
-""")
-
-floor_grammar = PCFG.fromstring("""
-    S -> A [0.5] | B [0.5]
-    A -> A A [0.5] | 'a' [0.5]
-    B -> 'r' S [0.9] | 'b' [0.1]
-    D -> 'b' [1.0]
-""")
-
-print('A Grammar:', grammar)
-print('grammar.start()   =>', grammar.start())
-print('grammar.productions() =>')
-print(grammar.productions())
-
 # inputs are taken from the user. Here I've just showing labels, as well as letting the user define
 # what the main creation material for the structures is
 inputs = (
@@ -175,29 +154,18 @@ inputs = (
 # Every agent must have a "perform" function, which has three parameters
 # 1: the level (aka the minecraft world). 2: the selected box from mcedit. 3: User defined inputs from mcedit
 def perform(level, box, options):
-    # buildWall(level,box,options)
-    markovTest()
-
-
-# Build floor
-def buildFloor(level, box, options, xd, zd):
-    floor = generate_sentence(floor_grammar)
-    print(' '.join(floor))
-
-    for f in floor:
-        if f == 'r':  # trim
-
-            xd = xd - 1
-            zd = zd - 1
-
+    buildWall(level,box,options)
 
 # Build a wall
 def buildWall(level, box, options):
-    # Generate a wall sentence out of the grammar
+    model = markovModel()
+    # Generate a wall sentence out of the markov model
     y = "d"
-    con = [y]
-    frags = search(grammar, con)  # generate_sentence(grammar)
-    print(' '.join(frags))
+    con = []
+    frags = search(model, con) # generate_sentence(grammar)
+    frags = frags.split(' ')
+    print('SENTENCE')
+    print(frags)
 
     # Build the wall (2 levels) on the ground
     for i in range(0, len(frags)):
@@ -205,16 +173,20 @@ def buildWall(level, box, options):
             # get this block
             tempBlock = level.blockAt(box.minx + i, y, box.maxz)
             if tempBlock != 0:
+                print('ELEM ' + str(i))
+                print(frags[i])
                 b = chooseBlock(frags[i])
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 1, box.maxz)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 2, box.maxz)
                 break;
 
-    # Generate a wall sentence out of the grammar
+    # Generate a wall sentence out of the markov model
     y = "d"
-    con = [y]
-    frags1 = search(grammar, con)  # generate_sentence(grammar)
-    print(' '.join(frags1))
+    con = []
+    frags1 = search(model, con)
+    frags1 = frags1.split(' ')
+    print('SENTENCE')
+    print(frags)
 
     # Build the second wall (2 levels) on the ground (leave out first corner)
     for i in range(1, len(frags1)):
@@ -230,9 +202,11 @@ def buildWall(level, box, options):
     # Generate a wall sentence out of the grammar
     x = "l" + str(len(frags))
     y = "d"
-    con = [x, y]
-    frags2 = search(grammar, con)  # generate_sentence(grammar)
-    print(' '.join(frags2))
+    con = []
+    frags2 = search(model, con)  # generate_sentence(grammar)
+    frags2 = frags2.split(' ')
+    print('SENTENCE')
+    print(frags)
 
     # Build the second wall (2 levels) on the ground (leave out first corner)
 
@@ -249,10 +223,11 @@ def buildWall(level, box, options):
     # Generate a wall sentence out of the grammar
     x = "l" + str(len(frags1))
     y = "d"
-    con = [x, y]
-    con = [x]
-    frags3 = search(grammar, con)  # generate_sentence(grammar)
-    print(' '.join(frags3))
+    con = []
+    frags3 = search(model, con)  # generate_sentence(grammar)
+    frags3 = frags3.split(' ')
+    print('SENTENCE')
+    print(frags)
 
     # Build the second wall (2 levels) on the ground (leave out first corner)
 
@@ -265,10 +240,6 @@ def buildWall(level, box, options):
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx, y + 1, box.maxz + i)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx, y + 2, box.maxz + i)
                 break;
-
-
-# Dimensions of the room are str(len(frags)) and str(len(frags1))
-# buildFloor(level,box,options,str(len(frags)),str(len(frags1)))
 
 def chooseBlockProb(prob):
     r = random.uniform(0, 1)
@@ -286,28 +257,6 @@ def chooseBlock(str):
         return wib
     if str == 'door':
         return db
-
-
-def markovTest():
-    __location__ = os.path.realpath(
-        os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    file_to_open = os.path.join(__location__, 'markov.txt')
-    # Get raw text as string.
-    with open(file_to_open) as f:
-        text = f.read()
-
-    # Build the model.
-    text_model = markovify.NewlineText(text, state_size=1)
-
-    # Print five randomly-generated sentences
-    print("RANDOM")
-    for i in range(30):
-        print(text_model.make_sentence(tries=100))
-
-    # Print three randomly-generated sentences of no more than 280 characters
-    print("SHORT")
-    for i in range(3):
-        print(text_model.make_short_sentence(10))
 
 # Future blocks - Concrete - Block(251,0),Block(251,1),Block(251,2),Block(251,3),Block(251,4),Block(251,5),Block(251,6),Block(251,7),Block(251,8),Block(251,9),Block(251,10),Block(251,11),Block(251,12),Block(251,13),Block(251,14),Block(251,15)
 #                Terra Cotta - Block(235,0),Block(236,0),Block(237,0),Block(238,0),Block(239,0),Block(240,0),Block(241,0),Block(242,0),Block(243,0),Block(244,0),Block(245,0),Block(246,0),Block(247,0),Block(248,0),Block(249,0),Block(250,0)

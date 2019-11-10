@@ -1,11 +1,5 @@
-17 5 5 5 20 20 5 5 5 17
-17 5 64 5 5 17
-17 5 5 5 5 5 17
-17 5 5 5 17
-17 5 20 20 20 5 17
-17 5 5 20 20 5 5 17
-17 20 20 20 17
-17 5 17
-17 5 5 17
-17 5 5 64 5 17
-17 5 5 17 5 64 5 17
+corner wall wall wall window window wall wall wall corner
+corner wall door wall wall corner
+corner wall wall wall corner
+corner wall wall door wall corner
+corner wall window window window wall corner
