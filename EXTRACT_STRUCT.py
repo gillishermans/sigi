@@ -90,7 +90,7 @@ def writeArray(array):
     with open(file_to_open, 'w') as f:
         f.write('# shape: {0}\n'.format(array.shape))
         for slice in array:
-            np.savetxt(outfile, slice, fmt='%-7.2f')
+            np.savetxt(f, slice, fmt='%-7.2f')
             f.write('# slice\n')
 
 
