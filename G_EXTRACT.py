@@ -19,7 +19,7 @@ class Block:
 		self.z = z
 
 	def __float__(self):
-		return 0.0
+		return float(self.id + float(self.dmg) / 100)
 	def __repr__(self):
 		return str(self)
 

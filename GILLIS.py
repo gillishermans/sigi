@@ -7,7 +7,7 @@ from mcplatform import *
 from nltk import CFG, PCFG, ProbabilisticProduction, Nonterminal
 from nltk.parse.generate import generate
 import random
-
+import markovify
 import utilityFunctions as utilityFunctions
 
 class Block:
@@ -144,7 +144,8 @@ inputs = (
 # Every agent must have a "perform" function, which has three parameters
 # 1: the level (aka the minecraft world). 2: the selected box from mcedit. 3: User defined inputs from mcedit
 def perform(level, box, options):
-	buildWall(level,box,options)
+	#buildWall(level,box,options)
+	markovTest()
 
 #Build floor
 def buildFloor(level,box,options,xd,zd):
@@ -252,6 +253,27 @@ def chooseBlock(str):
 		return wib
 	if str == 'door':
 		return db
+
+def markovTest():
+	__location__ = os.path.realpath(
+		os.path.join(os.getcwd(), os.path.dirname(__file__)))
+	file_to_open = os.path.join(__location__, 'markov.txt')
+	# Get raw text as string.
+	with open(file_to_open) as f:
+		text = f.read()
+
+	# Build the model.
+	text_model = markovify.NewlineText(text,state_size=1)
+
+	# Print five randomly-generated sentences
+	print("RANDOM")
+	for i in range(30):
+		print(text_model.make_sentence(tries=100))
+
+	# Print three randomly-generated sentences of no more than 280 characters
+	print("SHORT")
+	for i in range(3):
+		print(text_model.make_short_sentence(10))
 
 
 #Future blocks - Concrete - Block(251,0),Block(251,1),Block(251,2),Block(251,3),Block(251,4),Block(251,5),Block(251,6),Block(251,7),Block(251,8),Block(251,9),Block(251,10),Block(251,11),Block(251,12),Block(251,13),Block(251,14),Block(251,15)

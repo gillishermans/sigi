@@ -4,3 +4,9 @@ G_EXTRACT.pyc
 *.pyc
 
 g_data.txt
+
+data/
+
+peggy.txt
+
+peg.txt
