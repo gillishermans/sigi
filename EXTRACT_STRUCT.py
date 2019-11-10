@@ -78,24 +78,20 @@ def scanStructure(level,box,options):
     writeToFile(prob)
     return m
 
-def writeArray(data):
-    # Generate some test data
-    #data = np.arange(200).reshape((4,5,10))
-
-    # Write the array to disk
+def writeArray(array):
+    #Find path
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    file_to_open = os.path.join(__location__, 'data/array_data.txt')
     i = 0
     while os.path.exists(__location__ + "\data\data%s.txt" % i):
         i += 1
     file_to_open = __location__ + "\data\data%s.txt" % i
-    print(file_to_open)
-    with open(file_to_open, 'w') as outfile:
-        outfile.write('# Array shape: {0}\n'.format(data.shape))
-        for data_slice in data:
-            np.savetxt(outfile, data_slice, fmt='%-7.2f')
-            outfile.write('# New slice\n')
+    #Save the array in slices so it is readable
+    with open(file_to_open, 'w') as f:
+        f.write('# shape: {0}\n'.format(array.shape))
+        for slice in array:
+            np.savetxt(outfile, slice, fmt='%-7.2f')
+            f.write('# slice\n')
 
 
 
