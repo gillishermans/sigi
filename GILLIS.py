@@ -16,6 +16,8 @@ class Block:
 		self.id = blockid
 		self.dmg = dmg
 
+	def __str__(self):
+		return '(' + str(self.id) + ', ' + str(self.dmg) + ')'
 
 # blockid and dmg pairs
 

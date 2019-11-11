@@ -14,6 +14,9 @@ class Block:
         self.id = blockid
         self.dmg = dmg
 
+    def __str__(self):
+        return '('+str(self.id)+', '+str(self.dmg)+')'
+
 #blockid and dmg pairs
 door_set = [Block(64,0),Block(71,0),Block(107,0),Block(183,0),Block(184,0),Block(185,0),Block(186,0),Block(187,0),
             Block(193,0),Block(194,0),Block(195,0),Block(196,0),Block(197,0)]

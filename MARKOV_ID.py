@@ -98,7 +98,7 @@ def markovTest():
 def markovModel():
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    file_to_open = os.path.join(__location__, 'markov.txt')
+    file_to_open = os.path.join(__location__, 'markov1.txt')
     # Get raw text as string.
     with open(file_to_open) as f:
         text = f.read()
@@ -177,7 +177,9 @@ def buildWall(level, box, options):
             if tempBlock != 0:
                 print('ELEM ' + str(i))
                 print(frags[i])
-                b = chooseBlock(frags[i])
+                s = frags[i].split('.')
+                b = Block(s[0],s[1]) #b = chooseBlock(frags[i])
+                print(b)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 1, box.maxz)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 2, box.maxz)
                 break;
@@ -196,7 +198,8 @@ def buildWall(level, box, options):
             # get this block
             tempBlock = level.blockAt(box.minx + len(frags) - 1, y, box.maxz + i)
             if tempBlock != 0:
-                b = chooseBlock(frags1[i])
+                s = frags1[i].split('.')
+                b = Block(s[0], s[1])  # b = chooseBlock(frags[i])
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + len(frags) - 1, y + 1, box.maxz + i)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + len(frags) - 1, y + 2, box.maxz + i)
                 break;
@@ -217,7 +220,8 @@ def buildWall(level, box, options):
             # get this block
             tempBlock = level.blockAt(box.minx + i, y, box.maxz + len(frags1) - 1)
             if tempBlock != 0:
-                b = chooseBlock(frags2[i])
+                s = frags2[i].split('.')
+                b = Block(s[0], s[1])  # b = chooseBlock(frags[i])
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 1, box.maxz + len(frags1) - 1)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 2, box.maxz + len(frags1) - 1)
                 break;
@@ -238,7 +242,8 @@ def buildWall(level, box, options):
             # get this block
             tempBlock = level.blockAt(box.minx, y, box.maxz + i)
             if tempBlock != 0:
-                b = chooseBlock(frags3[i])
+                s = frags3[i].split('.')
+                b = Block(s[0], s[1])  # b = chooseBlock(frags[i])
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx, y + 1, box.maxz + i)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx, y + 2, box.maxz + i)
                 break;
@@ -248,7 +253,6 @@ def chooseBlockProb(prob):
     for b in prob:
         if (b[1] / nb) > r:
             return b[0]
-
 
 def chooseBlock(str):
     if str == 'corner':
