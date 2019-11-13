@@ -26,16 +26,11 @@ class Block:
 	def __str__(self):
 		return '('+str(self.id)+', '+str(self.dmg)+') at ('+str(self.x)+', '+str(self.y)+', '+str(self.z)+')'
 
-#inputs are taken from the user. Here I've just showing labels, as well as letting the user define
-# what the main creation material for the structures is
 inputs = (
-	("Gillis Extract Data", "label"),
+	("Extract Data", "label"),
 	("Creator: Gillis Hermans", "label"),
 	)
 
-# MAIN SECTION #
-# Every agent must have a "perform" function, which has three parameters
-# 1: the level (aka the minecraft world). 2: the selected box from mcedit. 3: User defined inputs from mcedit
 def perform(level, box, options):
 	print("EXTRACT")
 	m = scanStructure(level,box,options)

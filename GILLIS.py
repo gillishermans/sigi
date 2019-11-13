@@ -164,18 +164,12 @@ print('grammar.start()   =>', grammar.start())
 print('grammar.productions() =>')
 print(grammar.productions())
 
-# inputs are taken from the user. Here I've just showing labels, as well as letting the user define
-# what the main creation material for the structures is
 inputs = (
 	("Gillis Test", "label"),
 	("Material", alphaMaterials.Cobblestone),  # the material we want to use to build the mass of the structures
 	("Creator: Gillis Hermans", "label"),
 )
 
-
-# MAIN SECTION #
-# Every agent must have a "perform" function, which has three parameters
-# 1: the level (aka the minecraft world). 2: the selected box from mcedit. 3: User defined inputs from mcedit
 def perform(level, box, options):
 	buildWall(level,box,options)
 
@@ -270,6 +264,24 @@ def buildWall(level, box, options):
 
 # Dimensions of the room are str(len(frags)) and str(len(frags1))
 # buildFloor(level,box,options,str(len(frags)),str(len(frags1)))
+
+#attempt to build a general place wall function - not finished
+def placeWall(level,box,sentence,k):
+    h=0
+    l=1
+    if k!=0:
+        h=1
+    if k==2:
+        l=1
+    for i in range(0+h, len(sentence)-l):
+        for y in xrange(box.maxy, box.miny - 1, -1):
+            # get this block
+            tempBlock = level.blockAt(box.minx + i, y, box.maxz)
+            if tempBlock != 0:
+                b = chooseBlock(sentence[i])
+                utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 1, box.maxz)
+                utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 2, box.maxz)
+                break;
 
 def chooseBlockProb(prob):
 	r = random.uniform(0, 1)

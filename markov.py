@@ -143,18 +143,12 @@ def door_constraint(s, a):
     else:
         return False
 
-# inputs are taken from the user. Here I've just showing labels, as well as letting the user define
-# what the main creation material for the structures is
 inputs = (
     ("Gillis Test", "label"),
     ("Material", alphaMaterials.Cobblestone),  # the material we want to use to build the mass of the structures
     ("Creator: Gillis Hermans", "label"),
 )
 
-
-# MAIN SECTION #
-# Every agent must have a "perform" function, which has three parameters
-# 1: the level (aka the minecraft world). 2: the selected box from mcedit. 3: User defined inputs from mcedit
 def perform(level, box, options):
     buildWall(level,box,options)
 

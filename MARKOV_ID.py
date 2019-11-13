@@ -84,18 +84,7 @@ def rewrite_at(index, replacements, the_list):
     del the_list[index]
     the_list[index:index] = replacements
 
-def markovTest():
-    # Print five randomly-generated sentences
-    print("RANDOM")
-    for i in range(30):
-        print(text_model.make_sentence(tries=100))
-
-    # Print three randomly-generated sentences of no more than 280 characters
-    print("SHORT")
-    for i in range(3):
-        print(text_model.make_short_sentence(10))
-
-def markovModel():
+def markov_model():
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
     file_to_open = os.path.join(__location__, 'markov1.txt')
@@ -143,30 +132,23 @@ def door_constraint(s, a):
     else:
         return False
 
-# inputs are taken from the user. Here I've just showing labels, as well as letting the user define
-# what the main creation material for the structures is
 inputs = (
     ("Gillis Test", "label"),
     ("Material", alphaMaterials.Cobblestone),  # the material we want to use to build the mass of the structures
     ("Creator: Gillis Hermans", "label"),
 )
 
-
-# MAIN SECTION #
-# Every agent must have a "perform" function, which has three parameters
-# 1: the level (aka the minecraft world). 2: the selected box from mcedit. 3: User defined inputs from mcedit
 def perform(level, box, options):
     buildWall(level,box,options)
 
 # Build a wall
 def buildWall(level, box, options):
-    model = markovModel()
+    model = markov_model()
     # Generate a wall sentence out of the markov model
     y = "d"
     con = []
     frags = search(model, con) # generate_sentence(grammar)
     frags = frags.split(' ')
-    print('SENTENCE')
     print(frags)
 
     # Build the wall (2 levels) on the ground
@@ -175,11 +157,8 @@ def buildWall(level, box, options):
             # get this block
             tempBlock = level.blockAt(box.minx + i, y, box.maxz)
             if tempBlock != 0:
-                print('ELEM ' + str(i))
-                print(frags[i])
                 s = frags[i].split('.')
-                b = Block(s[0],s[1]) #b = chooseBlock(frags[i])
-                print(b)
+                b = Block(s[0],s[1])
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 1, box.maxz)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + i, y + 2, box.maxz)
                 break;
@@ -189,7 +168,6 @@ def buildWall(level, box, options):
     con = []
     frags1 = search(model, con)
     frags1 = frags1.split(' ')
-    print('SENTENCE')
     print(frags)
 
     # Build the second wall (2 levels) on the ground (leave out first corner)
@@ -199,7 +177,7 @@ def buildWall(level, box, options):
             tempBlock = level.blockAt(box.minx + len(frags) - 1, y, box.maxz + i)
             if tempBlock != 0:
                 s = frags1[i].split('.')
-                b = Block(s[0], s[1])  # b = chooseBlock(frags[i])
+                b = Block(s[0], s[1])
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + len(frags) - 1, y + 1, box.maxz + i)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + len(frags) - 1, y + 2, box.maxz + i)
                 break;
@@ -210,7 +188,6 @@ def buildWall(level, box, options):
     con = []
     frags2 = search(model, con)  # generate_sentence(grammar)
     frags2 = frags2.split(' ')
-    print('SENTENCE')
     print(frags)
 
     # Build the second wall (2 levels) on the ground (leave out first corner)
@@ -232,7 +209,6 @@ def buildWall(level, box, options):
     con = []
     frags3 = search(model, con)  # generate_sentence(grammar)
     frags3 = frags3.split(' ')
-    print('SENTENCE')
     print(frags)
 
     # Build the second wall (2 levels) on the ground (leave out first corner)
@@ -247,21 +223,3 @@ def buildWall(level, box, options):
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx, y + 1, box.maxz + i)
                 utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx, y + 2, box.maxz + i)
                 break;
-
-def chooseBlockProb(prob):
-    r = random.uniform(0, 1)
-    for b in prob:
-        if (b[1] / nb) > r:
-            return b[0]
-
-def chooseBlock(str):
-    if str == 'corner':
-        return cb
-    if str == 'wall':
-        return wb
-    if str == 'window':
-        return wib
-    if str == 'door':
-        return db
-
-
