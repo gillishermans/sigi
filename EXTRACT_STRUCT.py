@@ -42,7 +42,9 @@ def perform(level, box, options):
     print(m)
     print("FIT")
     shapes = fit_shape(m)
-    build_shape(shapes[0],level,box)
+    for s in shapes:
+        build_shape(s,level,box)
+    #build_shape(shapes[0],level,box)
 
 #help function to count probabilities of blocks used
 def add_block(nb,prob,blockid,dmg):
@@ -201,7 +203,7 @@ def build_shape(s,level,box):
     for b in s:
         print("Block loc (" + str(b.x) + ', ' + str(b.y) + ', ' +str(b.z) + ')' )
         print("Place loc (" + str(box.minx + (b.x - box.minx)) + ', ' + str(y + (b.y - y)) + ', ' +str(box.minz + (b.z - box.minz)) + ')' )
-        utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z)
+        utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z)
 
 
 
