@@ -42,9 +42,9 @@ def perform(level, box, options):
     print(m)
     print("FIT")
     shapes = fit_shape(m)
-    for s in shapes:
-        build_shape(s,level,box)
-    #build_shape(shapes[0],level,box)
+    # for s in shapes:
+    #     build_shape(s,level,box)
+    build_shape(shapes[0],level,box)
 
 #help function to count probabilities of blocks used
 def add_block(nb,prob,blockid,dmg):
@@ -136,7 +136,7 @@ def fit_shape(m):
                 #if block is not air
                 if b.id != 0 and not b.used:
                     #start shape matching procedure
-                    s,ma = match_rect(b,m)
+                    s,ma = match_rect(b,m,'xz')
                     shapes.append(s)
                     print('SHAPE')
                     print(s)
@@ -145,37 +145,49 @@ def fit_shape(m):
     print(shapes)
     return shapes
 
-#build a matching rectangle starting from the given block
-def match_rect(b,m):
+#build a matching rectangle starting from the given block: choose the plane of the rectangle as 'xy', 'xz' or 'zy'
+def match_rect(b,m,plane='xy'):
     #first corner to last corner spanning a rectangle: only contains 2 blocks
     shape = [b]
     b.to_used()
-    #x and y -> z same
-    p = check_pos(m,b.x+1,b.y,b.z)
+    dx, dy, dzx, dzy = 0, 0, 0, 0
+    #we have xy, xz and zy planes
+    if plane == 'xy':
+        dx = 1
+        dy = 1
+    if plane == 'xz':
+        dx = 1
+        dzy = 1
+    if plane == 'zy':
+        dzx = 1
+        dy = 1
+    print(str(dx) + str(dy) + str(dzx) + str(dzy))
+    p = check_pos(m,b.x + dx,b.y,b.z + dzx)
     if p.id != 0:
-        m[b.x + 1][b.y][b.z].to_used()
-        s, m = match_rect(p,m)
+        m[b.x + dx][b.y][b.z + dzx].to_used()
+        s, m = match_rect(p,m,plane)
         shape.extend(s)
 
-    p = check_pos(m,b.x-1,b.y,b.z)
+    p = check_pos(m,b.x - dx,b.y,b.z - dzx)
     if p.id != 0:
-        m[b.x - 1][b.y][b.z].to_used()
-        s, m = match_rect(p,m)
+        m[b.x - dx][b.y][b.z - dzx].to_used()
+        s, m = match_rect(p,m,plane)
         shape.extend(s)
 
-    p = check_pos(m,b.x,b.y+1,b.z)
+    p = check_pos(m,b.x,b.y + dy,b.z + dzy)
     if p.id != 0:
-        m[b.x][b.y + 1][b.z].to_used()
-        s, m = match_rect(p,m)
+        m[b.x][b.y + dy][b.z + dzy].to_used()
+        s, m = match_rect(p,m,plane)
         shape.extend(s)
 
-    p = check_pos(m,b.x,b.y-1,b.z)
+    p = check_pos(m,b.x,b.y - dy,b.z - dzy)
     if p.id != 0:
-        m[b.x][b.y - 1][b.z].to_used()
-        s, m = match_rect(p,m)
+        m[b.x][b.y - dy][b.z - dzy].to_used()
+        s, m = match_rect(p,m,plane)
         shape.extend(s)
 
     return shape, m
+
 
 def check_pos(m,x,y,z):
     #check if inside matrix bounds
@@ -201,9 +213,7 @@ def build_shape(s,level,box):
     temp = level.blockAt(box.minx, y, box.maxz)
         #if temp != 0:
     for b in s:
-        print("Block loc (" + str(b.x) + ', ' + str(b.y) + ', ' +str(b.z) + ')' )
-        print("Place loc (" + str(box.minx + (b.x - box.minx)) + ', ' + str(y + (b.y - y)) + ', ' +str(box.minz + (b.z - box.minz)) + ')' )
-        utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z)
+        utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z)
 
 
 
