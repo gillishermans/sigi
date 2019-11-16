@@ -42,9 +42,9 @@ def perform(level, box, options):
     print(m)
     print("FIT")
     shapes = fit_shape(m)
-    # for s in shapes:
-    #     build_shape(s,level,box)
-    build_shape(shapes[0],level,box)
+    for s in shapes:
+       build_shape(s,level,box)
+    #build_shape(shapes[0],level,box)
 
 #help function to count probabilities of blocks used
 def add_block(nb,prob,blockid,dmg):
@@ -136,7 +136,11 @@ def fit_shape(m):
                 #if block is not air
                 if b.id != 0 and not b.used:
                     #start shape matching procedure
+                    s,ma = match_rect(b,m,'xy')
+                    shapes.append(s)
                     s,ma = match_rect(b,m,'xz')
+                    shapes.append(s)
+                    s,ma = match_rect(b,m,'zy')
                     shapes.append(s)
                     print('SHAPE')
                     print(s)
@@ -213,7 +217,8 @@ def build_shape(s,level,box):
     temp = level.blockAt(box.minx, y, box.maxz)
         #if temp != 0:
     for b in s:
-        utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z)
+        print(str(box.minx + b.x) + ', ' + str(y + b.y) + ', ' + str(box.minz + b.z + 10))
+        utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10)
 
 
 
