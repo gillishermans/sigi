@@ -128,6 +128,7 @@ def read_array(i):
 #fit shapes to the structure
 def fit_shape(m):
     shapes = []
+    mx = m
     #go through every block
     for row in m:
         for col in row:
@@ -146,6 +147,8 @@ def fit_shape(m):
                     print(s)
                     #print('REDUCED M')
                     #print(ma)
+                    print(shapes)
+                    return shapes
     print(shapes)
     return shapes
 
@@ -165,7 +168,6 @@ def match_rect(b,m,plane='xy'):
     if plane == 'zy':
         dzx = 1
         dy = 1
-    print(str(dx) + str(dy) + str(dzx) + str(dzy))
     p = check_pos(m,b.x + dx,b.y,b.z + dzx)
     if p.id != 0:
         m[b.x + dx][b.y][b.z + dzx].to_used()
@@ -217,7 +219,7 @@ def build_shape(s,level,box):
     temp = level.blockAt(box.minx, y, box.maxz)
         #if temp != 0:
     for b in s:
-        print(str(box.minx + b.x) + ', ' + str(y + b.y) + ', ' + str(box.minz + b.z + 10))
+        #print(str(box.minx + b.x) + ', ' + str(y + b.y) + ', ' + str(box.minz + b.z + 10))
         utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10)
 
 
