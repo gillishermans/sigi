@@ -130,6 +130,31 @@ def fit_shape(m):
     shapes = []
     mx = m
     #go through every block
+    for plane in ['xy','xz','zy']:
+        reset_used(m)
+        for row in m:
+            for col in row:
+                for b in col:
+                    #print(str(b))
+                    #if block is not air
+                    if b.id != 0 and not b.used:
+                        #start shape matching procedure
+                        s,ma = match_rect(b,m,plane)
+                        shapes.append(s)
+                        print('SHAPE')
+                        print(s)
+                        #print('REDUCED M')
+                        #print(ma)
+                        #print(shapes)
+                        #return shapes
+    print(shapes)
+    shapes = filter_shapes(shapes)
+    return shapes
+
+def fit_shapeBACKUP(m):
+    shapes = []
+    mx = m
+    #go through every block
     for row in m:
         for col in row:
             for b in col:
@@ -150,9 +175,10 @@ def fit_shape(m):
                     print(s)
                     #print('REDUCED M')
                     #print(ma)
-                    print(shapes)
-                    return shapes
+                    #print(shapes)
+                    #return shapes
     print(shapes)
+    shapes = filter_shapes(shapes)
     return shapes
 
 #build a matching rectangle starting from the given block: choose the plane of the rectangle as 'xy', 'xz' or 'zy'
@@ -214,6 +240,13 @@ def reset_used(m):
             for b in col:
                 b.set_used(False)
 
+def filter_shapes(shapes):
+    sort = sorted(shapes, key=len, reverse=True)
+    print(sort)
+    largest = sort[0:6]
+    print(largest)
+    return largest
+
 #SHAPE BUILDER
 
 def build_shape(s,level,box):
@@ -225,7 +258,7 @@ def build_shape(s,level,box):
         #if temp != 0:
     for b in s:
         #print(str(box.minx + b.x) + ', ' + str(y + b.y) + ', ' + str(box.minz + b.z + 10))
-        utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10)
+        utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10)
 
 
 
