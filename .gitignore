@@ -10,3 +10,7 @@ data/
 peggy.txt
 
 peg.txt
+
+test_world/mcedit_waypoints.dat
+
+*.lock
