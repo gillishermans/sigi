@@ -28,8 +28,8 @@ class Block:
         return str(float(self.id + float(self.dmg) / 100))
         #return '('+str(self.id)+', '+str(self.dmg)+') at ('+str(self.x)+', '+str(self.y)+', '+str(self.z)+')'
 
-    def to_used(self):
-        self.used = True
+    def set_used(self,b):
+        self.used = b
 
 inputs = (
 	("Extract Data", "label"),
@@ -139,10 +139,13 @@ def fit_shape(m):
                     #start shape matching procedure
                     s,ma = match_rect(b,m,'xy')
                     shapes.append(s)
+                    reset_used(m)
                     s,ma = match_rect(b,m,'xz')
                     shapes.append(s)
+                    reset_used(m)
                     s,ma = match_rect(b,m,'zy')
                     shapes.append(s)
+                    reset_used(m)
                     print('SHAPE')
                     print(s)
                     #print('REDUCED M')
@@ -156,7 +159,7 @@ def fit_shape(m):
 def match_rect(b,m,plane='xy'):
     #first corner to last corner spanning a rectangle: only contains 2 blocks
     shape = [b]
-    b.to_used()
+    b.set_used(True)
     dx, dy, dzx, dzy = 0, 0, 0, 0
     #we have xy, xz and zy planes
     if plane == 'xy':
@@ -170,25 +173,21 @@ def match_rect(b,m,plane='xy'):
         dy = 1
     p = check_pos(m,b.x + dx,b.y,b.z + dzx)
     if p.id != 0:
-        m[b.x + dx][b.y][b.z + dzx].to_used()
         s, m = match_rect(p,m,plane)
         shape.extend(s)
 
     p = check_pos(m,b.x - dx,b.y,b.z - dzx)
     if p.id != 0:
-        m[b.x - dx][b.y][b.z - dzx].to_used()
         s, m = match_rect(p,m,plane)
         shape.extend(s)
 
     p = check_pos(m,b.x,b.y + dy,b.z + dzy)
     if p.id != 0:
-        m[b.x][b.y + dy][b.z + dzy].to_used()
         s, m = match_rect(p,m,plane)
         shape.extend(s)
 
     p = check_pos(m,b.x,b.y - dy,b.z - dzy)
     if p.id != 0:
-        m[b.x][b.y - dy][b.z - dzy].to_used()
         s, m = match_rect(p,m,plane)
         shape.extend(s)
 
@@ -208,6 +207,12 @@ def check_pos(m,x,y,z):
     #otherwise return air
     else:
         return Block(0,0,x,y,z)
+
+def reset_used(m):
+    for row in m:
+        for col in row:
+            for b in col:
+                b.set_used(False)
 
 #SHAPE BUILDER
 
