@@ -1,5 +1,6 @@
 import time # for timing
 from math import sqrt, tan, sin, cos, pi, ceil, floor, acos, atan, asin, degrees, radians, log, atan2, acos, asin
+import math as math
 from random import *
 import numpy as np
 from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
@@ -43,7 +44,9 @@ def perform(level, box, options):
     print("FIT")
     shapes = fit_shape(m)
     for s in shapes:
-       build_shape(s,level,box)
+        build_shape(s,level,box)
+        print("ENTROPY")
+        print(entropy(s))
     #build_shape(shapes[0],level,box)
 
 #help function to count probabilities of blocks used
@@ -261,4 +264,31 @@ def build_shape(s,level,box):
         utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10)
 
 
+#HILL CLIMBING ALGO...
+
+def extend_shape(s):
+    return
+
+def merge_shape(s1,s2):
+    return
+
+def split_shape(s):
+    return
+
+def entropy(s):
+    nb = len(s)
+    entropy = 0
+    prob = []
+    # sum block types = for
+    for b in s:
+        add_block(nb, prob, b.id, b.dmg)
+    #Probability of certain block type * log of prob
+    print(prob)
+    for p in prob:
+        entropy = entropy + p[2] * math.log(p[2],2)
+    entropy = - entropy
+    return entropy
+
+def hamming_distance(s):
+    return
 
