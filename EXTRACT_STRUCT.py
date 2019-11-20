@@ -38,24 +38,48 @@ class Shape:
         self.corner1 = []
         self.corner2 = []
 
-    def __init__(self,b):
+    def __init__(self,b,plane):
         self.list = [b]
         self.corner1 = [b.x,b.y,b.z]
         self.corner2 = [b.x,b.y,b.z]
+        self.plane = plane
 
     def __iter__(self):
         for b in self.list:
             yield b
 
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return str(self.list)
+
+    def __len__(self):
+        return len(self.list)
+
+    def __getitem__(self, item):
+        return self.list[item]
+
+    def extend(self,s):
+        for b in s:
+            self.append(b)
+
     def append(self,b):
         self.list.append(b)
-        if len(s) == 1:
+        if len(self) == 1:
             self.corner1 = [b.x,b.y,b.z]
             self.corner2 = [b.x,b.y,b.z]
         if b.x <= self.corner1[0] and b.y <= self.corner1[1] and b.z <= self.corner1[2]:
             self.corner1 = [b.x,b.y,b.z]
         if b.x >= self.corner2[0] and b.y >= self.corner2[1] and b.z >= self.corner2[2]:
             self.corner2 = [b.x,b.y,b.z]
+
+    def is_rect(self):
+        xs = abs(self.corner2[0] + 1 - self.corner1[0])
+        ys = abs(self.corner2[1] + 1 - self.corner1[1])
+        zs = abs(self.corner2[2] + 1 - self.corner1[2])
+        if len(self) != xs * ys * zs:
+            return False
 
 
 inputs = (
@@ -71,8 +95,6 @@ def perform(level, box, options):
     shapes = fit_shape(m)
     for s in shapes:
         build_shape(s,level,box)
-        print("ENTROPY")
-        print(entropy(s))
         print('IS_RECT')
         is_rect(s)
     #build_shape(shapes[0],level,box)
@@ -179,43 +201,13 @@ def fit_shape(m):
                         #print(shapes)
                         #return shapes
     print(shapes)
-    shapes = filter_shapes(shapes)
-    return shapes
-
-def fit_shapeBACKUP(m):
-    shapes = []
-    mx = m
-    #go through every block
-    for row in m:
-        for col in row:
-            for b in col:
-                #print(str(b))
-                #if block is not air
-                if b.id != 0 and not b.used:
-                    #start shape matching procedure
-                    s,ma = match_rect(b,m,'xy')
-                    shapes.append(s)
-                    reset_used(m)
-                    s,ma = match_rect(b,m,'xz')
-                    shapes.append(s)
-                    reset_used(m)
-                    s,ma = match_rect(b,m,'zy')
-                    shapes.append(s)
-                    reset_used(m)
-                    print('SHAPE')
-                    print(s)
-                    #print('REDUCED M')
-                    #print(ma)
-                    #print(shapes)
-                    #return shapes
-    print(shapes)
-    shapes = filter_shapes(shapes)
+    #shapes = filter_shapes(shapes)
     return shapes
 
 #build a matching rectangle starting from the given block: choose the plane of the rectangle as 'xy', 'xz' or 'zy'
 def match_rect(b,m,plane='xy'):
     #first corner to last corner spanning a rectangle: only contains 2 blocks
-    shape = [b]
+    shape = Shape(b,plane) #[b]
     b.set_used(True)
     dx, dy, dzx, dzy = 0, 0, 0, 0
     #we have xy, xz and zy planes
@@ -339,11 +331,91 @@ def split_shape(s):
 
 #is the shape rectangle
 def is_rect(s):
-    test = np.zeros((len(s),len(s),len(s)))
-    for b in s:
-        test[b.x][b.y][b.z] = 1.0
-        print(test)
-    return False
+    print("PLANE")
+    print(s.plane)
+    test = np.zeros((len(s),len(s)))
+
+    if s.plane == 'xy':
+        for b in s:
+            test[b.x][b.y] = 1.0
+    if s.plane == 'xz':
+        for b in s:
+            test[b.x][b.z] = 1.0
+    if s.plane == 'zy':
+        for b in s:
+            test[b.y][b.z] = 1.0
+
+    print("FULL")
+    print(test)
+
+    print("RECTANGLE FOUND")
+    print(get_rectangle(test))
+
+
+def findend(i, j, s, out, index):
+    x = len(s)
+    y = len(s[0])
+
+    # flag to check column edge case,
+    # initializing with 0
+    flagc = 0
+
+    # flag to check row edge case,
+    # initializing with 0
+    flagr = 0
+
+    for m in range(i, x):
+
+        # loop breaks where first 1 encounters
+        if s[m][j] == 0:
+            flagr = 1  # set the flag
+            break
+
+        # pass because already processed
+        if s[m][j] == 5:
+            pass
+
+        for n in range(j, y):
+
+            # loop breaks where first 1 encounters
+            if s[m][n] == 0:
+                flagc = 1  # set the flag
+                break
+
+            # fill rectangle elements with any
+            # number so that we can exclude
+            # next time
+            s[m][n] = 5
+
+    if flagr == 1:
+        out[index].append(m - 1)
+    else:
+        # when end point touch the boundary
+        out[index].append(m)
+
+    if flagc == 1:
+        out[index].append(n - 1)
+    else:
+        # when end point touch the boundary
+        out[index].append(n)
+
+
+def get_rectangle(s):
+    out = []
+    index = -1
+
+    for i in range(0, len(s)):
+        for j in range(0, len(s[0])):
+            if s[i][j] == 1:
+                # storing initial position
+                # of rectangle
+                out.append([i, j])
+
+                # will be used for the
+                # last position
+                index = index + 1
+                findend(i, j, s, out, index)
+    return out
 
 #cost function
 def cost(s):
