@@ -32,6 +32,32 @@ class Block:
     def set_used(self,b):
         self.used = b
 
+class Shape:
+    def __init__(self):
+        self.list = []
+        self.corner1 = []
+        self.corner2 = []
+
+    def __init__(self,b):
+        self.list = [b]
+        self.corner1 = [b.x,b.y,b.z]
+        self.corner2 = [b.x,b.y,b.z]
+
+    def __iter__(self):
+        for b in self.list:
+            yield b
+
+    def append(self,b):
+        self.list.append(b)
+        if len(s) == 1:
+            self.corner1 = [b.x,b.y,b.z]
+            self.corner2 = [b.x,b.y,b.z]
+        if b.x <= self.corner1[0] and b.y <= self.corner1[1] and b.z <= self.corner1[2]:
+            self.corner1 = [b.x,b.y,b.z]
+        if b.x >= self.corner2[0] and b.y >= self.corner2[1] and b.z >= self.corner2[2]:
+            self.corner2 = [b.x,b.y,b.z]
+
+
 inputs = (
 	("Extract Data", "label"),
 	("Creator: Gillis Hermans", "label"),
@@ -47,6 +73,8 @@ def perform(level, box, options):
         build_shape(s,level,box)
         print("ENTROPY")
         print(entropy(s))
+        print('IS_RECT')
+        is_rect(s)
     #build_shape(shapes[0],level,box)
 
 #help function to count probabilities of blocks used
@@ -266,15 +294,62 @@ def build_shape(s,level,box):
 
 #HILL CLIMBING ALGO...
 
-def extend_shape(s):
-    return
+#extends a shape
+def extend_shape(s,plane):
+    dx, dy, dzx, dzy = 0, 0, 0, 0
+    #we have xy, xz and zy planes
+    if plane == 'xy':
+        dx = 1
+        dy = 1
+    if plane == 'xz':
+        dx = 1
+        dzy = 1
+    if plane == 'zy':
+        dzx = 1
+        dy = 1
+    p = check_pos(m,b.x + dx,b.y,b.z + dzx)
+    if p.id != 0:
+        s, m = match_rect(p,m,plane)
+        shape.extend(s)
 
+    p = check_pos(m,b.x - dx,b.y,b.z - dzx)
+    if p.id != 0:
+        s, m = match_rect(p,m,plane)
+        shape.extend(s)
+
+    p = check_pos(m,b.x,b.y + dy,b.z + dzy)
+    if p.id != 0:
+        s, m = match_rect(p,m,plane)
+        shape.extend(s)
+
+    p = check_pos(m,b.x,b.y - dy,b.z - dzy)
+    if p.id != 0:
+        s, m = match_rect(p,m,plane)
+        shape.extend(s)
+    return s
+
+#merges two shapes into one
 def merge_shape(s1,s2):
     return
 
+#splits a shape into two shapes
 def split_shape(s):
+
     return
 
+#is the shape rectangle
+def is_rect(s):
+    test = np.zeros((len(s),len(s),len(s)))
+    for b in s:
+        test[b.x][b.y][b.z] = 1.0
+        print(test)
+    return False
+
+#cost function
+def cost(s):
+    return entropy(s)
+
+#returns the entropy of a shape
 def entropy(s):
     nb = len(s)
     entropy = 0
