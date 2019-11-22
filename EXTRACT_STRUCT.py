@@ -330,8 +330,9 @@ def extend_shape(s,plane):
 #merges two shapes into one
 def merge_shape(s1,s2):
     m = s1.copy().extend(s2)
-    #if
-    return
+    if is_rect(s):
+        return m
+    return s1
 
 #splits a shape into two shapes
 def split_shape(s):
@@ -340,7 +341,9 @@ def split_shape(s):
 
 def is_rect(s):
     r = find_rect(s)
-    #if len(r) == 1 and math.abs(r[0][2]-r[0][0])*math.abs(r[0][3]-r[0][1]) == len(s)
+    if len(r) == 1 and math.abs(r[0][2]-r[0][0]-1)*math.abs(r[0][3]-r[0][1]-1) == len(s):
+        return True
+    return False
 
 #find the shape rectangles
 def find_rect(s):
@@ -456,4 +459,14 @@ def entropy(s):
 
 def hamming_distance(s):
     return
+
+def main():
+    s = Shape(Block(20,0,0,0,0),'xy',[0,0,0])
+    s.append(Block(20,0,1,0,0))
+    s.append(Block(20,0,2,0,0))
+    find_rect(s)
+    return
+
+if __name__ == "__main__":
+    main()
 
