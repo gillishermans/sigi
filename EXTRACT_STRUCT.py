@@ -38,11 +38,13 @@ class Shape:
         self.corner1 = []
         self.corner2 = []
 
-    def __init__(self,b,plane):
-        self.list = [b]
-        self.corner1 = [b.x,b.y,b.z]
-        self.corner2 = [b.x,b.y,b.z]
+    def __init__(self,b,plane,f):
+        self.list = []
         self.plane = plane
+        self.fx = f[0]
+        self.fy = f[1]
+        self.fz = f[2]
+        self.append(b)
 
     def __iter__(self):
         for b in self.list:
@@ -65,14 +67,17 @@ class Shape:
             self.append(b)
 
     def append(self,b):
-        self.list.append(b)
-        if len(self) == 1:
-            self.corner1 = [b.x,b.y,b.z]
-            self.corner2 = [b.x,b.y,b.z]
-        if b.x <= self.corner1[0] and b.y <= self.corner1[1] and b.z <= self.corner1[2]:
-            self.corner1 = [b.x,b.y,b.z]
-        if b.x >= self.corner2[0] and b.y >= self.corner2[1] and b.z >= self.corner2[2]:
-            self.corner2 = [b.x,b.y,b.z]
+        print("APPEND")
+        print('('+str(self.fx)+', '+str(self.fy)+', '+str(self.fz)+')')
+        print('('+str(b.x)+', '+str(b.y)+', '+str(b.z)+')')
+        self.list.append(Block(b.id,b.dmg,b.x-self.fx,b.y-self.fy,b.z-self.fz)) #self.list.append(Block(b.id,b.dmg,b.x,b.y,b.z)) #
+        #if len(self) == 1:
+        #    self.corner1 = [b.x,b.y,b.z]
+        #   self.corner2 = [b.x,b.y,b.z]
+        #if b.x <= self.corner1[0] and b.y <= self.corner1[1] and b.z <= self.corner1[2]:
+        #    self.corner1 = [b.x,b.y,b.z]
+        #if b.x >= self.corner2[0] and b.y >= self.corner2[1] and b.z >= self.corner2[2]:
+        #    self.corner2 = [b.x,b.y,b.z]
 
     def is_rect(self):
         xs = abs(self.corner2[0] + 1 - self.corner1[0])
@@ -192,7 +197,7 @@ def fit_shape(m):
                     #if block is not air
                     if b.id != 0 and not b.used:
                         #start shape matching procedure
-                        s,ma = match_rect(b,m,plane)
+                        s,ma = match_rect(b,m,plane,[b.x,b.y,b.z]) #s,ma = match_rect(Block(b.id,b.dmg,0,0,0),m,plane) #
                         shapes.append(s)
                         print('SHAPE')
                         print(s)
@@ -205,9 +210,9 @@ def fit_shape(m):
     return shapes
 
 #build a matching rectangle starting from the given block: choose the plane of the rectangle as 'xy', 'xz' or 'zy'
-def match_rect(b,m,plane='xy'):
+def match_rect(b,m,plane='xy',f=[0,0,0]):
     #first corner to last corner spanning a rectangle: only contains 2 blocks
-    shape = Shape(b,plane) #[b]
+    shape = Shape(b,plane,f) #[b]
     b.set_used(True)
     dx, dy, dzx, dzy = 0, 0, 0, 0
     #we have xy, xz and zy planes
@@ -222,22 +227,22 @@ def match_rect(b,m,plane='xy'):
         dy = 1
     p = check_pos(m,b.x + dx,b.y,b.z + dzx)
     if p.id != 0:
-        s, m = match_rect(p,m,plane)
+        s, m = match_rect(p,m,plane,f)
         shape.extend(s)
 
     p = check_pos(m,b.x - dx,b.y,b.z - dzx)
     if p.id != 0:
-        s, m = match_rect(p,m,plane)
+        s, m = match_rect(p,m,plane,f)
         shape.extend(s)
 
     p = check_pos(m,b.x,b.y + dy,b.z + dzy)
     if p.id != 0:
-        s, m = match_rect(p,m,plane)
+        s, m = match_rect(p,m,plane,f)
         shape.extend(s)
 
     p = check_pos(m,b.x,b.y - dy,b.z - dzy)
     if p.id != 0:
-        s, m = match_rect(p,m,plane)
+        s, m = match_rect(p,m,plane,f)
         shape.extend(s)
 
     return shape, m
@@ -333,17 +338,20 @@ def split_shape(s):
 def is_rect(s):
     print("PLANE")
     print(s.plane)
-    test = np.zeros((len(s),len(s)))
+    test = np.zeros((2*len(s)+1,2*len(s)+1))
 
     if s.plane == 'xy':
         for b in s:
-            test[b.x][b.y] = 1.0
+            print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            test[b.x+len(s)][b.y+len(s)] = 1.0
     if s.plane == 'xz':
         for b in s:
-            test[b.x][b.z] = 1.0
+            print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            test[b.x+len(s)][b.z+len(s)] = 1.0
     if s.plane == 'zy':
         for b in s:
-            test[b.y][b.z] = 1.0
+            print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            test[b.y+len(s)][b.z+len(s)] = 1.0
 
     print("FULL")
     print(test)
