@@ -68,20 +68,18 @@ class Shape:
     def __getitem__(self, item):
         return self.list[item]
 
+    def copy(self):
+        s = Shape(self.list[0],self.plane,self.f)
+        s.list = self.list
+        return s
+
     def extend(self,s):
         for b in s:
             self.append(b)
 
     def append(self,b):
         b.set_relative(self.f)
-        self.list.append(Block(b.id,b.dmg,b.x,b.y,b.z)) #
-        #if len(self) == 1:
-        #    self.corner1 = [b.x,b.y,b.z]
-        #   self.corner2 = [b.x,b.y,b.z]
-        #if b.x <= self.corner1[0] and b.y <= self.corner1[1] and b.z <= self.corner1[2]:
-        #    self.corner1 = [b.x,b.y,b.z]
-        #if b.x >= self.corner2[0] and b.y >= self.corner2[1] and b.z >= self.corner2[2]:
-        #    self.corner2 = [b.x,b.y,b.z]
+        self.list.append(Block(b.id,b.dmg,b.x,b.y,b.z))
 
     def get_relative(self,item):
         b = self.list[item]
@@ -89,13 +87,6 @@ class Shape:
         print('(' + str(self.fx) + ', ' + str(self.fy) + ', ' + str(self.fz) + ')')
         print('(' + str(b.x) + ', ' + str(b.y) + ', ' + str(b.z) + ')')
         return Block(b.id, b.dmg, b.x - self.fx, b.y - self.fy, b.z - self.fz)
-
-    def is_rect(self):
-        xs = abs(self.corner2[0] + 1 - self.corner1[0])
-        ys = abs(self.corner2[1] + 1 - self.corner1[1])
-        zs = abs(self.corner2[2] + 1 - self.corner1[2])
-        if len(self) != xs * ys * zs:
-            return False
 
 
 inputs = (
@@ -112,7 +103,7 @@ def perform(level, box, options):
     for s in shapes:
         build_shape(s,level,box)
         print('IS_RECT')
-        is_rect(s)
+        find_rect(s)
     #build_shape(shapes[0],level,box)
 
 #help function to count probabilities of blocks used
@@ -338,6 +329,8 @@ def extend_shape(s,plane):
 
 #merges two shapes into one
 def merge_shape(s1,s2):
+    m = s1.copy().extend(s2)
+    #if
     return
 
 #splits a shape into two shapes
@@ -345,30 +338,36 @@ def split_shape(s):
 
     return
 
-#is the shape rectangle
 def is_rect(s):
+    r = find_rect(s)
+    #if len(r) == 1 and math.abs(r[0][2]-r[0][0])*math.abs(r[0][3]-r[0][1]) == len(s)
+
+#find the shape rectangles
+def find_rect(s):
     print("PLANE")
     print(s.plane)
     test = np.zeros((2*len(s)+1,2*len(s)+1))
 
     if s.plane == 'xy':
         for b in s:
-            print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            #print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
             test[b.rx+len(s)][b.ry+len(s)] = 1.0
     if s.plane == 'xz':
         for b in s:
-            print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            #print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
             test[b.rx+len(s)][b.rz+len(s)] = 1.0
     if s.plane == 'zy':
         for b in s:
-            print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            #print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
             test[b.ry+len(s)][b.rz+len(s)] = 1.0
 
     print("FULL")
     print(test)
 
+    r = get_rectangle(test)
     print("RECTANGLE FOUND")
-    print(get_rectangle(test))
+    print(r)
+    return r
 
 
 def findend(i, j, s, out, index):
