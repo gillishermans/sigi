@@ -19,6 +19,9 @@ class Block:
         self.y = y
         self.z = z
         self.used = False
+        self.rx = x
+        self.ry = y
+        self.rz = z
 
     def __float__(self):
         return float(self.id + float(self.dmg)/100)
@@ -32,6 +35,11 @@ class Block:
     def set_used(self,b):
         self.used = b
 
+    def set_relative(self,f):
+        self.rx = self.x-f[0]
+        self.ry = self.y-f[1]
+        self.rz = self.z-f[2]
+
 class Shape:
     def __init__(self):
         self.list = []
@@ -41,9 +49,7 @@ class Shape:
     def __init__(self,b,plane,f):
         self.list = []
         self.plane = plane
-        self.fx = f[0]
-        self.fy = f[1]
-        self.fz = f[2]
+        self.f = f
         self.append(b)
 
     def __iter__(self):
@@ -67,10 +73,8 @@ class Shape:
             self.append(b)
 
     def append(self,b):
-        print("APPEND")
-        print('('+str(self.fx)+', '+str(self.fy)+', '+str(self.fz)+')')
-        print('('+str(b.x)+', '+str(b.y)+', '+str(b.z)+')')
-        self.list.append(Block(b.id,b.dmg,b.x-self.fx,b.y-self.fy,b.z-self.fz)) #self.list.append(Block(b.id,b.dmg,b.x,b.y,b.z)) #
+        b.set_relative(self.f)
+        self.list.append(Block(b.id,b.dmg,b.x,b.y,b.z)) #
         #if len(self) == 1:
         #    self.corner1 = [b.x,b.y,b.z]
         #   self.corner2 = [b.x,b.y,b.z]
@@ -78,6 +82,13 @@ class Shape:
         #    self.corner1 = [b.x,b.y,b.z]
         #if b.x >= self.corner2[0] and b.y >= self.corner2[1] and b.z >= self.corner2[2]:
         #    self.corner2 = [b.x,b.y,b.z]
+
+    def get_relative(self,item):
+        b = self.list[item]
+        print("RELATIVE")
+        print('(' + str(self.fx) + ', ' + str(self.fy) + ', ' + str(self.fz) + ')')
+        print('(' + str(b.x) + ', ' + str(b.y) + ', ' + str(b.z) + ')')
+        return Block(b.id, b.dmg, b.x - self.fx, b.y - self.fy, b.z - self.fz)
 
     def is_rect(self):
         xs = abs(self.corner2[0] + 1 - self.corner1[0])
@@ -343,15 +354,15 @@ def is_rect(s):
     if s.plane == 'xy':
         for b in s:
             print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
-            test[b.x+len(s)][b.y+len(s)] = 1.0
+            test[b.rx+len(s)][b.ry+len(s)] = 1.0
     if s.plane == 'xz':
         for b in s:
             print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
-            test[b.x+len(s)][b.z+len(s)] = 1.0
+            test[b.rx+len(s)][b.rz+len(s)] = 1.0
     if s.plane == 'zy':
         for b in s:
             print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
-            test[b.y+len(s)][b.z+len(s)] = 1.0
+            test[b.ry+len(s)][b.rz+len(s)] = 1.0
 
     print("FULL")
     print(test)
