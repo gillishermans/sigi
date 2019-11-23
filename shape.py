@@ -137,7 +137,7 @@ def merge_shape(s1,s2):
         return m
     return s1
 
-#splits a shape into two shapes - find the best split as well
+#splits a shape into two shapes - find the best split according to the minimal cost of the shapes
 def split_shape(s):
     #r = find_rect(s)
     subshapes = sub_shapes(s)
@@ -147,7 +147,6 @@ def split_shape(s):
         print("SUB")
         print(sub)
         if is_rect(sub[0]) and is_rect(sub[1]):
-            print("BOTH RECT")
             possible_splits.append(sub)
     print("POSSIBLE")
     print(possible_splits)
@@ -159,6 +158,7 @@ def split_shape(s):
             cost = shape_cost(best[0]) + shape_cost(best[1])
     return best
 
+#finds the sub_shape combinations for a certain shape
 def sub_shapes(s):
     subshapes = []
     sub = []
@@ -183,6 +183,7 @@ def sub_shapes(s):
         subshapes.append(subsob)
     return subshapes
 
+#returns true if a shape is a rectangle
 def is_rect(s):
     r = find_rect(s)
     if len(r) == 1:
@@ -192,11 +193,7 @@ def is_rect(s):
 
 #find the shape rectangles
 def find_rect(s):
-    print("PLANE")
-    print(s.plane)
     test = np.zeros((2*len(s)+1,2*len(s)+1))
-    print(s)
-    print(s.f)
 
     if s.plane == 'xy':
         for b in s:
@@ -214,61 +211,12 @@ def find_rect(s):
 
     print("FULL")
     print(test)
-
     r = get_rectangle(test)
     print("RECTANGLE FOUND")
     print(r)
     return r
 
-
-def findend(i, j, s, out, index):
-    x = len(s)
-    y = len(s[0])
-
-    # flag to check column edge case,
-    # initializing with 0
-    flagc = 0
-
-    # flag to check row edge case,
-    # initializing with 0
-    flagr = 0
-
-    for m in range(i, x):
-
-        # loop breaks where first 1 encounters
-        if s[m][j] == 0:
-            flagr = 1  # set the flag
-            break
-
-        # pass because already processed
-        if s[m][j] == 5:
-            pass
-
-        for n in range(j, y):
-
-            # loop breaks where first 1 encounters
-            if s[m][n] == 0:
-                flagc = 1  # set the flag
-                break
-
-            # fill rectangle elements with any
-            # number so that we can exclude
-            # next time
-            s[m][n] = 5
-
-    if flagr == 1:
-        out[index].append(m - 1)
-    else:
-        # when end point touch the boundary
-        out[index].append(m)
-
-    if flagc == 1:
-        out[index].append(n - 1)
-    else:
-        # when end point touch the boundary
-        out[index].append(n)
-
-
+#gets the rectangles of a matrix - Prabhat Jha (https://www.geeksforgeeks.org/find-rectangles-filled-0/)
 def get_rectangle(s):
     out = []
     index = -1
@@ -286,7 +234,34 @@ def get_rectangle(s):
                 findend(i, j, s, out, index)
     return out
 
-#cost function
+#get_rectangle help function - Prabhat Jha (https://www.geeksforgeeks.org/find-rectangles-filled-0/)
+def findend(i, j, s, out, index):
+    flagc = 0
+    flagr = 0
+
+    for m in range(i, len(s)):
+        if s[m][j] == 0:
+            flagr = 1  # set the flag
+            break
+        if s[m][j] == 2:
+            pass
+        for n in range(j, len(s[0])):
+            if s[m][n] == 0:
+                flagc = 1
+                break
+            s[m][n] = 2
+
+    if flagr == 1:
+        out[index].append(m - 1)
+    else:
+        out[index].append(m)
+
+    if flagc == 1:
+        out[index].append(n - 1)
+    else:
+        out[index].append(n)
+
+#cost function of a shape: entropy, hamming distance and MDL
 def shape_cost(s):
     return entropy(s)
 
@@ -306,6 +281,10 @@ def entropy(s):
     return entropy
 
 def hamming_distance(s):
+    return
+
+#the minimal description length
+def mdl(s):
     return
 
 def main():

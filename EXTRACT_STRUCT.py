@@ -26,15 +26,6 @@ def perform(level, box, options):
         shp.find_rect(s)
     #build_shape(shapes[0],level,box)
 
-#help function to count probabilities of blocks used
-def add_block(nb,prob,blockid,dmg):
-    for b in prob:
-        if b[0] == blockid and b[3] == dmg:
-            b[1] = b[1]+1.0
-            b[2] = b[1]/nb
-            return
-    prob.append([blockid,1.0,1.0/nb,dmg])
-
 #scan the box for a structure and the probabilities of the blocks used in the structure
 def scan_structure(level,box,options):
     nb=0
@@ -50,7 +41,7 @@ def scan_structure(level,box,options):
                 m[x-box.minx][y-box.miny][z-box.minz] = Block(blockid,dmg,x,y,z)
                 if blockid != 0 and blockid != 2 and blockid != 3:
                     nb = nb+1
-                    add_block(nb,prob,blockid,dmg)
+                    shp.add_block(nb,prob,blockid,dmg)
     write_array(m)
     write_to_file(prob)
     return ma
@@ -134,7 +125,7 @@ def fit_shape(m):
 #build a matching rectangle starting from the given block: choose the plane of the rectangle as 'xy', 'xz' or 'zy'
 def match_rect(b,m,plane='xy',f=[0,0,0]):
     #first corner to last corner spanning a rectangle: only contains 2 blocks
-    shape = Shape(b,plane,f) #[b]
+    shape = Shape(b,plane)
     b.set_used(True)
     dx, dy, dzx, dzy = 0, 0, 0, 0
     #we have xy, xz and zy planes
