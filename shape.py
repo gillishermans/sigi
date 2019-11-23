@@ -1,6 +1,7 @@
 import numpy as np
 from math import sqrt, tan, sin, cos, pi, ceil, floor, acos, atan, asin, degrees, radians, log, atan2, acos, asin
 import math as math
+from  itertools import combinations
 
 class Block:
     def __init__(self, blockid, dmg, x, y, z):
@@ -130,7 +131,7 @@ def merge_shape(s1,s2):
 #splits a shape into two shapes - find the best split as well
 def split_shape(s):
     #r = find_rect(s)
-    subshapes = sub_shapes(s)
+    subshapes = sublists(s)
     print(subshapes)
     possible_splits = []
     for sub in subshapes:
@@ -139,11 +140,33 @@ def split_shape(s):
         if is_rect(sub[0]) and is_rect(sub[1]):
             print("BOTH RECT")
             possible_splits.append(sub)
-        else:
-            print("NOT RECT")
     print("POSSIBLE")
     print(possible_splits)
     return
+
+def sublists(s):
+    subshapes = []
+    sub = []
+    for i in range(1,len(s)):
+        comb = combinations(s,i)
+        for c in comb:
+            print(c)
+            if len(c) == 1:
+                sub.append([c[0]])
+            else:
+                l = []
+                for e in c:
+                    l.append(e)
+                sub.append(l)
+    for i in range(0,len(sub)):
+        subs = Shape(sub[i][0], s.plane)
+        subs.extend(sub[i][1:])
+        sob = [a for a in s if a not in sub[i]]
+        sobs = Shape(sob[0], s.plane)
+        sobs.extend(sob[1:])
+        subsob = [subs, sobs]
+        subshapes.append(subsob)
+    return subshapes
 
 def sub_shapes(s):
     subshapes = [[]]
@@ -293,15 +316,16 @@ def main():
     print("MERGE")
     s = Shape(Block(20,0,0,0,0),'xy')
     s.append(Block(21,0,1,0,0))
-    s.append(Block(22,0,2,0,0))
-    print(s.plane)
+    #s.append(Block(22,0,2,0,0))
     s2 = Shape(Block(30,0,0,1,0),'xy')
     s2.append(Block(31,0,1,1,0))
-    s2.append(Block(32,0,2,1,0))
+    #s2.append(Block(32,0,2,1,0))
     find_rect(s2)
     m = merge_shape(s,s2)
     print(m)
     print("SPLIT")
+    #print(sub_shapes(s))
+    #print(sublists(s))
     split_shape(m)
     return
 
