@@ -84,6 +84,15 @@ class Shape:
         print('(' + str(b.x) + ', ' + str(b.y) + ', ' + str(b.z) + ')')
         return Block(b.id, b.dmg, b.x - self.f[0], b.y - self.f[1], b.z - self.f[2])
 
+
+def add_block(nb,prob,blockid,dmg):
+    for b in prob:
+        if b[0] == blockid and b[3] == dmg:
+            b[1] = b[1]+1.0
+            b[2] = b[1]/nb
+            return
+    prob.append([blockid,1.0,1.0/nb,dmg])
+
 #HILL CLIMBING ALGO...
 
 #extends a shape
@@ -131,7 +140,7 @@ def merge_shape(s1,s2):
 #splits a shape into two shapes - find the best split as well
 def split_shape(s):
     #r = find_rect(s)
-    subshapes = sublists(s)
+    subshapes = sub_shapes(s)
     print(subshapes)
     possible_splits = []
     for sub in subshapes:
@@ -142,9 +151,15 @@ def split_shape(s):
             possible_splits.append(sub)
     print("POSSIBLE")
     print(possible_splits)
-    return
+    best = possible_splits[0]
+    cost = shape_cost(best[0]) + shape_cost(best[1])
+    for i in range(1,len(possible_splits)):
+        if shape_cost(possible_splits[i][0]) + shape_cost(possible_splits[i][1]) < cost:
+            best = possible_splits[i]
+            cost = shape_cost(best[0]) + shape_cost(best[1])
+    return best
 
-def sublists(s):
+def sub_shapes(s):
     subshapes = []
     sub = []
     for i in range(1,len(s)):
@@ -166,25 +181,6 @@ def sublists(s):
         sobs.extend(sob[1:])
         subsob = [subs, sobs]
         subshapes.append(subsob)
-    return subshapes
-
-def sub_shapes(s):
-    subshapes = [[]]
-    e = True
-    for i in range(len(s)+1):
-        for j in range(i + 1, len(s)):
-            sub = s[i:j]
-            subs = Shape(sub[0],s.plane) #Shape(sub[0],s.plane,[sub[0].x,sub[0].y,sub[0].z])
-            subs.extend(sub[1:])
-            sob = [a for a in s if a not in sub]
-            sobs = Shape(sob[0],s.plane) #Shape(sob[0],s.plane,[sob[0].x,sob[0].y,sob[0].z])
-            sobs.extend(sob[1:])
-            subsob = [subs,sobs]
-            if e:
-                subshapes[0] = subsob
-                e = False
-            else:
-                subshapes.append(subsob)
     return subshapes
 
 def is_rect(s):
@@ -291,7 +287,7 @@ def get_rectangle(s):
     return out
 
 #cost function
-def cost(s):
+def shape_cost(s):
     return entropy(s)
 
 #returns the entropy of a shape
@@ -318,15 +314,15 @@ def main():
     s.append(Block(21,0,1,0,0))
     #s.append(Block(22,0,2,0,0))
     s2 = Shape(Block(30,0,0,1,0),'xy')
-    s2.append(Block(31,0,1,1,0))
+    s2.append(Block(30,0,1,1,0))
     #s2.append(Block(32,0,2,1,0))
     find_rect(s2)
     m = merge_shape(s,s2)
     print(m)
     print("SPLIT")
-    #print(sub_shapes(s))
-    #print(sublists(s))
-    split_shape(m)
+    best = split_shape(m)
+    print("BEST SPLIT")
+    print(best)
     return
 
 if __name__ == "__main__":
