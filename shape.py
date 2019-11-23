@@ -32,23 +32,17 @@ class Block:
         self.rz = self.z-f[2]
 
 class Shape:
-    def __init__(self):
-        self.list = []
-        self.corner1 = []
-        self.corner2 = []
-
-    def __init__(self,b,plane,f):
+    def __init__(self,b,plane):
         self.list = []
         self.plane = plane
-        self.f = f
+        self.f = [b.x,b.y,b.z]
         self.append(b)
 
-    #def __init__(self,l,plane,f):
+    #def __init__(self,b,plane,f):
     #    self.list = []
     #    self.plane = plane
     #    self.f = f
-    #    self.append(l[0])
-    #    self.extend(l[1:])
+    #    self.append(b)
 
     def __iter__(self):
         for b in self.list:
@@ -67,7 +61,7 @@ class Shape:
         return self.list[item]
 
     def copy(self):
-        s = Shape(self.list[0], self.plane, self.f)
+        s = Shape(self.list[0], self.plane) #self.f
         s.list = self.list
         return s
 
@@ -76,15 +70,18 @@ class Shape:
             self.append(b)
 
     def append(self,b):
-        b.set_relative(self.f)
-        self.list.append(Block(b.id,b.dmg,b.x,b.y,b.z))
+        bn = (Block(b.id,b.dmg,b.x,b.y,b.z))
+        bn.set_relative(self.f)
+        #b.set_relative(self.f)
+        self.list.append(bn) #(Block(b.id,b.dmg,b.x,b.y,b.z))
 
     def get_relative(self,item):
-        b = self.list[item]
+        #b = self.list[item]
+        b = item
         print("RELATIVE")
-        print('(' + str(self.fx) + ', ' + str(self.fy) + ', ' + str(self.fz) + ')')
+        print('(' + str(self.f[0]) + ', ' + str(self.f[1]) + ', ' + str(self.f[2]) + ')')
         print('(' + str(b.x) + ', ' + str(b.y) + ', ' + str(b.z) + ')')
-        return Block(b.id, b.dmg, b.x - self.fx, b.y - self.fy, b.z - self.fz)
+        return Block(b.id, b.dmg, b.x - self.f[0], b.y - self.f[1], b.z - self.f[2])
 
 #HILL CLIMBING ALGO...
 
@@ -135,11 +132,17 @@ def split_shape(s):
     #r = find_rect(s)
     subshapes = sub_shapes(s)
     print(subshapes)
+    possible_splits = []
     for sub in subshapes:
+        print("SUB")
+        print(sub)
         if is_rect(sub[0]) and is_rect(sub[1]):
             print("BOTH RECT")
+            possible_splits.append(sub)
         else:
             print("NOT RECT")
+    print("POSSIBLE")
+    print(possible_splits)
     return
 
 def sub_shapes(s):
@@ -148,10 +151,10 @@ def sub_shapes(s):
     for i in range(len(s)+1):
         for j in range(i + 1, len(s)):
             sub = s[i:j]
-            subs = Shape(sub[0],s.plane,[sub[0].x,sub[0].y,sub[0].z])
+            subs = Shape(sub[0],s.plane) #Shape(sub[0],s.plane,[sub[0].x,sub[0].y,sub[0].z])
             subs.extend(sub[1:])
             sob = [a for a in s if a not in sub]
-            sobs = Shape(sob[0],s.plane,[sob[0].x,sob[0].y,sob[0].z])
+            sobs = Shape(sob[0],s.plane) #Shape(sob[0],s.plane,[sob[0].x,sob[0].y,sob[0].z])
             sobs.extend(sob[1:])
             subsob = [subs,sobs]
             if e:
@@ -163,8 +166,9 @@ def sub_shapes(s):
 
 def is_rect(s):
     r = find_rect(s)
-    if len(r) == 1 and abs(r[0][2]-r[0][0]-1)*abs(r[0][3]-r[0][1]-1) == len(s):
-        return True
+    if len(r) == 1:
+        if abs(1 + r[0][2] - r[0][0]) * abs(1 + r[0][3] - r[0][1]) == len(s):
+            return True
     return False
 
 #find the shape rectangles
@@ -172,18 +176,21 @@ def find_rect(s):
     print("PLANE")
     print(s.plane)
     test = np.zeros((2*len(s)+1,2*len(s)+1))
+    print(s)
+    print(s.f)
 
     if s.plane == 'xy':
         for b in s:
             #print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            #print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             test[b.rx+len(s)][b.ry+len(s)] = 1.0
     if s.plane == 'xz':
         for b in s:
-            #print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            #print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             test[b.rx+len(s)][b.rz+len(s)] = 1.0
     if s.plane == 'zy':
         for b in s:
-            #print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            #print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             test[b.ry+len(s)][b.rz+len(s)] = 1.0
 
     print("FULL")
@@ -283,16 +290,18 @@ def hamming_distance(s):
     return
 
 def main():
-    s = Shape(Block(20,0,0,0,0),'xy',[0,0,0])
+    print("MERGE")
+    s = Shape(Block(20,0,0,0,0),'xy')
     s.append(Block(21,0,1,0,0))
     s.append(Block(22,0,2,0,0))
     print(s.plane)
-    s2 = Shape(Block(30,0,0,1,0),'xy',[0,0,0])
+    s2 = Shape(Block(30,0,0,1,0),'xy')
     s2.append(Block(31,0,1,1,0))
     s2.append(Block(32,0,2,1,0))
     find_rect(s2)
     m = merge_shape(s,s2)
     print(m)
+    print("SPLIT")
     split_shape(m)
     return
 
