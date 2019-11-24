@@ -39,15 +39,18 @@ class Shape:
         self.f = [b.x,b.y,b.z]
         self.append(b)
 
-    #def __init__(self,b,plane,f):
-    #    self.list = []
-    #    self.plane = plane
-    #    self.f = f
-    #    self.append(b)
-
     def __iter__(self):
         for b in self.list:
             yield b
+
+    def __eq__(self, other):
+        if self.plane == other.plane and self.f == other.f and self.list == other.list:
+            return True
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     def __repr__(self):
         return str(self)
@@ -63,7 +66,7 @@ class Shape:
 
     def copy(self):
         s = Shape(self.list[0], self.plane) #self.f
-        s.list = self.list
+        s.list = self.list.copy()
         return s
 
     def extend(self,s):
@@ -83,6 +86,9 @@ class Shape:
         print('(' + str(self.f[0]) + ', ' + str(self.f[1]) + ', ' + str(self.f[2]) + ')')
         print('(' + str(b.x) + ', ' + str(b.y) + ', ' + str(b.z) + ')')
         return Block(b.id, b.dmg, b.x - self.f[0], b.y - self.f[1], b.z - self.f[2])
+
+    def remove(self,s):
+        self.list.remove(s)
 
 
 def add_block(nb,prob,blockid,dmg):
@@ -129,13 +135,72 @@ def extend_shape(s,plane):
         shape.extend(s)
     return s
 
+#Returns the best possible merge for a set of shapes
+def best_merge(shapes):
+    saved_cost = 0
+    best = []
+    for s1 in shapes:
+        for s2 in shapes:
+            print("BEST  MERGE")
+            print(shapes)
+            print(s1)
+            print(s2)
+            print(s1.__ne__(s2))
+            if s1.__ne__(s2):
+                s = merge_shape(s1,s2)
+                if not is_rect(s):
+                    continue
+                #print(s)
+                saved = shape_cost(s1) + shape_cost(s2) - shape_cost(s)
+                if saved > saved_cost:
+                    saved_cost = saved
+                    best = [s1,s2,s]
+                else:
+                    print("NOT BETTER")
+            else:
+                print("NOT EQUAL")
+    if len(best) == 0:
+        print("NO BETTER MERGE")
+        return shapes
+    print("appendshit")
+    shapes.append(s)
+    print(shapes)
+    shapes.remove(s1)
+    print(shapes)
+    shapes.remove(s2)
+    print(shapes)
+    print("endappendshit")
+    return shapes
+
 #merges two shapes into one
 def merge_shape(s1,s2):
     m = s1.copy()
     m.extend(s2)
-    if is_rect(m):
-        return m
-    return s1
+    #if is_rect(m):
+    #    return m
+    return m
+
+# Returns the best possible split for a set of shapes
+def best_split(shapes):
+    saved_cost = 0
+    best = []
+    for s in shapes:
+        split = split_shape(s)
+        if(s.__eq__(split[0]) and s.__eq__(split[1])):
+            continue
+        if shape_cost(s) - (shape_cost(split[0]) + shape_cost(split[1])) > saved_cost:
+            saved_cost = shape_cost(s) - (shape_cost(split[0]) + shape_cost(split[1]))
+            best = [s,split[0],split[1]]
+    if len(best) == 0:
+        return shapes
+    print("SPLIT THESE")
+    print(s)
+    print(split[0])
+    print(split[1])
+    shapes.remove(s)
+    shapes.append(split[0])
+    shapes.append(split[1])
+    return shapes
 
 #splits a shape into two shapes - find the best split according to the minimal cost of the shapes
 def split_shape(s):
@@ -151,8 +216,8 @@ def split_shape(s):
     print("POSSIBLE")
     print(possible_splits)
     print(s)
-    best = s
-    cost = shape_cost(best)
+    best = [s,s]
+    cost = shape_cost(best[0])
     print("COST")
     print(cost)
     for i in range(0,len(possible_splits)):
@@ -266,6 +331,12 @@ def findend(i, j, s, out, index):
     else:
         out[index].append(n)
 
+def shapes_cost(shapes):
+    cost = 0
+    for s in shapes:
+        cost = cost + shape_cost(s)
+    return cost
+
 #cost function of a shape: entropy, hamming distance and MDL
 def shape_cost(s):
     return entropy(s)
@@ -291,25 +362,57 @@ def hamming_distance(s):
 def mdl(shapes):
     return len(shapes)
 
+def hill_climbing(shapes):
+    #find initial set of shapes - given for now
+
+    #choose between merge\split of a shape for a better cost
+    same = 0
+    while(same < 5 ):
+        new = choice(shapes)
+        print("STEP")
+        print(shapes)
+        print(new)
+        if shapes_cost(new) == shapes_cost(shapes):
+            same = same +1
+        shapes = new
+    #until we reach an optima
+    return shapes
+
+def choice(shapes):
+    merge = best_merge(shapes.copy())
+    print("CHOICE MERGE")
+    print(merge)
+    print(shapes_cost(merge))
+    split = best_split(shapes.copy())
+    print("CHOICE SPLIT")
+    print(split)
+    print(shapes_cost(split))
+    if shapes_cost(merge) > shapes_cost(split):
+        return split
+    else:
+        return merge
+
 def main():
     print("MERGE")
     s = Shape(Block(20,0,0,0,0),'xy')
     s.append(Block(21,0,1,0,0))
-    s.append(Block(22,0,2,0,0))
-    s.append(Block(23,0,3,0,0))
-    s.append(Block(24,0,4,0,0))
+    #s.append(Block(22,0,2,0,0))
+    #s.append(Block(23,0,3,0,0))
+    #s.append(Block(24,0,4,0,0))
     s2 = Shape(Block(31,0,0,1,0),'xy')
     s2.append(Block(32,0,1,1,0))
-    s2.append(Block(33,0,2,1,0))
-    s2.append(Block(34,0,3,1,0))
-    s2.append(Block(35,0,4,1,0))
-    find_rect(s2)
-    m = merge_shape(s,s2)
-    print(m)
-    print("SPLIT")
-    best = split_shape(m)
-    print("BEST SPLIT")
-    print(best)
+    #s2.append(Block(33,0,2,1,0))
+    #s2.append(Block(34,0,3,1,0))
+    #s2.append(Block(35,0,4,1,0))
+    shapes = [s,s2]
+    #find_rect(s2)
+    #m = merge_shape(s,s2)
+    #print(m)
+    #print("SPLIT")
+    #best = split_shape(m)
+    #print("BEST SPLIT")
+    #print(best)
+    print(hill_climbing(shapes))
     return
 
 if __name__ == "__main__":
