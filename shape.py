@@ -150,9 +150,14 @@ def split_shape(s):
             possible_splits.append(sub)
     print("POSSIBLE")
     print(possible_splits)
-    best = possible_splits[0]
-    cost = shape_cost(best[0]) + shape_cost(best[1])
-    for i in range(1,len(possible_splits)):
+    print(s)
+    best = s
+    cost = shape_cost(best)
+    print("COST")
+    print(cost)
+    for i in range(0,len(possible_splits)):
+        print("COSTif")
+        print(shape_cost(possible_splits[i][0]) + shape_cost(possible_splits[i][1]))
         if shape_cost(possible_splits[i][0]) + shape_cost(possible_splits[i][1]) < cost:
             best = possible_splits[i]
             cost = shape_cost(best[0]) + shape_cost(best[1])
@@ -274,7 +279,6 @@ def entropy(s):
     for b in s:
         add_block(nb, prob, b.id, b.dmg)
     #Probability of certain block type * log of prob
-    print(prob)
     for p in prob:
         entropy = entropy + p[2] * math.log(p[2],2)
     entropy = - entropy
@@ -283,18 +287,22 @@ def entropy(s):
 def hamming_distance(s):
     return
 
-#the minimal description length
-def mdl(s):
-    return
+#the minimal description length cost
+def mdl(shapes):
+    return len(shapes)
 
 def main():
     print("MERGE")
     s = Shape(Block(20,0,0,0,0),'xy')
     s.append(Block(21,0,1,0,0))
-    #s.append(Block(22,0,2,0,0))
-    s2 = Shape(Block(30,0,0,1,0),'xy')
-    s2.append(Block(30,0,1,1,0))
-    #s2.append(Block(32,0,2,1,0))
+    s.append(Block(22,0,2,0,0))
+    s.append(Block(23,0,3,0,0))
+    s.append(Block(24,0,4,0,0))
+    s2 = Shape(Block(31,0,0,1,0),'xy')
+    s2.append(Block(32,0,1,1,0))
+    s2.append(Block(33,0,2,1,0))
+    s2.append(Block(34,0,3,1,0))
+    s2.append(Block(35,0,4,1,0))
     find_rect(s2)
     m = merge_shape(s,s2)
     print(m)
