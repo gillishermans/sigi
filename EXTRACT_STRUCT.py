@@ -46,7 +46,7 @@ def scan_structure(level,box,options):
     write_to_file(prob)
     return ma
 
-#writes the found probabilities to a text file
+#writes the probabilities to a text file
 def write_to_file(prob):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
