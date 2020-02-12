@@ -360,8 +360,8 @@ def entropy(s):
 def hamming_distance(s):
     return
 
-#the minimal description length cost
-def mdl(shapes):
+#the description length cost
+def dl(shapes):
     return len(shapes)
 
 def hill_climbing(shapes):
