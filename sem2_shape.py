@@ -359,7 +359,7 @@ def hill_climbing(shapes):
             same = same +1
         shapes = new
     #until we reach an optima
-    return filter_final_shapes(shapes)
+    return shapes
 
 def choice(shapes):
     #print("CHOICE")
@@ -383,6 +383,41 @@ def choice(shapes):
     #else:
     #   print("MERGE WIN")
     #    return merge
+
+def filter_final_shapes_total(shapes,m):
+    final = []
+    blocks = []
+    for row in m:
+        for col in row:
+            for b in col:
+                #if block is not air
+                if b.id != 0:
+                    blocks.append(b)
+    sort = sorted(shapes, key=len, reverse=True)
+    while blocks != []:
+        for s in sort:
+            if len(final)==0:
+                final.append(s)
+                for e in s:
+                    for b in blocks:
+                        if e.id == b.id and e.dmg == b.dmg and e.x == b.x and e.y == b.y and e.z == b.z:
+                            blocks.remove(b)
+
+            else:
+                go = False
+                for e in s:
+                    if final_block_check(blocks,e):
+                        go  = True
+                        break
+                if go == True:
+                    final.append(s)
+                    for e in s:
+                        for b in blocks:
+                            if e.id == b.id and e.dmg == b.dmg and e.x == b.x and e.y == b.y and e.z == b.z:
+                                blocks.remove(b)
+    print("FINAL")
+    print(final)
+    return final
 
 def filter_final_shapes(shapes):
     final = []

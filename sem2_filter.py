@@ -25,6 +25,7 @@ def perform(level, box, options):
     #shapes = initial_shapes(ms)
     #print(shapes)
     shapes = shp.hill_climbing(shapes)
+    shapes = shp.filter_final_shapes_total(shapes,m)
     for s in shapes:
         build_shape(s,level,box)
 
