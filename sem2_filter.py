@@ -20,8 +20,11 @@ def perform(level, box, options):
     shapes = initial_shapes(m)
     print("SHAPES")
     print(shapes)
+    #ms = read_array(0)
+    #print(ms)
+    #shapes = initial_shapes(ms)
+    #print(shapes)
     shapes = shp.hill_climbing(shapes)
-    print(shapes)
     for s in shapes:
         build_shape(s,level,box)
 
@@ -88,9 +91,11 @@ def read_array(i):
         print(a)
 
     #load the array and reshape to 3d
-    new_array = np.loadtxt(__location__ + "\data\data%s.txt" % i)
-    new_array = new_array.reshape((a[0], a[1], a[2]))
-    return new_array
+    na = np.loadtxt(__location__ + "\data\data%s.txt" % i)
+    na = na.reshape((a[0], a[1], a[2]))
+
+    m = [[[Block(int(na[x,y,z]),round(100*(na[x,y,z] - int(na[x,y,z]))),x,y,z) for z in range(0,len(na[0][0]))] for y in range(0,len(na[0]))] for x in range(0,len(na))]
+    return m
 
 #SHAPE FITTER
 
@@ -118,4 +123,21 @@ def build_shape(s,level,box):
     print(s)
     y = box.miny
     for b in s:
+        #print("BUILD")
+        #print(b)
+        #print(b.id)
+        #print(b.dmg)
         utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10)
+
+def main():
+    ms = read_array(0)
+    print(ms)
+    shapes = initial_shapes(ms)
+    print(shapes)
+    shapes = shp.hill_climbing(shapes)
+    print(shapes)
+    for s in shapes:
+        build_shape(s,level,box)
+
+if __name__ == "__main__":
+    main()

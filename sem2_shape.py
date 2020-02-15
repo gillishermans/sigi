@@ -94,16 +94,37 @@ def add_block(nb,prob,blockid,dmg):
             return
     prob.append([blockid,1.0,1.0/nb,dmg])
 
+def just_merge(shapes):
+    for s1 in shapes:
+        for s2 in shapes:
+            if s1.__ne__(s2) and s1.plane == s2.plane:
+                #print("JUST")
+                #print(s1)
+                #print(s2)
+                s = merge_shape(s1,s2)
+                #print(s)
+                if not is_rect(s):
+                    continue
+                #print("RECT")
+                new_shapes = [x for x in shapes if x!=s1 and x!=s2]
+                new_shapes.append(s)
+                #print(new_shapes)
+                saved = shapes_cost(shapes) - shapes_cost(new_shapes)
+                #print(saved)
+                if saved >= 0:
+                    return new_shapes
+    return shapes
+
 #Returns the best possible merge for a set of shapes
 def best_merge(shapes):
     saved_cost = 0
     best = []
     for s1 in shapes:
         for s2 in shapes:
-            print("BEST  MERGE")
-            print(shapes)
-            print(s1)
-            print(s2)
+            #print("BEST  MERGE")
+            #print(shapes)
+            #print(s1)
+            #print(s2)
             if s1.__ne__(s2) and s1.plane == s2.plane:
                 s = merge_shape(s1,s2)
                 if not is_rect(s):
@@ -114,24 +135,24 @@ def best_merge(shapes):
                 #saved = shape_cost(s1) + shape_cost(s2) - shape_cost(s)
                 if saved >= saved_cost:
                     saved_cost = saved
-                    best = [s1,s2,s]
-                else:
-                    print("NOT BETTER")
-            else:
-                print("NOT EQUAL")
+                    best = new_shapes
+                #else:
+                    #print("NOT BETTER")
+            #else:
+                #print("NOT EQUAL")
     if len(best) == 0:
-        print("NO BETTER MERGE")
+        #print("NO BETTER MERGE")
         return shapes
-    print("appendshit")
-    print(shapes)
-    print(best[2])
-    print(best[0])
-    print(best[1])
-    shapes = [x for x in shapes if x!=best[0] and x!=best[1]]
-    shapes.append(best[2])
-    print(shapes)
-    print("endappendshit")
-    return shapes
+    #print("appendshit")
+    #print(shapes)
+    #print(best[2])
+    #print(best[0])
+    #print(best[1])
+    #shapes = [x for x in shapes if x!=best[0] and x!=best[1]]
+    #shapes.append(best[2])
+    #print(shapes)
+    #print("endappendshit")
+    return best #shapes
 
 #merges two shapes into one
 def merge_shape(s1,s2):
@@ -226,11 +247,11 @@ def find_rect(s):
 
     if s.plane == 'xy':
         for b in s:
-            print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
-            print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
-            print(s)
-            print(len(s))
-            print(test)
+            #print("BLOCK FIND RECT")
+            #print(s)
+            #print(b)
+            #print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
+            #print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             if b.rx+len(s) >= 2*len(s)+1 or b.ry+len(s) >= 2*len(s)+1: return []
             test[b.rx+len(s)][b.ry+len(s)] = 1.0
     if s.plane == 'xz':
@@ -244,11 +265,11 @@ def find_rect(s):
             if b.ry + len(s) >= 2 * len(s) + 1 or b.rz + len(s) >= 2 * len(s) + 1: return []
             test[b.ry+len(s)][b.rz+len(s)] = 1.0
 
-    print("FULL")
-    print(test)
+    #print("FULL")
+    #print(test)
     r = get_rectangle(test)
-    print("RECTANGLE FOUND")
-    print(r)
+    #print("RECTANGLE FOUND")
+    #print(r)
     return r
 
 #gets the rectangles of a matrix - Prabhat Jha (https://www.geeksforgeeks.org/find-rectangles-filled-0/)
@@ -297,13 +318,10 @@ def findend(i, j, s, out, index):
         out[index].append(n)
 
 def shapes_cost(shapes):
-    cost = 0
-    alpha = 1
+    alpha = 1.001
     cost = (1+dl(shapes))**alpha
-    print(cost)
     for s in shapes:
         cost = cost + shape_cost(s)
-        print(cost)
     return cost
 
 #cost function of a shape: entropy, hamming distance and MDL
@@ -324,9 +342,6 @@ def entropy(s):
     entropy = - entropy
     return entropy
 
-def hamming_distance(s):
-    return
-
 #the description length cost
 def dl(shapes):
     return len(shapes)
@@ -336,8 +351,9 @@ def hill_climbing(shapes):
     same = 0
     while(same < 2 ):
         new = choice(shapes)
-        print("STEP")
+        print("OLD")
         print(shapes)
+        print("NEW")
         print(new)
         if shapes_cost(new) == shapes_cost(shapes):
             same = same +1
@@ -346,42 +362,38 @@ def hill_climbing(shapes):
     return filter_final_shapes(shapes)
 
 def choice(shapes):
-    print("CHOICE")
-    print(shapes)
+    #print("CHOICE")
+    #print(shapes)
     cpy = shapes[:]#shapes.copy()
-    merge = best_merge(cpy)
+    merge = best_merge(cpy) #just_merge(cpy)
     print("CHOICE MERGE")
     print(merge)
     print(shapes_cost(merge))
-    cpy = shapes[:]
-    split = best_split(cpy)#shapes.copy())
-    print("CHOICE SPLIT")
-    print(split)
-    print(dl(split))
-    print(merge)
-    print(dl(merge))
-    if shapes_cost(merge) > shapes_cost(split):
-        print("SPLIT WIN")
-        return split
-    else:
-        print("MERGE WIN")
-        return merge
+    return merge
+    #cpy = shapes[:]
+    #split = best_split(cpy)#shapes.copy())
+    #print("CHOICE SPLIT")
+    #print(split)
+    #print(dl(split))
+    #print(merge)
+    #print(dl(merge))
+    #if shapes_cost(merge) > shapes_cost(split):
+    #    print("SPLIT WIN")
+    #    return split
+    #else:
+    #   print("MERGE WIN")
+    #    return merge
 
 def filter_final_shapes(shapes):
     final = []
     blocks = []
     sort = sorted(shapes, key=len, reverse=True)
-    print("FILTER FINAL SHAPES")
-    print(sort)
+
     for s in sort:
         if len(final)==0:
             final.append(s)
             for e in s:
-                print(e)
                 blocks.append(e)
-            print("FIRST")
-            print(final)
-            print(blocks)
         else:
             go = True
             for e in s:
@@ -394,7 +406,6 @@ def filter_final_shapes(shapes):
                     blocks.append(e)
     print("FINAL")
     print(final)
-    print(blocks)
     return final
 
 def final_block_check(blocks,e):
@@ -403,39 +414,49 @@ def final_block_check(blocks,e):
             return True
     return False
 
+
 def main():
-    print("MERGE")
-    s = Shape(Block(4, 0, 0, 0, 0), 'xz')
-    s2 = Shape(Block(4, 0, 0, 1, 0), 'xz')
-    s3 = Shape(Block(4, 0, 0, 2, 0), 'xz')
-    s4 = Shape(Block(20, 0, 1, 0, 0), 'xz')
-    s5 = Shape(Block(20, 0, 1, 1, 0), 'xz')
-    s6 = Shape(Block(20, 0, 1, 2, 0), 'xz')
-    s7 = Shape(Block(20, 0, 2, 0, 0), 'xz')
-    s8 = Shape(Block(20, 0, 2, 1, 0), 'xz')
-    s9 = Shape(Block(20, 0, 2, 2, 0), 'xz')
-    ss = Shape(Block(4, 0, 0, 0, 0), 'xy')
-    ss2 = Shape(Block(4, 0, 0, 1, 0), 'xy')
-    ss3 = Shape(Block(4, 0, 0, 2, 0), 'xy')
-    ss4 = Shape(Block(20, 0, 1, 0, 0), 'xy')
-    ss5 = Shape(Block(20, 0, 1, 1, 0), 'xy')
-    ss6 = Shape(Block(20, 0, 1, 2, 0), 'xy')
-    ss7 = Shape(Block(20, 0, 2, 0, 0), 'xy')
-    ss8 = Shape(Block(20, 0, 2, 1, 0), 'xy')
-    ss9 = Shape(Block(20, 0, 2, 2, 0), 'xy')
-    sss = Shape(Block(4, 0, 0, 0, 0), 'zy')
-    sss2 = Shape(Block(4, 0, 0, 1, 0), 'zy')
-    sss3 = Shape(Block(4, 0, 0, 2, 0), 'zy')
-    sss4 = Shape(Block(20, 0, 1, 0, 0), 'zy')
-    sss5 = Shape(Block(20, 0, 1, 1, 0), 'zy')
-    sss6 = Shape(Block(20, 0, 1, 2, 0), 'zy')
-    sss7 = Shape(Block(20, 0, 2, 0, 0), 'zy')
-    sss8 = Shape(Block(20, 0, 2, 1, 0), 'zy')
-    sss9 = Shape(Block(20, 0, 2, 2, 0), 'zy')
-    shapes = [s, s2, s3, s4, s5, s6, s7, s8, s9, ss, ss2, ss3, ss4, ss5, ss6, ss7, ss8, ss9, sss, sss2, sss3, sss4, sss5,
-              sss6, sss7, sss8, sss9]
+    shapes3m3m3 =[]
+    main_shape_append(shapes3m3m3,Block(3, 0, 0, 0, 0))
+    main_shape_append(shapes3m3m3,Block(3, 0, 0, 1, 0))
+    main_shape_append(shapes3m3m3,Block(3, 0, 0, 2, 0))
+    main_shape_append(shapes3m3m3, Block(4, 0, 0, 3, 0))
+    main_shape_append(shapes3m3m3, Block(4, 0, 0, 4, 0))
+    main_shape_append(shapes3m3m3,Block(3, 0, 1, 0, 0))
+    main_shape_append(shapes3m3m3,Block(1, 0, 1, 1, 0))
+    main_shape_append(shapes3m3m3,Block(3, 0, 1, 2, 0))
+    main_shape_append(shapes3m3m3, Block(4, 0, 1, 3, 0))
+    main_shape_append(shapes3m3m3, Block(4, 0, 1, 4, 0))
+    main_shape_append(shapes3m3m3,Block(20, 0, 2, 0, 0))
+    main_shape_append(shapes3m3m3,Block(20, 0, 2, 1, 0))
+    main_shape_append(shapes3m3m3,Block(20, 0, 2, 2, 0))
+    main_shape_append(shapes3m3m3, Block(20, 0, 2, 3, 0))
+    main_shape_append(shapes3m3m3, Block(20, 0, 2, 4, 0))
+    main_shape_append(shapes3m3m3,Block(20, 0, 3, 0, 0))
+    main_shape_append(shapes3m3m3,Block(20, 0, 3, 1, 0))
+    main_shape_append(shapes3m3m3,Block(20, 0, 3, 2, 0))
+    main_shape_append(shapes3m3m3, Block(20, 0, 3, 3, 0))
+    main_shape_append(shapes3m3m3, Block(20, 0, 3, 4, 0))
+    shapesb = []
+    main_shape_append(shapesb,Block(4, 0, 0, 0, 0))
+    main_shape_append(shapesb,Block(4, 0, 0, 1, 0))
+    main_shape_append(shapesb,Block(4, 0, 0, 2, 0))
+    main_shape_append(shapesb,Block(20, 0, 1, 0, 0))
+    main_shape_append(shapesb,Block(4, 0, 1, 1, 0))
+    main_shape_append(shapesb,Block(4, 0, 1, 2, 0))
+    main_shape_append(shapesb,Block(4, 0, 2, 0, 0))
+    main_shape_append(shapesb,Block(4, 0, 2, 1, 0))
+    main_shape_append(shapesb,Block(4, 0, 2, 2, 0))
+    shapes = shapesb
+    print(shapes_cost(shapes))
     print(hill_climbing(shapes))
+    print(shapes_cost(shapes))
     return
+
+def main_shape_append(shapes,b):
+    shapes.append(Shape(b,'xz'))
+    shapes.append(Shape(b, 'xy'))
+    shapes.append(Shape(b, 'zy'))
 
 if __name__ == "__main__":
     main()
