@@ -253,16 +253,19 @@ def find_rect(s):
             #print(str(b.x) + ', ' + str(b.y) + ', ' + str(b.z))
             #print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             if b.rx+len(s) >= 2*len(s)+1 or b.ry+len(s) >= 2*len(s)+1: return []
+            if b.rx+len(s) < 0 or b.ry+len(s) < 0: return []
             test[b.rx+len(s)][b.ry+len(s)] = 1.0
     if s.plane == 'xz':
         for b in s:
             #print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             if b.rx + len(s) >= 2 * len(s) + 1 or b.rz + len(s) >= 2 * len(s) + 1: return []
+            if b.rx + len(s) < 0 or b.rz + len(s) < 0: return []
             test[b.rx+len(s)][b.rz+len(s)] = 1.0
     if s.plane == 'zy':
         for b in s:
             #print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             if b.ry + len(s) >= 2 * len(s) + 1 or b.rz + len(s) >= 2 * len(s) + 1: return []
+            if b.ry + len(s) < 0 or b.rz + len(s) < 0: return []
             test[b.ry+len(s)][b.rz+len(s)] = 1.0
 
     #print("FULL")
@@ -365,7 +368,7 @@ def choice(shapes):
     #print("CHOICE")
     #print(shapes)
     cpy = shapes[:]#shapes.copy()
-    merge = best_merge(cpy) #just_merge(cpy)
+    merge = just_merge(cpy) #best_merge(cpy) 
     print("CHOICE MERGE")
     print(merge)
     print(shapes_cost(merge))
@@ -483,8 +486,8 @@ def main():
     main_shape_append(shapesb,Block(4, 0, 2, 1, 0))
     main_shape_append(shapesb,Block(4, 0, 2, 2, 0))
     shapes = shapesb
-    print(shapes_cost(shapes))
     print(hill_climbing(shapes))
+    print(filter_final_shapes_total(shapes,))
     print(shapes_cost(shapes))
     return
 
