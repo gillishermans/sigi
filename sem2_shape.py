@@ -2,6 +2,7 @@ import numpy as np
 from math import sqrt, tan, sin, cos, pi, ceil, floor, acos, atan, asin, degrees, radians, log, atan2, acos, asin
 import math as math
 from  itertools import combinations
+import random
 
 #A single block class
 class Block:
@@ -246,7 +247,11 @@ def find_rect(s):
     test = np.zeros((2*len(s)+1,2*len(s)+1))
 
     if s.plane == 'xy':
+        z = 999999
         for b in s:
+            if (z==999999): z = b.z
+            else:
+                if (z != b.z): return []
             #print("BLOCK FIND RECT")
             #print(s)
             #print(b)
@@ -256,13 +261,21 @@ def find_rect(s):
             if b.rx+len(s) < 0 or b.ry+len(s) < 0: return []
             test[b.rx+len(s)][b.ry+len(s)] = 1.0
     if s.plane == 'xz':
+        y = 999999
         for b in s:
+            if (y==999999): y = b.y
+            else:
+                if (y != b.y): return []
             #print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             if b.rx + len(s) >= 2 * len(s) + 1 or b.rz + len(s) >= 2 * len(s) + 1: return []
             if b.rx + len(s) < 0 or b.rz + len(s) < 0: return []
             test[b.rx+len(s)][b.rz+len(s)] = 1.0
     if s.plane == 'zy':
+        x = 999999
         for b in s:
+            if (x == 999999): x = b.x
+            else:
+                if(x != b.x): return []
             #print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             if b.ry + len(s) >= 2 * len(s) + 1 or b.rz + len(s) >= 2 * len(s) + 1: return []
             if b.ry + len(s) < 0 or b.rz + len(s) < 0: return []
@@ -321,7 +334,7 @@ def findend(i, j, s, out, index):
         out[index].append(n)
 
 def shapes_cost(shapes):
-    alpha = 1.001
+    alpha = 0.75
     cost = (1+dl(shapes))**alpha
     for s in shapes:
         cost = cost + shape_cost(s)
@@ -368,7 +381,7 @@ def choice(shapes):
     #print("CHOICE")
     #print(shapes)
     cpy = shapes[:]#shapes.copy()
-    merge = just_merge(cpy) #best_merge(cpy) 
+    merge = just_merge(cpy) #best_merge(cpy) #
     print("CHOICE MERGE")
     print(merge)
     print(shapes_cost(merge))
@@ -452,6 +465,45 @@ def final_block_check(blocks,e):
             return True
     return False
 
+#Learn the relations between shapes in a shape set
+def relation_learning(shapes):
+    print("RELATIONS")
+    print(shapes)
+    rel =[]
+    for s1 in shapes:
+        for s2 in shapes:
+            if s1.__ne__(s2):
+                if contact(s1,s2):
+                    rel.append([s1,s2])
+    return rel
+
+#Direct contact between shapes
+def contact(s1,s2):
+    for b1 in s1:
+        for b2 in s2:
+            if distance(b1,b2) == 1:
+                return True
+    return False
+
+def distance(b1,b2):
+    return sqrt(pow((b2.x-b1.x),2)+pow((b2.y-b1.y),2)+pow((b2.z-b1.z),2))
+
+def production(shapes,rel,n=5):
+    print("PRODUCTION")
+    final = [random.choice(shapes)]
+    w = random.choice(final)
+    print(w)
+    while n > 0:
+        rrel = []
+        for r in rel:
+            if r[0] == w:
+                rrel.append(r)
+        if (len(rrel) != 0):
+            r = random.choice(rrel)
+            final.append(r[1])
+            w = r[1]
+        n = n -1
+    return final
 
 def main():
     shapes3m3m3 =[]
@@ -476,19 +528,25 @@ def main():
     main_shape_append(shapes3m3m3, Block(20, 0, 3, 3, 0))
     main_shape_append(shapes3m3m3, Block(20, 0, 3, 4, 0))
     shapesb = []
-    main_shape_append(shapesb,Block(4, 0, 0, 0, 0))
-    main_shape_append(shapesb,Block(4, 0, 0, 1, 0))
-    main_shape_append(shapesb,Block(4, 0, 0, 2, 0))
-    main_shape_append(shapesb,Block(20, 0, 1, 0, 0))
+    main_shape_append(shapesb,Block(20, 0, 0, 0, 0))
+    main_shape_append(shapesb,Block(20, 0, 0, 1, 0))
+    main_shape_append(shapesb,Block(20, 0, 0, 2, 0))
+    main_shape_append(shapesb,Block(4, 0, 1, 0, 0))
     main_shape_append(shapesb,Block(4, 0, 1, 1, 0))
     main_shape_append(shapesb,Block(4, 0, 1, 2, 0))
-    main_shape_append(shapesb,Block(4, 0, 2, 0, 0))
-    main_shape_append(shapesb,Block(4, 0, 2, 1, 0))
-    main_shape_append(shapesb,Block(4, 0, 2, 2, 0))
+    main_shape_append(shapesb,Block(3, 0, 2, 0, 0))
+    main_shape_append(shapesb,Block(3, 0, 2, 1, 0))
+    main_shape_append(shapesb,Block(3, 0, 2, 2, 0))
     shapes = shapesb
-    print(hill_climbing(shapes))
-    print(filter_final_shapes_total(shapes,))
+    shapes = hill_climbing(shapes)
+    print(shapes)
+    shapes = filter_final_shapes(shapes)
+    print(shapes)
     print(shapes_cost(shapes))
+    rel = relation_learning(shapes)
+    print(rel)
+    final = production(shapes,rel)
+    print(final)
     return
 
 def main_shape_append(shapes,b):

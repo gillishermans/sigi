@@ -26,8 +26,15 @@ def perform(level, box, options):
     #print(shapes)
     shapes = shp.hill_climbing(shapes)
     shapes = shp.filter_final_shapes_total(shapes,m)
-    for s in shapes:
-        build_shape(s,level,box)
+    i=0
+    #for s in shapes:
+    #    build_shape(s,level,box,i)
+    #    i = i+1
+    rel = shp.relation_learning(shapes)
+    print(rel)
+    final = shp.production(shapes,rel,20)
+    for s in final:
+        build_shape(s, level, box)
 
 #scan the box for a structure and the probabilities of the blocks used in the structure
 def scan_structure(level,box,options):
@@ -119,7 +126,7 @@ def initial_shapes(m):
 
 #SHAPE BUILDER
 
-def build_shape(s,level,box):
+def build_shape(s,level,box,i=0):
     print("BUILD")
     print(s)
     y = box.miny
@@ -128,7 +135,7 @@ def build_shape(s,level,box):
         #print(b)
         #print(b.id)
         #print(b.dmg)
-        utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10)
+        utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i*6))
 
 def main():
     ms = read_array(0)
