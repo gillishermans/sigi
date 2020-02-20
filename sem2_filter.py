@@ -26,12 +26,15 @@ def perform(level, box, options):
     #print(shapes)
     shapes = shp.hill_climbing(shapes)
     shapes = shp.filter_final_shapes_total(shapes,m)
-    i=0
+    #i=0
     #for s in shapes:
-    #    build_shape(s,level,box,i)
-    #    i = i+1
+        #build_shape(s,level,box,i)
+        #print(s.plane)
+        #for s2 in shapes:
+        #    print(shp.is_duplicate_shape(s,s2))
+        #i = i+1
     rel = shp.relation_learning(shapes)
-    print(rel)
+    #print(rel)
     final = shp.production(shapes,rel,20)
     for s in final:
         build_shape(s, level, box)

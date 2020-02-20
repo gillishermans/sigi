@@ -2,6 +2,7 @@ import numpy as np
 from math import sqrt, tan, sin, cos, pi, ceil, floor, acos, atan, asin, degrees, radians, log, atan2, acos, asin
 import math as math
 from  itertools import combinations
+import itertools
 import random
 
 #A single block class
@@ -22,6 +23,7 @@ class Block:
         return str(self)
 
     def __str__(self):
+        #return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
         return str(float(self.id + float(self.dmg) / 100))
 
     def set_relative(self,f):
@@ -334,7 +336,7 @@ def findend(i, j, s, out, index):
         out[index].append(n)
 
 def shapes_cost(shapes):
-    alpha = 0.75
+    alpha = 1.001
     cost = (1+dl(shapes))**alpha
     for s in shapes:
         cost = cost + shape_cost(s)
@@ -475,6 +477,33 @@ def relation_learning(shapes):
             if s1.__ne__(s2):
                 if contact(s1,s2):
                     rel.append([s1,s2])
+    #duplicates
+    print("DUPE")
+    d = []
+    for s1 in shapes:
+        for s2 in shapes:
+            if (s1.__ne__(s2) and is_duplicate_shape(s1, s2)):
+                for r in rel:
+                    if r[0].__eq__(s1):
+                        d.append([s2,r[1]])
+                    if r[0].__eq__(s2):
+                        d.append([s1,r[1]])
+                    if r[1].__eq__(s1):
+                        d.append([r[0], s2])
+                    if r[1].__eq__(s2):
+                        d.append([r[0], s1])
+            print(rel)
+    for i in d:
+        rel.append(i)
+    print("ADDED RULES")
+    print(rel)
+    new_rel = []
+    for elem in rel:
+        if elem not in new_rel:
+            new_rel.append(elem)
+    rel = new_rel
+    print("REMOVE DUPE")
+    print(rel)
     return rel
 
 #Direct contact between shapes
@@ -504,6 +533,45 @@ def production(shapes,rel,n=5):
             w = r[1]
         n = n -1
     return final
+
+#Check if the shape is the same except for location and orientation
+def is_duplicate_shape(s1,s2):
+    if (len(s1) != len(s2)):
+        #print("same")
+        return False
+    if (s1.plane == s2.plane):
+        m = len(s1)
+        for b1 in s1:
+            for b2 in s2:
+                if (b1.id == b2.id and b1.dmg == b2.dmg and b1.rx == b2.rx and b1.ry == b2.ry and b1.rz == b2.rz):
+                    m = m-1
+                    break
+        if (m == 0):
+            #print("same plane " + s2.plane)
+            return True
+    else:
+        m = len(s1)
+        for b1 in s1:
+            for b2 in s2:
+                if (b1.id == b2.id and b1.dmg == b2.dmg):
+                    if ((s1.plane == 'zy' and s2.plane == 'xy') or (s1.plane == 'xy' and s2.plane == 'zy')):
+                        if (b1.rx == b2.rz and b1.ry == b2.ry and b1.rz == b2.rx):
+                            m = m - 1
+                            break
+                    if ((s1.plane == 'xy' and s2.plane == 'xz') or (s1.plane == 'xz' and s2.plane == 'xy')):
+                        if  (b1.rx == b2.rx and b1.ry == b2.rz and b1.rz == b2.ry):
+                            m = m - 1
+                            break
+                    if ((s1.plane == 'xz' and s2.plane == 'zy') or (s1.plane == 'zy' and s2.plane == 'xz')):
+                        if (b1.rx == b2.ry and b1.ry == b2.rx and b1.rz == b2.rz):
+                            m = m - 1
+                            break
+        if (m == 0):
+            #print(s2.plane)
+            return True
+    #print(s2.plane)
+    return False
+
 
 def main():
     shapes3m3m3 =[]
