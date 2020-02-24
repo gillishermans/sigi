@@ -23,7 +23,8 @@ class Block:
         return str(self)
 
     def __str__(self):
-        #return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
+        return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
+        return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
         return str(float(self.id + float(self.dmg) / 100))
 
     def set_relative(self,f):
@@ -89,6 +90,23 @@ class Shape:
     def remove(self,s):
         self.list.remove(s)
 
+    def set_relative(self,f):
+        for b in self.list:
+            b.set_relative(f)
+
+class Relation:
+    def __init__(self,s1,s2):
+        self.s1 = s1
+        self.s2 = s2
+        #self.pl = self.plane(s1.plane,s2.plane)
+
+    #def plane(self,p1,p2):
+    #    if (p1==p2):
+    #        return 0
+    #    else:
+
+
+
 def add_block(nb,prob,blockid,dmg):
     for b in prob:
         if b[0] == blockid and b[3] == dmg:
@@ -99,23 +117,25 @@ def add_block(nb,prob,blockid,dmg):
 
 def just_merge(shapes):
     for s1 in shapes:
+        #if (len(s1) > 9): continue
         for s2 in shapes:
+            #if (len(s2) > 9): continue
             if s1.__ne__(s2) and s1.plane == s2.plane:
-                #print("JUST")
-                #print(s1)
-                #print(s2)
-                s = merge_shape(s1,s2)
-                #print(s)
-                if not is_rect(s):
-                    continue
-                #print("RECT")
-                new_shapes = [x for x in shapes if x!=s1 and x!=s2]
-                new_shapes.append(s)
-                #print(new_shapes)
-                saved = shapes_cost(shapes) - shapes_cost(new_shapes)
-                #print(saved)
-                if saved >= 0:
-                    return new_shapes
+                        #print("JUST")
+                        #print(s1)
+                        #print(s2)
+                        s = merge_shape(s1,s2)
+                        #print(s)
+                        if not is_rect(s):
+                            continue
+                        #print("RECT")
+                        new_shapes = [x for x in shapes if x!=s1 and x!=s2]
+                        new_shapes.append(s)
+                        #print(new_shapes)
+                        saved = shapes_cost(shapes) - shapes_cost(new_shapes)
+                        #print(saved)
+                        if saved >= 0:
+                            return new_shapes
     return shapes
 
 #Returns the best possible merge for a set of shapes
@@ -123,7 +143,9 @@ def best_merge(shapes):
     saved_cost = 0
     best = []
     for s1 in shapes:
+        #if(len(s1) > 9): continue
         for s2 in shapes:
+            #if (len(s2) > 9): continue
             #print("BEST  MERGE")
             #print(shapes)
             #print(s1)
@@ -335,8 +357,15 @@ def findend(i, j, s, out, index):
     else:
         out[index].append(n)
 
+def shapes_cost2(shapes):
+    alpha = 1.5
+    cost = (1+dl(shapes))*alpha
+    for s in shapes:
+        cost = cost + shape_cost(s)
+    return cost
+
 def shapes_cost(shapes):
-    alpha = 1.001
+    alpha = 1.25
     cost = (1+dl(shapes))**alpha
     for s in shapes:
         cost = cost + shape_cost(s)
@@ -529,10 +558,19 @@ def production(shapes,rel,n=5):
                 rrel.append(r)
         if (len(rrel) != 0):
             r = random.choice(rrel)
-            final.append(r[1])
-            w = r[1]
+            #EDIT POSITION OF R[1]
+            shape = r[1].copy()
+            shape.set_relative(w.f)
+            final.append(shape)
+            w = shape
         n = n -1
     return final
+
+#def edit_pos_relation(s1,s2):
+#   s2 = s2.copy()
+#    for b in s2:
+
+
 
 #Check if the shape is the same except for location and orientation
 def is_duplicate_shape(s1,s2):
@@ -541,6 +579,7 @@ def is_duplicate_shape(s1,s2):
         return False
     if (s1.plane == s2.plane):
         m = len(s1)
+        #FLIP S2 ON FOUR SIDES TO CHECK IF EQUAL
         for b1 in s1:
             for b2 in s2:
                 if (b1.id == b2.id and b1.dmg == b2.dmg and b1.rx == b2.rx and b1.ry == b2.ry and b1.rz == b2.rz):
@@ -551,6 +590,7 @@ def is_duplicate_shape(s1,s2):
             return True
     else:
         m = len(s1)
+        #FLIP S2 ON FOUR SIDES TO CHECK IF EQUAL
         for b1 in s1:
             for b2 in s2:
                 if (b1.id == b2.id and b1.dmg == b2.dmg):
@@ -571,6 +611,64 @@ def is_duplicate_shape(s1,s2):
             return True
     #print(s2.plane)
     return False
+
+#def flip(shape):
+
+def to_xz(s):
+    if(s.plane == 'xz'): return s.copy()
+    if(s.plane == 'xy'):
+        sd = s.copy()
+        for b in sd:
+            temp = b.y
+            b.y = b.z
+            b.z = temp
+        sd.plane = 'xz'
+        return sd
+    if (s.plane == 'zy'):
+        sd = s.copy()
+        for b in sd:
+            temp = b.y
+            b.y = b.x
+            b.x = temp
+        sd.plane = 'xz'
+        return s
+def to_xy(s):
+    if (s.plane == 'xy'): return s.copy()
+    if(s.plane == 'xz'):
+        sd = s.copy()
+        for b in sd:
+            temp = b.y
+            b.y = b.z
+            b.z = temp
+        sd.plane = 'xy'
+        return sd
+    if (s.plane == 'zy'):
+        sd = s.copy()
+        for b in sd:
+            temp = b.z
+            b.z = b.x
+            b.x = temp
+        sd.plane = 'xy'
+        return sd
+def to_zy(s):
+    if (s.plane == 'zy'): return s.copy()
+    if(s.plane == 'xz'):
+        sd = s.copy()
+        for b in sd:
+            temp = b.y
+            b.y = b.x
+            b.x = temp
+        sd.plane = 'zy'
+        return sd
+    if(s.plane == 'xy'):
+        sd = s.copy()
+        for b in sd:
+            temp = b.z
+            b.z = b.x
+            b.x = temp
+        sd.plane = 'zy'
+        return sd
+
 
 
 def main():
@@ -599,12 +697,11 @@ def main():
     main_shape_append(shapesb,Block(20, 0, 0, 0, 0))
     main_shape_append(shapesb,Block(20, 0, 0, 1, 0))
     main_shape_append(shapesb,Block(20, 0, 0, 2, 0))
+    main_shape_append(shapesb,Block(20, 0, 0, 3, 0))
     main_shape_append(shapesb,Block(4, 0, 1, 0, 0))
     main_shape_append(shapesb,Block(4, 0, 1, 1, 0))
     main_shape_append(shapesb,Block(4, 0, 1, 2, 0))
-    main_shape_append(shapesb,Block(3, 0, 2, 0, 0))
-    main_shape_append(shapesb,Block(3, 0, 2, 1, 0))
-    main_shape_append(shapesb,Block(3, 0, 2, 2, 0))
+    main_shape_append(shapesb,Block(4, 0, 1, 3, 0))
     shapes = shapesb
     shapes = hill_climbing(shapes)
     print(shapes)

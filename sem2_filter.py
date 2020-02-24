@@ -26,18 +26,19 @@ def perform(level, box, options):
     #print(shapes)
     shapes = shp.hill_climbing(shapes)
     shapes = shp.filter_final_shapes_total(shapes,m)
-    #i=0
-    #for s in shapes:
-        #build_shape(s,level,box,i)
-        #print(s.plane)
+    i=0
+    for s in shapes:
+        build_shape(s,level,box,i)
+        print(s.plane)
         #for s2 in shapes:
         #    print(shp.is_duplicate_shape(s,s2))
-        #i = i+1
-    rel = shp.relation_learning(shapes)
+        build_shape(shp.to_zy(s),level,box,i+1)
+        i = i+2
+    #rel = shp.relation_learning(shapes)
     #print(rel)
-    final = shp.production(shapes,rel,20)
-    for s in final:
-        build_shape(s, level, box)
+    #final = shp.production(shapes,rel,20)
+    #for s in final:
+    #    build_shape(s, level, box)
 
 #scan the box for a structure and the probabilities of the blocks used in the structure
 def scan_structure(level,box,options):
@@ -138,6 +139,7 @@ def build_shape(s,level,box,i=0):
         #print(b)
         #print(b.id)
         #print(b.dmg)
+        #utilityFunctions.setBlock(level, (b.id, b.dmg), box.maxx + b.rx, box.maxy + b.ry, box.minz + b.rz + 10 + (i * 6))
         utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i*6))
 
 def main():
