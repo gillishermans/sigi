@@ -23,8 +23,8 @@ class Block:
         return str(self)
 
     def __str__(self):
-        return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
-        return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
+        #return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
+        #return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
         return str(float(self.id + float(self.dmg) / 100))
 
     def set_relative(self,f):
@@ -94,16 +94,13 @@ class Shape:
         for b in self.list:
             b.set_relative(f)
 
+
 class Relation:
-    def __init__(self,s1,s2):
+    def __init__(self,s1,s2,planes):
         self.s1 = s1
         self.s2 = s2
         #self.pl = self.plane(s1.plane,s2.plane)
 
-    #def plane(self,p1,p2):
-    #    if (p1==p2):
-    #        return 0
-    #    else:
 
 
 
@@ -497,7 +494,7 @@ def final_block_check(blocks,e):
     return False
 
 #Learn the relations between shapes in a shape set
-def relation_learning(shapes):
+def relation_learning2(shapes):
     print("RELATIONS")
     print(shapes)
     rel =[]
@@ -535,6 +532,56 @@ def relation_learning(shapes):
     print(rel)
     return rel
 
+#Learn the relations between shapes in a shape set
+def relation_learning(shapes):
+    print("FIND RELATIONS FOR")
+    print(shapes)
+    shapesc = []
+    for s in shapes:
+        shapesc.append(s.copy())
+    shapes = shapesc
+    shape_dupe_list = []
+    for s1 in shapes:
+        if(in_shape_dupe_list(s1,shape_dupe_list)):
+            continue
+        s = []
+        s.append(s1)
+        for s2 in shapes:
+            if (in_shape_dupe_list(s2, shape_dupe_list)):
+                continue
+            if (s1.__ne__(s2) and is_duplicate_shape(s1, s2)):
+                s.append(s2)
+        shape_dupe_list.append(s)
+    print("DUPE LIST")
+    print(shape_dupe_list)
+
+    rel =[]
+    for sl1 in shape_dupe_list:
+        for sl2 in shape_dupe_list:
+            for s1 in sl1:
+                for s2 in sl2:
+                    if s1.__ne__(s2):
+                        if contact(s1,s2):
+                            rel.append([sl1,sl2])
+
+    print("ADDED RULES")
+    print(rel)
+    new_rel = []
+    for elem in rel:
+        if elem not in new_rel:
+            new_rel.append(elem)
+    rel = new_rel
+    print("REMOVE DUPE")
+    print(rel)
+    return rel
+
+def in_shape_dupe_list(shape,shape_dupe_list):
+    for sl in shape_dupe_list:
+        for s in sl:
+            if(shape.__eq__(s)):
+                return True
+    return False
+
 #Direct contact between shapes
 def contact(s1,s2):
     for b1 in s1:
@@ -546,7 +593,7 @@ def contact(s1,s2):
 def distance(b1,b2):
     return sqrt(pow((b2.x-b1.x),2)+pow((b2.y-b1.y),2)+pow((b2.z-b1.z),2))
 
-def production(shapes,rel,n=5):
+def production2(shapes,rel,n=5):
     print("PRODUCTION")
     final = [random.choice(shapes)]
     w = random.choice(final)
@@ -560,6 +607,35 @@ def production(shapes,rel,n=5):
             r = random.choice(rrel)
             #EDIT POSITION OF R[1]
             shape = r[1].copy()
+            shape.set_relative(w.f)
+            final.append(shape)
+            w = shape
+        n = n -1
+    return final
+
+def production(shapes,rel,n=5):
+    print("PRODUCTION")
+    final = [random.choice(shapes)]
+    w = random.choice(final)
+    print(w)
+    while n > 0:
+        rrel = []
+        for r in rel:
+            for s in r[0]:
+                if s.__eq__(w):
+                    rrel.append(r)
+        if (len(rrel) != 0):
+            print("R")
+            print(rrel)
+            r = random.choice(rrel)
+            print(r)
+            r = r[1]
+            print(r)
+            r = random.choice(r)
+            print(r)
+
+            #EDIT POSITION OF R[1]
+            shape = r.copy()
             shape.set_relative(w.f)
             final.append(shape)
             w = shape
