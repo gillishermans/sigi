@@ -23,7 +23,7 @@ class Block:
         return str(self)
 
     def __str__(self):
-        #return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
+        return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
         #return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
         return str(float(self.id + float(self.dmg) / 100))
 
@@ -46,6 +46,12 @@ class Shape:
 
     def __eq__(self, other):
         if self.plane == other.plane and self.f == other.f and self.list == other.list:
+            return True
+        else:
+            return False
+
+    def eq_no_plane(self,other):
+        if self.f == other.f and self.list == other.list:
             return True
         else:
             return False
@@ -395,10 +401,10 @@ def hill_climbing(shapes):
     same = 0
     while(same < 2 ):
         new = choice(shapes)
-        print("OLD")
-        print(shapes)
-        print("NEW")
-        print(new)
+        #print("OLD")
+        #print(shapes)
+        #print("NEW")
+        #print(new)
         if shapes_cost(new) == shapes_cost(shapes):
             same = same +1
         shapes = new
@@ -410,9 +416,9 @@ def choice(shapes):
     #print(shapes)
     cpy = shapes[:]#shapes.copy()
     merge = just_merge(cpy) #best_merge(cpy) #
-    print("CHOICE MERGE")
-    print(merge)
-    print(shapes_cost(merge))
+    #print("CHOICE MERGE")
+    #print(merge)
+    #print(shapes_cost(merge))
     return merge
     #cpy = shapes[:]
     #split = best_split(cpy)#shapes.copy())
@@ -615,28 +621,26 @@ def production2(shapes,rel,n=5):
 
 def production(shapes,rel,n=5):
     print("PRODUCTION")
-    final = [random.choice(shapes)]
-    w = random.choice(final)
-    print(w)
+    #final = [random.choice(shapes)]
+    w = random.choice(shapes)
+    #w = to_xy(w)
+    final = [w]
     while n > 0:
         rrel = []
         for r in rel:
             for s in r[0]:
-                if s.__eq__(w):
+                if s.eq_no_plane(w):
                     rrel.append(r)
         if (len(rrel) != 0):
-            print("R")
-            print(rrel)
             r = random.choice(rrel)
-            print(r)
             r = r[1]
-            print(r)
             r = random.choice(r)
-            print(r)
-
             #EDIT POSITION OF R[1]
             shape = r.copy()
+            print("S")
+            print(shape)
             shape.set_relative(w.f)
+            print(shape)
             final.append(shape)
             w = shape
         n = n -1

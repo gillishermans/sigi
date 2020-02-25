@@ -36,7 +36,7 @@ def perform(level, box, options):
         #i = i+2
     rel = shp.relation_learning(shapes)
     print(rel)
-    final = shp.production(shapes,rel,20)
+    final = shp.production(shapes,rel,2)
     for s in final:
         build_shape(s, level, box)
 
