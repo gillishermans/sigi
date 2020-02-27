@@ -35,10 +35,27 @@ def perform(level, box, options):
         #build_shape(shp.to_zy(s),level,box,i+1)
         #i = i+2
     rel = shp.relation_learning(shapes)
-    print(rel)
-    final = shp.production(shapes,rel,2)
+    print("REL")
+    for r in rel:
+        print(r)
+    i=0
+    final = shp.production(shapes,rel,5)
     for s in final:
-        build_shape(s, level, box)
+        build_shape(s, level, box,0)
+        build_shape(s, level, box,1+i)
+        i=i+1
+    i = 0
+    final = shp.production(shapes, rel, 5)
+    for s in final:
+        build_shape(s, level, box, 15)
+        build_shape(s, level, box,16+i)
+        i = i + 1
+    i = 0
+    final = shp.production(shapes, rel, 5)
+    for s in final:
+        build_shape(s, level, box,25)
+        build_shape(s, level, box,26+i)
+        i = i + 1
 
 #scan the box for a structure and the probabilities of the blocks used in the structure
 def scan_structure(level,box,options):

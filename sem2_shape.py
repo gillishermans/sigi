@@ -23,8 +23,8 @@ class Block:
         return str(self)
 
     def __str__(self):
-        return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
-        #return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
+        #return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
+        return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
         return str(float(self.id + float(self.dmg) / 100))
 
     def set_relative(self,f):
@@ -38,6 +38,7 @@ class Shape:
         self.list = []
         self.plane = plane
         self.f = [b.x,b.y,b.z]
+        self.ogf = [b.x,b.y,b.z]
         self.append(b)
 
     def __iter__(self):
@@ -56,6 +57,12 @@ class Shape:
         else:
             return False
 
+    def eq_production(self,other):
+        if self.list == other.list:
+            return True
+        else:
+            return False
+
     def __ne__(self, other):
         return not self.__eq__(other)
 
@@ -63,7 +70,7 @@ class Shape:
         return str(self)
 
     def __str__(self):
-        return str(self.list)
+        return str(self.plane) + " " +  str(self.list)
 
     def __len__(self):
         return len(self.list)
@@ -86,17 +93,19 @@ class Shape:
         #b.set_relative(self.f)
         self.list.append(bn)
 
-    def get_relative(self,item):
-        b = item
-        #print("RELATIVE")
-        #print('(' + str(self.f[0]) + ', ' + str(self.f[1]) + ', ' + str(self.f[2]) + ')')
-        #print('(' + str(b.x) + ', ' + str(b.y) + ', ' + str(b.z) + ')')
-        return Block(b.id, b.dmg, b.x - self.f[0], b.y - self.f[1], b.z - self.f[2])
+    #def get_relative(self,item):
+    #    b = item
+    #    #print("RELATIVE")
+    #    #print('(' + str(self.f[0]) + ', ' + str(self.f[1]) + ', ' + str(self.f[2]) + ')')
+    #    #print('(' + str(b.x) + ', ' + str(b.y) + ', ' + str(b.z) + ')')
+    #    return Block(b.id, b.dmg, b.x - self.f[0], b.y - self.f[1], b.z - self.f[2])
 
     def remove(self,s):
         self.list.remove(s)
 
     def set_relative(self,f):
+        print(f)
+        self.f = f
         for b in self.list:
             b.set_relative(f)
 
@@ -568,7 +577,7 @@ def relation_learning(shapes):
                 for s2 in sl2:
                     if s1.__ne__(s2):
                         if contact(s1,s2):
-                            rel.append([sl1,sl2])
+                            rel.append([sl1,sl2,s1])
 
     print("ADDED RULES")
     print(rel)
@@ -623,32 +632,72 @@ def production(shapes,rel,n=5):
     print("PRODUCTION")
     #final = [random.choice(shapes)]
     w = random.choice(shapes)
-    #w = to_xy(w)
+    print(w)
+    #c = False
+    #wrel = w.f
+    #if(w.plane == 'xy'):
+    #    w = to_zy(w)
+    #    c = True
+    #elif(w.plane == 'zy'):
+    #    w = to_xy(w)
+    #    c = True
+    #elif(w.plane == 'xz'):
+    #    print("TOP")
     final = [w]
     while n > 0:
         rrel = []
         for r in rel:
             for s in r[0]:
-                if s.eq_no_plane(w):
+                #HERE
+                if s.eq_production(w):
                     rrel.append(r)
         if (len(rrel) != 0):
             r = random.choice(rrel)
+            og = r[2]
             r = r[1]
             r = random.choice(r)
             #EDIT POSITION OF R[1]
-            shape = r.copy()
             print("S")
+            print(r)
+            shape = r.copy()
             print(shape)
-            shape.set_relative(w.f)
+            #if(c):
+            #    if (shape.plane == 'xy'):
+            #        shape = to_zy(shape)
+            #        shape.set_relative(w.f)
+            #    elif (shape.plane == 'zy'):
+            #        shape = to_xy(shape)
+            #        shape.set_relative(w.f)
+            #    elif (shape.plane == 'xz'):
+            #        #shape.set_relative(wrel)
+            #        print("Top")
+
+            #p = [og.f[0]-w.f[0],og.f[1]-w.f[1],og.f[2]-w.f[2]]
+            #p = [w.f[0] - og.f[0], w.f[1] - og.f[1], w.f[2] - og.f[2]]
+            shape.set_relative(edit_pos_relation(w,og))
             print(shape)
             final.append(shape)
             w = shape
         n = n -1
     return final
 
-#def edit_pos_relation(s1,s2):
-#   s2 = s2.copy()
-#    for b in s2:
+def edit_pos_relation(w,og):
+    p = [0,0,0]
+    if(w.ogf[0] !=og.f[0]):
+        p[0] = (w.ogf[0] - og.f[0])
+    else:
+        p[0] = (w.f[0])
+    if(w.ogf[1] !=og.f[1]):
+        p[1] = (w.ogf[1] - og.f[1])
+    else:
+        p[1] = (w.f[1])
+    if(w.ogf[2] !=og.f[2]):
+        p[2] = (w.ogf[2] - og.f[2])
+    else:
+        p[2] = (w.f[2])
+    print("PPPP")
+    print(p)
+    return p
 
 
 
@@ -694,6 +743,7 @@ def is_duplicate_shape(s1,s2):
 
 #def flip(shape):
 
+#EDIT RELATIVE HERE?
 def to_xz(s):
     if(s.plane == 'xz'): return s.copy()
     if(s.plane == 'xy'):
@@ -703,6 +753,7 @@ def to_xz(s):
             b.y = b.z
             b.z = temp
         sd.plane = 'xz'
+        sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return sd
     if (s.plane == 'zy'):
         sd = s.copy()
@@ -711,6 +762,7 @@ def to_xz(s):
             b.y = b.x
             b.x = temp
         sd.plane = 'xz'
+        sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return s
 def to_xy(s):
     if (s.plane == 'xy'): return s.copy()
@@ -721,6 +773,7 @@ def to_xy(s):
             b.y = b.z
             b.z = temp
         sd.plane = 'xy'
+        sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return sd
     if (s.plane == 'zy'):
         sd = s.copy()
@@ -729,6 +782,7 @@ def to_xy(s):
             b.z = b.x
             b.x = temp
         sd.plane = 'xy'
+        sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return sd
 def to_zy(s):
     if (s.plane == 'zy'): return s.copy()
@@ -739,6 +793,7 @@ def to_zy(s):
             b.y = b.x
             b.x = temp
         sd.plane = 'zy'
+        sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return sd
     if(s.plane == 'xy'):
         sd = s.copy()
@@ -747,6 +802,7 @@ def to_zy(s):
             b.z = b.x
             b.x = temp
         sd.plane = 'zy'
+        sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return sd
 
 
