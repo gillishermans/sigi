@@ -39,23 +39,23 @@ def perform(level, box, options):
     for r in rel:
         print(r)
     i=0
-    final = shp.production(shp.copy_shapes(shapes),rel,5)
+    final = shp.production(shp.copy_shapes(shapes),rel,50)
     for s in final:
         build_shape(s, level, box,0)
-        build_shape(s, level, box,1+i)
+        build_shape(s, level, box,5+i)
         i=i+1
     i = 0
-    final = shp.production(shp.copy_shapes(shapes), rel, 5)
-    for s in final:
-        build_shape(s, level, box, 15)
-        build_shape(s, level, box,16+i)
-        i = i + 1
-    i = 0
-    final = shp.production(shp.copy_shapes(shapes), rel, 5)
-    for s in final:
-        build_shape(s, level, box,25)
-        build_shape(s, level, box,26+i)
-        i = i + 1
+    #final = shp.production(shp.copy_shapes(shapes), rel, 15)
+    #for s in final:
+    #    build_shape(s, level, box, 20)
+    #    build_shape(s, level, box,25+i)
+    #    i = i + 1
+    #i = 0
+    #final = shp.production(shp.copy_shapes(shapes), rel, 25)
+    #for s in final:
+    #    build_shape(s, level, box,40)
+    #    build_shape(s, level, box,45+i)
+    #    i = i + 1
 
 #scan the box for a structure and the probabilities of the blocks used in the structure
 def scan_structure(level,box,options):
