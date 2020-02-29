@@ -734,6 +734,12 @@ def edit_pos_relation(w,og,shape):
         shape.edit_pos(p)
     else:
         print("DIFFERENT PLANE!")
+        if(og.plane == 'xy'):
+            shape = to_xy(shape)
+        if(og.plane == 'xz'):
+            shape = to_xz(shape)
+        if(og.plane =='zy'):
+            shape = to_zy(shape)
 
 #Check if the shape is the same except for location and orientation
 def is_duplicate_shape(s1,s2):
