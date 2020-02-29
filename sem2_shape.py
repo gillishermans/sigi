@@ -32,6 +32,13 @@ class Block:
         self.ry = self.y-f[1]
         self.rz = self.z-f[2]
 
+    def copy(self):
+        b = Block(self.id,self.dmg,self.x,self.y,self.z)
+        b.rx = self.rx
+        b.ry = self.ry
+        b.rz = self.rz
+        return b
+
 #A shape class consisting of a plane of blocks
 class Shape:
     def __init__(self,b,plane):
@@ -40,6 +47,7 @@ class Shape:
         self.f = [b.x,b.y,b.z]
         self.ogf = [b.x,b.y,b.z]
         self.append(b)
+        self.tag = self.__str__()
 
     def __iter__(self):
         for b in self.list:
@@ -58,7 +66,7 @@ class Shape:
             return False
 
     def eq_production(self,other):
-        if self.list == other.list:
+        if self.tag == other.tag:
             return True
         else:
             return False
@@ -80,7 +88,12 @@ class Shape:
 
     def copy(self):
         s = Shape(self.list[0], self.plane) #self.f
-        s.list = self.list[:]
+        c = []
+        for b in self.list:
+            c.append(b.copy())
+        #s.list = self.list[:]
+        s.list = c
+        s.tag = self.tag
         return s
 
     def extend(self,s):
@@ -104,10 +117,20 @@ class Shape:
         self.list.remove(s)
 
     def set_relative(self,f):
+        print("SET_REL")
+        print(self.f)
         print(f)
         self.f = f
         for b in self.list:
             b.set_relative(f)
+
+    def edit_pos(self,p):
+        self.f = [self.f[0]-p[0],self.f[1]-p[1],self.f[2]-p[2]]
+        for b in self.list:
+            b.x = b.x - p[0]
+            b.y = b.y - p[1]
+            b.z = b.z - p[2]
+            b.set_relative(self.f)
 
 
 class Relation:
@@ -116,7 +139,11 @@ class Relation:
         self.s2 = s2
         #self.pl = self.plane(s1.plane,s2.plane)
 
-
+def copy_shapes(shapes):
+    shapesc = []
+    for s in shapes:
+        shapesc.append(s.copy())
+    return shapesc
 
 
 def add_block(nb,prob,blockid,dmg):
@@ -551,17 +578,14 @@ def relation_learning2(shapes):
 def relation_learning(shapes):
     print("FIND RELATIONS FOR")
     print(shapes)
-    shapesc = []
-    for s in shapes:
-        shapesc.append(s.copy())
-    shapes = shapesc
+    shapesc = copy_shapes(shapes)
     shape_dupe_list = []
-    for s1 in shapes:
+    for s1 in shapesc:
         if(in_shape_dupe_list(s1,shape_dupe_list)):
             continue
         s = []
         s.append(s1)
-        for s2 in shapes:
+        for s2 in shapesc:
             if (in_shape_dupe_list(s2, shape_dupe_list)):
                 continue
             if (s1.__ne__(s2) and is_duplicate_shape(s1, s2)):
@@ -570,14 +594,17 @@ def relation_learning(shapes):
     print("DUPE LIST")
     print(shape_dupe_list)
 
+    print("RELATIONS")
     rel =[]
+    shapesc = copy_shapes(shapes)
     for sl1 in shape_dupe_list:
-        for sl2 in shape_dupe_list:
+        #for sl2 in shape_dupe_list:
             for s1 in sl1:
-                for s2 in sl2:
+                for s2 in shapesc:#sl2:
                     if s1.__ne__(s2):
                         if contact(s1,s2):
-                            rel.append([sl1,sl2,s1])
+                            rel.append([sl1,s2,s1])
+                            print([sl1,s2,s1])
 
     print("ADDED RULES")
     print(rel)
@@ -655,10 +682,9 @@ def production(shapes,rel,n=5):
             r = random.choice(rrel)
             og = r[2]
             r = r[1]
-            r = random.choice(r)
+            #r = random.choice(r)
             #EDIT POSITION OF R[1]
             print("S")
-            print(r)
             shape = r.copy()
             print(shape)
             #if(c):
@@ -674,7 +700,9 @@ def production(shapes,rel,n=5):
 
             #p = [og.f[0]-w.f[0],og.f[1]-w.f[1],og.f[2]-w.f[2]]
             #p = [w.f[0] - og.f[0], w.f[1] - og.f[1], w.f[2] - og.f[2]]
-            shape.set_relative(edit_pos_relation(w,og))
+            #shape.set_relative(edit_pos_relation(w,og))
+            #shape.set_relative(w.f)
+            edit_pos_relation(w,og,shape)
             print(shape)
             final.append(shape)
             w = shape
@@ -683,23 +711,29 @@ def production(shapes,rel,n=5):
 
 def edit_pos_relation(w,og):
     p = [0,0,0]
-    if(w.ogf[0] !=og.f[0]):
-        p[0] = (w.ogf[0] - og.f[0])
+    if(w.plane == 'zy' and w.ogf[0] !=og.f[0]):#if(w.ogf[0] !=og.f[0]):
+        p[0] = (w.f[0] - og.f[0])
     else:
         p[0] = (w.f[0])
-    if(w.ogf[1] !=og.f[1]):
-        p[1] = (w.ogf[1] - og.f[1])
+    if(w.plane == 'xz' and w.ogf[1] !=og.f[1]):#if(w.ogf[1] !=og.f[1]):
+        p[1] = (w.f[1] - og.f[1])
     else:
         p[1] = (w.f[1])
-    if(w.ogf[2] !=og.f[2]):
-        p[2] = (w.ogf[2] - og.f[2])
+    if(w.plane == 'xy' and w.ogf[2] !=og.f[2]):#if(w.ogf[2] !=og.f[2]):
+        p[2] = (w.f[2] - og.f[2])
     else:
         p[2] = (w.f[2])
-    print("PPPP")
-    print(p)
     return p
 
-
+def edit_pos_relation(w,og,shape):
+    p = [0,0,0]
+    if(w.plane == og.plane):
+        p[0] =  og.f[0] - w.f[0]
+        p[1] =  og.f[1] - w.f[1]
+        p[2] = og.f[2] - w.f[2]
+        shape.edit_pos(p)
+    else:
+        print("DIFFERENT PLANE!")
 
 #Check if the shape is the same except for location and orientation
 def is_duplicate_shape(s1,s2):
@@ -838,16 +872,33 @@ def main():
     main_shape_append(shapesb,Block(4, 0, 1, 1, 0))
     main_shape_append(shapesb,Block(4, 0, 1, 2, 0))
     main_shape_append(shapesb,Block(4, 0, 1, 3, 0))
-    shapes = shapesb
-    shapes = hill_climbing(shapes)
+
+    a = Shape(Block(98,0,0,0,0),'xy')
+    a.append(Block(98,0,1,0,0))
+    a.append(Block(98,0,0,1,0))
+    a.append(Block(98,0,1,1,0))
+    b = Shape(Block(5,0,2,0,0),'xy')
+    b.append(Block(5,0,3,0,0))
+    c = Shape(Block(98,0,0,1,0),'zy')
+    c.append(Block(98,0,1,1,0))
+    c.append(Block(20,0,0,1,1))
+    c.append(Block(20, 0, 1, 1, 1))
+    c.append(Block(98,0,0,1,2))
+    c.append(Block(98, 0, 1, 1, 2))
+    d = Shape(Block(98,0,0,0,2),'xy')
+    d.append(Block(98,0,1,0,2))
+    d.append(Block(98,0,0,1,2))
+    d.append(Block(98,0,1,1,2))
+    shapes = [a,b,c,d]
     print(shapes)
-    shapes = filter_final_shapes(shapes)
-    print(shapes)
-    print(shapes_cost(shapes))
-    rel = relation_learning(shapes)
-    print(rel)
-    final = production(shapes,rel)
-    print(final)
+    rel = relation_learning(copy_shapes(shapes))
+    print("FINAL RELATIONS")
+    for r in rel:
+        print(r)
+    final = production(shapes, rel)
+    print("FINAL PRODUCTION")
+    for s in final:
+        print(s)
     return
 
 def main_shape_append(shapes,b):

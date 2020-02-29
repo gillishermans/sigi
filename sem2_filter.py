@@ -34,24 +34,24 @@ def perform(level, box, options):
         #    print(shp.is_duplicate_shape(s,s2))
         #build_shape(shp.to_zy(s),level,box,i+1)
         #i = i+2
-    rel = shp.relation_learning(shapes)
+    rel = shp.relation_learning(shp.copy_shapes(shapes))
     print("REL")
     for r in rel:
         print(r)
     i=0
-    final = shp.production(shapes,rel,5)
+    final = shp.production(shp.copy_shapes(shapes),rel,5)
     for s in final:
         build_shape(s, level, box,0)
         build_shape(s, level, box,1+i)
         i=i+1
     i = 0
-    final = shp.production(shapes, rel, 5)
+    final = shp.production(shp.copy_shapes(shapes), rel, 5)
     for s in final:
         build_shape(s, level, box, 15)
         build_shape(s, level, box,16+i)
         i = i + 1
     i = 0
-    final = shp.production(shapes, rel, 5)
+    final = shp.production(shp.copy_shapes(shapes), rel, 5)
     for s in final:
         build_shape(s, level, box,25)
         build_shape(s, level, box,26+i)
@@ -156,8 +156,8 @@ def build_shape(s,level,box,i=0):
         #print(b)
         #print(b.id)
         #print(b.dmg)
-        utilityFunctions.setBlock(level, (b.id, b.dmg), box.maxx + b.rx, box.maxy + b.ry, box.minz + b.rz + 10 + (i * 6))
-        #utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i*6))
+        #utilityFunctions.setBlock(level, (b.id, b.dmg), box.maxx + b.rx, box.maxy + b.ry, box.minz + b.rz + 10 + (i * 6))
+        utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i*6))
 
 def main():
     ms = read_array(0)
