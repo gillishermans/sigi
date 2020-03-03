@@ -39,10 +39,10 @@ def perform(level, box, options):
     for r in rel:
         print(r)
     i=0
-    final = shp.production(shp.copy_shapes(shapes),rel,50)
+    final = shp.production_limit(shp.copy_shapes(shapes),rel,50)
     for s in final:
-        build_shape(s, level, box,0)
-        build_shape(s, level, box,5+i)
+        build_shape(s, level, box,1)
+        build_shape(s, level, box,10+i)
         i=i+1
     i = 0
     #final = shp.production(shp.copy_shapes(shapes), rel, 15)

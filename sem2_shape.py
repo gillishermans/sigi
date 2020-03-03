@@ -59,12 +59,6 @@ class Shape:
         else:
             return False
 
-    def eq_no_plane(self,other):
-        if self.f == other.f and self.list == other.list:
-            return True
-        else:
-            return False
-
     def eq_production(self,other):
         if self.tag == other.tag:
             return True
@@ -106,20 +100,10 @@ class Shape:
         #b.set_relative(self.f)
         self.list.append(bn)
 
-    #def get_relative(self,item):
-    #    b = item
-    #    #print("RELATIVE")
-    #    #print('(' + str(self.f[0]) + ', ' + str(self.f[1]) + ', ' + str(self.f[2]) + ')')
-    #    #print('(' + str(b.x) + ', ' + str(b.y) + ', ' + str(b.z) + ')')
-    #    return Block(b.id, b.dmg, b.x - self.f[0], b.y - self.f[1], b.z - self.f[2])
-
     def remove(self,s):
         self.list.remove(s)
 
     def set_relative(self,f):
-        print("SET_REL")
-        print(self.f)
-        print(f)
         self.f = f
         for b in self.list:
             b.set_relative(f)
@@ -131,7 +115,6 @@ class Shape:
             b.y = b.y - p[1]
             b.z = b.z - p[2]
             b.set_relative(self.f)
-
 
 class Relation:
     def __init__(self,s1,s2,planes):
@@ -536,45 +519,6 @@ def final_block_check(blocks,e):
     return False
 
 #Learn the relations between shapes in a shape set
-def relation_learning2(shapes):
-    print("RELATIONS")
-    print(shapes)
-    rel =[]
-    for s1 in shapes:
-        for s2 in shapes:
-            if s1.__ne__(s2):
-                if contact(s1,s2):
-                    rel.append([s1,s2])
-    #duplicates
-    print("DUPE")
-    d = []
-    for s1 in shapes:
-        for s2 in shapes:
-            if (s1.__ne__(s2) and is_duplicate_shape(s1, s2)):
-                for r in rel:
-                    if r[0].__eq__(s1):
-                        d.append([s2,r[1]])
-                    if r[0].__eq__(s2):
-                        d.append([s1,r[1]])
-                    if r[1].__eq__(s1):
-                        d.append([r[0], s2])
-                    if r[1].__eq__(s2):
-                        d.append([r[0], s1])
-            print(rel)
-    for i in d:
-        rel.append(i)
-    print("ADDED RULES")
-    print(rel)
-    new_rel = []
-    for elem in rel:
-        if elem not in new_rel:
-            new_rel.append(elem)
-    rel = new_rel
-    print("REMOVE DUPE")
-    print(rel)
-    return rel
-
-#Learn the relations between shapes in a shape set
 def relation_learning(shapes):
     print("FIND RELATIONS FOR")
     print(shapes)
@@ -635,41 +579,10 @@ def contact(s1,s2):
 def distance(b1,b2):
     return sqrt(pow((b2.x-b1.x),2)+pow((b2.y-b1.y),2)+pow((b2.z-b1.z),2))
 
-def production2(shapes,rel,n=5):
-    print("PRODUCTION")
-    final = [random.choice(shapes)]
-    w = random.choice(final)
-    print(w)
-    while n > 0:
-        rrel = []
-        for r in rel:
-            if r[0] == w:
-                rrel.append(r)
-        if (len(rrel) != 0):
-            r = random.choice(rrel)
-            #EDIT POSITION OF R[1]
-            shape = r[1].copy()
-            shape.set_relative(w.f)
-            final.append(shape)
-            w = shape
-        n = n -1
-    return final
-
 def production(shapes,rel,n=5):
     print("PRODUCTION")
-    #final = [random.choice(shapes)]
     w = random.choice(shapes)
     print(w)
-    #c = False
-    #wrel = w.f
-    #if(w.plane == 'xy'):
-    #    w = to_zy(w)
-    #    c = True
-    #elif(w.plane == 'zy'):
-    #    w = to_xy(w)
-    #    c = True
-    #elif(w.plane == 'xz'):
-    #    print("TOP")
     final = [w]
     while n > 0:
         rrel = []
@@ -682,48 +595,90 @@ def production(shapes,rel,n=5):
             r = random.choice(rrel)
             og = r[2]
             r = r[1]
-            #r = random.choice(r)
             #EDIT POSITION OF R[1]
             print("S")
             shape = r.copy()
             print(shape)
-            #if(c):
-            #    if (shape.plane == 'xy'):
-            #        shape = to_zy(shape)
-            #        shape.set_relative(w.f)
-            #    elif (shape.plane == 'zy'):
-            #        shape = to_xy(shape)
-            #        shape.set_relative(w.f)
-            #    elif (shape.plane == 'xz'):
-            #        #shape.set_relative(wrel)
-            #        print("Top")
-
-            #p = [og.f[0]-w.f[0],og.f[1]-w.f[1],og.f[2]-w.f[2]]
-            #p = [w.f[0] - og.f[0], w.f[1] - og.f[1], w.f[2] - og.f[2]]
-            #shape.set_relative(edit_pos_relation(w,og))
-            #shape.set_relative(w.f)
             edit_pos_relation(w,og,shape)
             print(shape)
             final.append(shape)
-            w = shape
+            w = random.choice(final)#w = shape
         n = n -1
     return final
 
-def edit_pos_relation(w,og):
-    p = [0,0,0]
-    if(w.plane == 'zy' and w.ogf[0] !=og.f[0]):#if(w.ogf[0] !=og.f[0]):
-        p[0] = (w.f[0] - og.f[0])
-    else:
-        p[0] = (w.f[0])
-    if(w.plane == 'xz' and w.ogf[1] !=og.f[1]):#if(w.ogf[1] !=og.f[1]):
-        p[1] = (w.f[1] - og.f[1])
-    else:
-        p[1] = (w.f[1])
-    if(w.plane == 'xy' and w.ogf[2] !=og.f[2]):#if(w.ogf[2] !=og.f[2]):
-        p[2] = (w.f[2] - og.f[2])
-    else:
-        p[2] = (w.f[2])
-    return p
+def production_limit(shapes,rel,n=5):
+    limit = [10,10,10]
+    print("PRODUCTION")
+    w = random.choice(shapes)
+    extend_shape(w,1)
+    min = [w.list[0].x, w.list[0].y, w.list[0].z]
+    max = [w.list[0].x, w.list[0].y, w.list[0].z]
+    print(w)
+    final = [w]
+    tries = 0
+    nrtries = 0
+    blocked = []
+    while n > 0:
+        if(tries > 1000):
+            print("TRIES FAILED")
+            break
+        if(nrtries > 1000):
+            print("NRTRIES FAILED")
+            break
+        rrel = []
+        for r in rel:
+            for s in r[0]:
+                #HERE
+                if s.eq_production(w):
+                    rrel.append(r)
+        remove = []
+        for rr in blocked:
+            for r in rrel:
+                if (r == rr):
+                    remove.append(r)
+        for r in remove:
+            rrel.remove(r)
+        if (len(rrel) != 0):
+            r = random.choice(rrel)
+            og = r[2]
+            #EDIT POSITION OF R[1]
+            print("S")
+            shape = r[1].copy()
+            print(shape)
+            edit_pos_relation(w,og,shape)
+            print(shape)
+
+            tempmin = min
+            tempmax = max
+            if(shape.list[0].x < min[0]): min[0] = shape.list[0].x
+            if (shape.list[0].y < min[1]): min[1] = shape.list[0].y
+            if (shape.list[0].z < min[2]): min[2] = shape.list[0].z
+            if(shape.list[0].x > max[0]): max[0] = shape.list[0].x
+            if (shape.list[0].y > max[1]): max[1] = shape.list[0].y
+            if (shape.list[0].z > max[2]): max[2] = shape.list[0].z
+            if (max[0] - min[0] > limit[0] or max[1] - min[1] > limit[1] or max[2] - min[2] > limit[2]):
+                min = tempmin
+                max = tempmax
+                tries = tries +1
+                blocked.append(r)
+                w = random.choice(final)
+                continue
+            else:
+                if(final.__contains__(shape)):
+                    continue
+                tries = 0
+                blocked = []
+                shape = extend_shape(shape,1)
+                final.append(shape)
+                w = random.choice(final)#w = shape
+        else:
+            print("No rules")
+            w = random.choice(final)
+            nrtries = nrtries +1
+            continue
+        n = n -1
+    print("FINAL PRODUCTION")
+    return final
 
 def edit_pos_relation(w,og,shape):
     p = [0,0,0]
@@ -804,6 +759,7 @@ def to_xz(s):
         sd.plane = 'xz'
         sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return s
+
 def to_xy(s):
     if (s.plane == 'xy'): return s.copy()
     if(s.plane == 'xz'):
@@ -824,6 +780,7 @@ def to_xy(s):
         sd.plane = 'xy'
         sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return sd
+
 def to_zy(s):
     if (s.plane == 'zy'): return s.copy()
     if(s.plane == 'xz'):
@@ -845,7 +802,103 @@ def to_zy(s):
         sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return sd
 
-
+def extend_shape(s,l):
+    if (s.plane == 'xy'):
+        print("EXTEND")
+        print(s)
+        minx = s[0].x
+        maxx = s[0].x
+        for b in s:
+            if(b.x<minx): minx = b.x
+            if (b.x > maxx): maxx = b.x
+        mid = int((maxx - minx+1)/2)
+        print(minx)
+        print(maxx)
+        print(mid)
+        middle = []
+        right = []
+        for b in s:
+            if(b.x == mid): middle.append(b)
+            if (b.x > mid): right.append(b)
+        for m in middle:
+            m = m.copy()
+            m.x = m.x+1
+            s.append(m)
+        for r in right:
+            r.x = r.x+1
+            r.set_relative(s.f)
+    if (s.plane == 'zy'):
+        print("EXTEND")
+        print(s)
+        minz = s[0].z
+        maxz = s[0].z
+        for b in s:
+            if(b.z<minz): minz = b.z
+            if (b.z > maxz): maxz = b.z
+        mid = int((maxz - minz+1)/2)
+        print(minz)
+        print(maxz)
+        print(mid)
+        middle = []
+        right = []
+        for b in s:
+            if(b.z == mid): middle.append(b)
+            if (b.z > mid): right.append(b)
+        for m in middle:
+            m = m.copy()
+            m.z = m.z+1
+            s.append(m)
+        for r in right:
+            r.z = r.z+1
+            r.set_relative(s.f)
+    if (s.plane == 'xz'):
+        print("EXTEND")
+        print(s)
+        minz = s[0].z
+        maxz = s[0].z
+        for b in s:
+            if(b.z<minz): minz = b.z
+            if (b.z > maxz): maxz = b.z
+        mid = int((maxz - minz+1)/2)
+        print(minz)
+        print(maxz)
+        print(mid)
+        middle = []
+        right = []
+        for b in s:
+            if(b.z == mid): middle.append(b)
+            if (b.z > mid): right.append(b)
+        for m in middle:
+            m = m.copy()
+            m.z = m.z+1
+            s.append(m)
+        for r in right:
+            r.z = r.z+1
+            r.set_relative(s.f)
+        minx = s[0].x
+        maxx = s[0].x
+        for b in s:
+            if(b.x<minx): minx = b.x
+            if (b.x > maxx): maxx = b.x
+        mid = int((maxx - minx+1)/2)
+        print(minx)
+        print(maxx)
+        print(mid)
+        middle = []
+        right = []
+        for b in s:
+            if(b.x == mid): middle.append(b)
+            if (b.x > mid): right.append(b)
+        for m in middle:
+            m = m.copy()
+            m.x = m.x+1
+            s.append(m)
+        for r in right:
+            r.x = r.x+1
+            r.set_relative(s.f)
+    print("res")
+    print(s)
+    return s
 
 def main():
     shapes3m3m3 =[]
