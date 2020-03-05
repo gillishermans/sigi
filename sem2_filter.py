@@ -45,7 +45,7 @@ def perform(level, box, options):
         if(type(s) == None.__class__):
             continue
         build_shape(s, level, box,1)
-        #build_shape(s, level, box,10+i)
+        build_shape(s, level, box,10+i)
         i=i+1
     i = 0
     #final = shp.production(shp.copy_shapes(shapes), rel, 15)

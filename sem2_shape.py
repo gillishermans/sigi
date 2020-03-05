@@ -900,6 +900,19 @@ def extend_shape(s,l):
     print(s)
     return s
 
+def all_xy_to_zy(shapes,rules):
+    new_shapes = []
+    for s in shapes:
+        if (s.plane == 'xy'):
+            ns = s.copy()
+            new_shapes.append(to_zy(ns))
+        if (s.plane == 'zy'):
+            ns = s.copy()
+            new_shapes.append(to_xy(ns))
+        else: continue
+    shapes.extend(new_shapes)
+    return shapes
+
 def main2():
     shapes3m3m3 =[]
     main_shape_append(shapes3m3m3,Block(3, 0, 0, 0, 0))
@@ -999,18 +1012,20 @@ class Beam():
         return [b1,b2]
 
     def fill_beam(self,shapes,rules):
+        shapes = all_xy_to_zy(shapes,rules)
         #6 beam faces: try to fill all
         #start with 1, then look for rules to fill the rest
         #if no rule available, leave the beam face open
         final = []
         #first xy
+        c = []
         for s in shapes:
             if(s.plane == 'xy'):
                 s = s.copy()
                 s.edit_pos([s.f[0], s.f[1], s.f[2]])
                 s.edit_pos([self.x,self.y,self.z+(self.zz-1)])
-                final.append(s)
-                break
+                c.append(s)
+        final.append(random.choice(c))
         #first zy
         p = self.find_plane_shape(final[0],rules,'zy')
         final.append(p)
@@ -1040,16 +1055,6 @@ class Beam():
         if plane == 'zy':
             p.edit_pos([self.x + j, self.y, self.z])
         return p
-
-
-class Rectangle():
-    def __init__(self,x,y,z,xx,yy,zz):
-        self.x = x
-        self.y = y
-        self.z = z
-        self.xx = xx
-        self.yy = yy
-        self.zz = zz
 
 def split_grammar(shapes,rules):
     print("SPLIT")
