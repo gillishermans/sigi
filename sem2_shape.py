@@ -23,7 +23,7 @@ class Block:
         return str(self)
 
     def __str__(self):
-        #return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
+        return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
         return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
         return str(float(self.id + float(self.dmg) / 100))
 
@@ -610,7 +610,7 @@ def production_limit(shapes,rel,n=5):
     limit = [10,10,10]
     print("PRODUCTION")
     w = random.choice(shapes)
-    extend_shape(w,1)
+    #extend_shape(w,1)
     min = [w.list[0].x, w.list[0].y, w.list[0].z]
     max = [w.list[0].x, w.list[0].y, w.list[0].z]
     print(w)
@@ -668,7 +668,7 @@ def production_limit(shapes,rel,n=5):
                     continue
                 tries = 0
                 blocked = []
-                shape = extend_shape(shape,1)
+                #shape = extend_shape(shape,1)
                 final.append(shape)
                 w = random.choice(final)#w = shape
         else:
@@ -900,7 +900,7 @@ def extend_shape(s,l):
     print(s)
     return s
 
-def main():
+def main2():
     shapes3m3m3 =[]
     main_shape_append(shapes3m3m3,Block(3, 0, 0, 0, 0))
     main_shape_append(shapes3m3m3,Block(3, 0, 0, 1, 0))
@@ -960,10 +960,111 @@ def main():
         print(s)
     return
 
+def main():
+    split_grammar()
+
 def main_shape_append(shapes,b):
     shapes.append(Shape(b,'xz'))
     shapes.append(Shape(b, 'xy'))
     shapes.append(Shape(b, 'zy'))
 
+class Beam():
+    def __init__(self,x,y,z,xx,yy,zz):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.xx = xx
+        self.yy = yy
+        self.zz = zz
+
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return "pos (" + str(self.x) + "," + str(self.y) + "," +str(self.z) + ")" + " rpos (" + str(self.xx) + "," + str(self.yy) + "," +str(self.zz) + ")"
+
+    def split_x(self,r):
+        b1 = Beam(self.x,self.y,self.z,r,self.yy,self.zz)
+        b2 = Beam(self.x + r, self.y, self.z, self.xx - r, self.yy,self.zz)
+        return [b1,b2]
+
+    def split_y(self,r):
+        b1 = Beam(self.x,self.y,self.z,self.xx,r,self.zz)
+        b2 = Beam(self.x, self.y + r, self.z, self.xx, self.yy - r,self.zz)
+        return [b1,b2]
+
+    def split_z(self,r):
+        b1 = Beam(self.x,self.y,self.z,self.xx,self.yy,r)
+        b2 = Beam(self.x, self.y, self.z + r, self.xx, self.yy,self.zz - r)
+        return [b1,b2]
+
+    def fill_beam(self,shapes,rules):
+        #6 beam faces: try to fill all
+        #start with 1, then look for rules to fill the rest
+        #if no rule available, leave the beam face open
+        final = []
+        #first xy
+        for s in shapes:
+            if(s.plane == 'xy'):
+                s = s.copy()
+                s.edit_pos([s.f[0], s.f[1], s.f[2]])
+                s.edit_pos([self.x,self.y,self.z+4])
+                final.append(s)
+                break
+        #first zy
+        p = self.find_plane_shape(final[0],rules,'zy')
+        final.append(p)
+        p = self.find_plane_shape(final[1],rules,'xz',-3)
+        final.append(p)
+        p = self.find_plane_shape(final[2],rules,'xy')
+        final.append(p)
+        p = self.find_plane_shape(final[2],rules,'zy',-4)
+        final.append(p)
+        print("FILL")
+        print(final)
+        return final
+
+    def find_plane_shape(self,prev,rules,plane,j=0):
+        rrel = []
+        for r in rules:
+            for s in r[0]:
+                if(prev.eq_production(s) and r[1].plane == plane):
+                    rrel.append(r)
+        r = random.choice(rrel)
+        p = r[1].copy()
+        p.edit_pos([p.f[0],p.f[1],p.f[2]])
+        if plane == 'xy':
+            p.edit_pos([self.x, self.y, (self.z + j)])
+        if plane == 'xz':
+            p.edit_pos([self.x, self.y + j, self.z])
+        if plane == 'zy':
+            p.edit_pos([self.x + j, self.y, self.z])
+        return p
+
+
+class Rectangle():
+    def __init__(self,x,y,z,xx,yy,zz):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.xx = xx
+        self.yy = yy
+        self.zz = zz
+
+def split_grammar(shapes,rules):
+    print("SPLIT")
+    b = Beam(-10,0,-10,10,4,5)
+    print(b)
+    b = b.split_x(5)
+    print(b)
+    #b = [b[0],b[1].split_y(5)]
+    final = []
+    for beam in b:
+        final.extend(beam.fill_beam(shapes,rules))
+        print(final)
+    return final
+
+
 if __name__ == "__main__":
     main()
+
