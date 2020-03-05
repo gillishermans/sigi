@@ -961,7 +961,7 @@ def main2():
     return
 
 def main():
-    split_grammar()
+    split_grammar([],[])
 
 def main_shape_append(shapes,b):
     shapes.append(Shape(b,'xz'))
@@ -1008,17 +1008,17 @@ class Beam():
             if(s.plane == 'xy'):
                 s = s.copy()
                 s.edit_pos([s.f[0], s.f[1], s.f[2]])
-                s.edit_pos([self.x,self.y,self.z+4])
+                s.edit_pos([self.x,self.y,self.z+(self.zz-1)])
                 final.append(s)
                 break
         #first zy
         p = self.find_plane_shape(final[0],rules,'zy')
         final.append(p)
-        p = self.find_plane_shape(final[1],rules,'xz',-3)
+        p = self.find_plane_shape(final[1],rules,'xy')
         final.append(p)
-        p = self.find_plane_shape(final[2],rules,'xy')
+        p = self.find_plane_shape(final[2],rules,'xz',+(self.yy+1))
         final.append(p)
-        p = self.find_plane_shape(final[2],rules,'zy',-4)
+        p = self.find_plane_shape(final[3],rules,'zy',-(self.xx-1))
         final.append(p)
         print("FILL")
         print(final)
@@ -1053,15 +1053,22 @@ class Rectangle():
 
 def split_grammar(shapes,rules):
     print("SPLIT")
-    b = Beam(-10,0,-10,10,4,5)
+    b = Beam(-10,0,-10,10,-8,5)#b = Beam(-10,0,0,6,3,3)#
     print(b)
-    b = b.split_x(5)
-    print(b)
+    b = b.split_y(-4)
+    bb = []
+    bb.extend(b[0].split_x(5))#b = b.split_x(3)#
+    bb.extend(b[1].split_x(5))
+    print(bb)
     #b = [b[0],b[1].split_y(5)]
     final = []
-    for beam in b:
+    i=0
+    for beam in bb:
+        if(i>2): break
         final.extend(beam.fill_beam(shapes,rules))
+        print("BEAM")
         print(final)
+        i = i+1
     return final
 
 
