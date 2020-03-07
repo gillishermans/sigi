@@ -23,8 +23,8 @@ class Block:
         return str(self)
 
     def __str__(self):
-        return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
-        return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
+        #return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
+        #return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
         return str(float(self.id + float(self.dmg) / 100))
 
     def set_relative(self,f):
@@ -606,10 +606,18 @@ def production(shapes,rel,n=5):
         n = n -1
     return final
 
-def production_limit(shapes,rel,n=5):
-    limit = [10,10,10]
+def production_limit(shapes,rel,limit=[10,10,10],n=5):
+    print("TEST")
+    print(len(shapes))
+    print(shapes)
+    #t = all_xy_to_zy(shapes,rel)
+    #shapes = t[0]
+    #rel = t[1]
+    print(shapes)
+    print(len(shapes))
     print("PRODUCTION")
     w = random.choice(shapes)
+    w = extend_shape(w,3)
     #extend_shape(w,1)
     min = [w.list[0].x, w.list[0].y, w.list[0].z]
     max = [w.list[0].x, w.list[0].y, w.list[0].z]
@@ -668,7 +676,7 @@ def production_limit(shapes,rel,n=5):
                     continue
                 tries = 0
                 blocked = []
-                #shape = extend_shape(shape,1)
+                shape = extend_shape(shape, 3)
                 final.append(shape)
                 w = random.choice(final)#w = shape
         else:
@@ -802,7 +810,7 @@ def to_zy(s):
         sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return sd
 
-def extend_shape(s,l):
+def extend_shape(s,l=1):
     if (s.plane == 'xy'):
         print("EXTEND")
         print(s)
@@ -812,20 +820,18 @@ def extend_shape(s,l):
             if(b.x<minx): minx = b.x
             if (b.x > maxx): maxx = b.x
         mid = int((maxx - minx+1)/2)
-        print(minx)
-        print(maxx)
-        print(mid)
         middle = []
         right = []
         for b in s:
             if(b.x == mid): middle.append(b)
             if (b.x > mid): right.append(b)
-        for m in middle:
-            m = m.copy()
-            m.x = m.x+1
-            s.append(m)
+        for i in range(1,l+1):
+            for m in middle:
+                m = m.copy()
+                m.x = m.x+i
+                s.append(m)
         for r in right:
-            r.x = r.x+1
+            r.x = r.x+l
             r.set_relative(s.f)
     if (s.plane == 'zy'):
         print("EXTEND")
@@ -836,22 +842,21 @@ def extend_shape(s,l):
             if(b.z<minz): minz = b.z
             if (b.z > maxz): maxz = b.z
         mid = int((maxz - minz+1)/2)
-        print(minz)
-        print(maxz)
-        print(mid)
         middle = []
         right = []
         for b in s:
             if(b.z == mid): middle.append(b)
             if (b.z > mid): right.append(b)
-        for m in middle:
-            m = m.copy()
-            m.z = m.z+1
-            s.append(m)
+        for i in range(1, l + 1):
+            for m in middle:
+                m = m.copy()
+                m.z = m.z+1
+                s.append(m)
         for r in right:
             r.z = r.z+1
             r.set_relative(s.f)
     if (s.plane == 'xz'):
+        return s
         print("EXTEND")
         print(s)
         minz = s[0].z
@@ -860,9 +865,6 @@ def extend_shape(s,l):
             if(b.z<minz): minz = b.z
             if (b.z > maxz): maxz = b.z
         mid = int((maxz - minz+1)/2)
-        print(minz)
-        print(maxz)
-        print(mid)
         middle = []
         right = []
         for b in s:
@@ -881,9 +883,6 @@ def extend_shape(s,l):
             if(b.x<minx): minx = b.x
             if (b.x > maxx): maxx = b.x
         mid = int((maxx - minx+1)/2)
-        print(minx)
-        print(maxx)
-        print(mid)
         middle = []
         right = []
         for b in s:
@@ -903,15 +902,23 @@ def extend_shape(s,l):
 def all_xy_to_zy(shapes,rules):
     new_shapes = []
     for s in shapes:
-        if (s.plane == 'xy'):
-            ns = s.copy()
-            new_shapes.append(to_zy(ns))
+        #if (s.plane == 'xy'):
+        #    ns = s.copy()
+        #    ns = to_zy(ns)
+        #    ns.edit_pos([ns.f[0],ns.f[1],ns.f[2]])
+        #    new_shapes.append(ns)
         if (s.plane == 'zy'):
             ns = s.copy()
             new_shapes.append(to_xy(ns))
         else: continue
     shapes.extend(new_shapes)
-    return shapes
+    new_rules = []
+    for r in rules:
+        for s in new_shapes:
+            if (r[1].eq_production(s)):
+                new_rules.append([r[0],s,r[2]])
+    #rules.extend(new_rules)
+    return [shapes, rules]
 
 def main2():
     shapes3m3m3 =[]
@@ -1012,7 +1019,9 @@ class Beam():
         return [b1,b2]
 
     def fill_beam(self,shapes,rules):
-        shapes = all_xy_to_zy(shapes,rules)
+        #t = all_xy_to_zy(shapes,rules)
+        #shapes = t[0]
+        #rules = t[1]
         #6 beam faces: try to fill all
         #start with 1, then look for rules to fill the rest
         #if no rule available, leave the beam face open
@@ -1025,7 +1034,7 @@ class Beam():
                 s.edit_pos([s.f[0], s.f[1], s.f[2]])
                 s.edit_pos([self.x,self.y,self.z+(self.zz-1)])
                 c.append(s)
-        final.append(random.choice(c))
+        final.append(extend_shape(random.choice(c),2))
         #first zy
         p = self.find_plane_shape(final[0],rules,'zy')
         final.append(p)

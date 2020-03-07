@@ -39,11 +39,9 @@ def perform(level, box, options):
     for r in rel:
         print(r)
     i=0
-    #final = shp.production_limit(shp.copy_shapes(shapes),rel,50)
-    final = shp.split_grammar(shp.copy_shapes(shapes),rel)
+    final = shp.production_limit(shp.copy_shapes(shapes),rel,[40,40,40],50)
+    #final = shp.split_grammar(shp.copy_shapes(shapes),rel)
     for s in final:
-        if(type(s) == None.__class__):
-            continue
         build_shape(s, level, box,1)
         build_shape(s, level, box,10+i)
         i=i+1
