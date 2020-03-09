@@ -379,15 +379,8 @@ def findend(i, j, s, out, index):
     else:
         out[index].append(n)
 
-def shapes_cost2(shapes):
-    alpha = 1.5
-    cost = (1+dl(shapes))*alpha
-    for s in shapes:
-        cost = cost + shape_cost(s)
-    return cost
-
 def shapes_cost(shapes):
-    alpha = 1.25
+    alpha = 1.01#1.25
     cost = (1+dl(shapes))**alpha
     for s in shapes:
         cost = cost + shape_cost(s)
@@ -617,8 +610,7 @@ def production_limit(shapes,rel,limit=[10,10,10],n=5):
     print(len(shapes))
     print("PRODUCTION")
     w = random.choice(shapes)
-    w = extend_shape(w,3)
-    #extend_shape(w,1)
+    #w = extend_shape(w,3)
     min = [w.list[0].x, w.list[0].y, w.list[0].z]
     max = [w.list[0].x, w.list[0].y, w.list[0].z]
     print(w)
@@ -676,7 +668,7 @@ def production_limit(shapes,rel,limit=[10,10,10],n=5):
                     continue
                 tries = 0
                 blocked = []
-                shape = extend_shape(shape, 3)
+                #shape = extend_shape(shape, 3)
                 final.append(shape)
                 w = random.choice(final)#w = shape
         else:
@@ -783,8 +775,8 @@ def to_xy(s):
         sd = s.copy()
         for b in sd:
             temp = b.z
-            b.z = b.x
-            b.x = temp
+            b.z = -b.x
+            b.x = -temp
         sd.plane = 'xy'
         sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
         return sd
@@ -804,7 +796,7 @@ def to_zy(s):
         sd = s.copy()
         for b in sd:
             temp = b.z
-            b.z = b.x
+            b.z = -b.x
             b.x = temp
         sd.plane = 'zy'
         sd.set_relative([sd.list[0].x,sd.list[0].y,sd.list[0].z])
@@ -917,7 +909,12 @@ def all_xy_to_zy(shapes,rules):
         for s in new_shapes:
             if (r[1].eq_production(s)):
                 new_rules.append([r[0],s,r[2]])
-    #rules.extend(new_rules)
+            for p in r[0]:
+                if (p.eq_production(s)):
+                    r[0].append(s)
+                    break
+    rules.extend(new_rules)
+    return [new_shapes,rules]
     return [shapes, rules]
 
 def main2():
@@ -1034,7 +1031,7 @@ class Beam():
                 s.edit_pos([s.f[0], s.f[1], s.f[2]])
                 s.edit_pos([self.x,self.y,self.z+(self.zz-1)])
                 c.append(s)
-        final.append(extend_shape(random.choice(c),2))
+        final.append(random.choice(c))
         #first zy
         p = self.find_plane_shape(final[0],rules,'zy')
         final.append(p)
@@ -1054,6 +1051,8 @@ class Beam():
             for s in r[0]:
                 if(prev.eq_production(s) and r[1].plane == plane):
                     rrel.append(r)
+        if (len(rrel)==0):
+            return prev
         r = random.choice(rrel)
         p = r[1].copy()
         p.edit_pos([p.f[0],p.f[1],p.f[2]])
@@ -1067,20 +1066,25 @@ class Beam():
 
 def split_grammar(shapes,rules):
     print("SPLIT")
-    b = Beam(-10,0,-10,10,-8,5)#b = Beam(-10,0,0,6,3,3)#
+    b = Beam(0,0,0,10,-8,5)#b = Beam(-10,0,0,6,3,3)#
     print(b)
     b = b.split_y(-4)
     bb = []
     bb.extend(b[0].split_x(5))#b = b.split_x(3)#
     bb.extend(b[1].split_x(5))
     print(bb)
-    #b = [b[0],b[1].split_y(5)]
+    #bbb = []
+    #for b in bb:
+    #    bbb.extend(b.split_z(5))
     final = []
     i=0
+    #bb =[]
+    #bb.append(Beam(0,0,0,5,-4,5))
     for beam in bb:
-        if(i>2): break
-        final.extend(beam.fill_beam(shapes,rules))
+        #if(i>4): break
         print("BEAM")
+        print(beam)
+        final.extend(beam.fill_beam(shapes,rules))
         print(final)
         i = i+1
     return final

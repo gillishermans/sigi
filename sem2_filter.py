@@ -26,22 +26,33 @@ def perform(level, box, options):
     #print(shapes)
     shapes = shp.hill_climbing(shapes)
     shapes = shp.filter_final_shapes_total(shapes,m)
-    i=0
-    #for s in shapes:
-        #build_shape(s,level,box,i)
-        #print(s.plane)
-        #for s2 in shapes:
-        #    print(shp.is_duplicate_shape(s,s2))
-        #build_shape(shp.to_zy(s),level,box,i+1)
-        #i = i+2
+    print("LEN1")
+    print(len(shapes))
+    new_shapes = []
+    for s in shapes:
+        if (s.plane == 'xy'):
+            ns = s.copy()
+            ns = shp.to_zy(ns)
+            #ns.edit_pos([ns.f[0],ns.f[1],ns.f[2]])
+            new_shapes.append(ns)
+        if (s.plane == 'zy'):
+            ns = s.copy()
+            ns = shp.to_xy(ns)
+            #ns.edit_pos([ns.f[0],ns.f[1],ns.f[2]])
+            new_shapes.append(ns)
+        else: continue
+    shapes.extend(new_shapes)
+    print("LEN2")
+    print(len(shapes))
     rel = shp.relation_learning(shp.copy_shapes(shapes))
     print("REL")
     for r in rel:
         print(r)
     i=0
-    final = shp.production_limit(shp.copy_shapes(shapes),rel,[40,40,40],50)
-    #final = shp.split_grammar(shp.copy_shapes(shapes),rel)
+    #final = shp.production_limit(shp.copy_shapes(shapes),rel,[40,40,40],50)
+    final = shp.split_grammar(shp.copy_shapes(shapes),rel)
     for s in final:
+        #if(s.plane == 'xz'): continue
         build_shape(s, level, box,1)
         build_shape(s, level, box,10+i)
         i=i+1
@@ -158,6 +169,9 @@ def build_shape(s,level,box,i=0):
         #print(b.id)
         #print(b.dmg)
         #utilityFunctions.setBlock(level, (b.id, b.dmg), box.maxx + b.rx, box.maxy + b.ry, box.minz + b.rz + 10 + (i * 6))
+        if (level.blockAt(box.minx + b.x,y + b.y,box.minz + b.z + 10 + (i*6))!=0):
+            utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i * 6))
+        #else :
         utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i*6))
 
 def main():
