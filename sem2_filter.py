@@ -49,8 +49,8 @@ def perform(level, box, options):
     for r in rel:
         print(r)
     i=0
-    #final = shp.production_limit(shp.copy_shapes(shapes),rel,[40,40,40],50)
-    final = shp.split_grammar(shp.copy_shapes(shapes),rel)
+    final = shp.production_limit(shp.copy_shapes(shapes),rel,[40,40,40],200)
+    #final = shp.split_grammar(shp.copy_shapes(shapes),rel)
     for s in final:
         #if(s.plane == 'xz'): continue
         build_shape(s, level, box,1)

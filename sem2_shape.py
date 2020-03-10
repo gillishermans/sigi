@@ -1066,21 +1066,21 @@ class Beam():
 
 def split_grammar(shapes,rules):
     print("SPLIT")
-    b = Beam(0,0,0,10,-8,5)#b = Beam(-10,0,0,6,3,3)#
+    b = Beam(0,0,0,10,-8,10)#b = Beam(-10,0,0,6,3,3)#
     print(b)
     b = b.split_y(-4)
     bb = []
     bb.extend(b[0].split_x(5))#b = b.split_x(3)#
     bb.extend(b[1].split_x(5))
     print(bb)
-    #bbb = []
-    #for b in bb:
-    #    bbb.extend(b.split_z(5))
+    bbb = []
+    for b in bb:
+        bbb.extend(b.split_z(5))
     final = []
     i=0
     #bb =[]
     #bb.append(Beam(0,0,0,5,-4,5))
-    for beam in bb:
+    for beam in bbb:
         #if(i>4): break
         print("BEAM")
         print(beam)
