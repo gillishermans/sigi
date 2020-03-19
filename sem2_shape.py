@@ -353,7 +353,7 @@ def post_xz_splits(shapes):
                         add.append(shape_from_blocks(top,s.plane))
                         add.append(shape_from_blocks(bottom,s.plane))
     for r in remove:
-        shapes.remove(r)
+        remove_copy(shapes,r)
     for a in add:
         shapes.append(a)
     return shapes
