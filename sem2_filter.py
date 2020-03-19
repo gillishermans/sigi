@@ -29,7 +29,9 @@ def perform(level, box, options):
     #for s in shapes:
     #    build_shape(s, level, box, 5 + i)
     #    i = i + 1
-    shapes = shp.post_xz_splits(shapes)
+    shapes = shp.post_xz_splits(shapes, 'xz')
+    shapes = shp.post_xz_splits(shapes,'xy')
+    shapes = shp.post_xz_splits(shapes, 'zy')
     for s in shapes:
         build_shape(s, level, box, 5 + i)
         i = i + 1

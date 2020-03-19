@@ -336,22 +336,26 @@ def post_xz_splits(shapes,plane='xz'):
             else:
                 print("S")
                 print(s)
-                #Check the positions of xz and s to see if xz splits s
-                y = splitter.list[0].y
-                print(y)
+                i = 0
+                if plane == 'xz': i = splitter.list[0].y
+                elif plane == 'xy': i = splitter.list[0].z
+                elif plane == 'zy': i = splitter.list[0].x
+                print(i)
                 top = []
                 bottom = []
-                shared = []
+                middle = []
                 for b in s:
-                    if b.y > y: top.append(b)
-                    elif b.y < y: bottom.append(b)
-                    if b.y == y:
-                        bottom.append(b)
+                    if split_on_i(plane,b) > i: top.append(b)
+                    elif split_on_i(plane,b) < i: bottom.append(b)
+                    if split_on_i(plane,b) == i:
+                        middle.append(b)
                 if len(top) == 0 or len(bottom) == 0:
                     continue
                 else:
-                    #top.extend(shared)
-                    #bottom.extend(shared)
+                    if plane == 'xz': bottom.extend(middle)
+                    else:
+                        bottom.extend(middle)
+                        top.extend(middle)
                     remove.append(s)
                     add.append(shape_from_blocks(top,s.plane))
                     add.append(shape_from_blocks(bottom,s.plane))
@@ -361,6 +365,12 @@ def post_xz_splits(shapes,plane='xz'):
         for a in add:
             shapes.append(a)
     return shapes
+
+def split_on_i(plane,b):
+    if plane == 'xz': return b.y
+    elif plane == 'xy': return b.z
+    else: return b.x
+
 
 def shape_from_blocks(blocks,plane):
     s = Shape(blocks[0], plane)
