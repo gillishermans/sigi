@@ -320,44 +320,47 @@ def half_splits(s):
     return h1,h2
 
 #after the initial shape and shape relations sets have been found use these to effectively split large shapes
-def post_xz_splits(shapes):
-    remove = []
-    add = []
-    for xz in shapes:
-        if xz.plane == 'xz':
-            print("XZSPLIT")
-            print(xz)
-            for s in shapes:
-                #if same shape or they don't touch move on to next s
-                if xz == s or not contact(xz,s): continue
+def post_xz_splits(shapes,plane='xz'):
+    splitters = []
+    for splitter in shapes:
+        if splitter.plane == plane:
+            splitters.append(splitter)
+    for splitter in splitters:
+        print("XZSPLIT")
+        print(splitter)
+        remove = []
+        add = []
+        for s in shapes:
+            #if same shape or they don't touch move on to next s
+            if splitter == s or not contact(splitter,s): continue
+            else:
+                print("S")
+                print(s)
+                #Check the positions of xz and s to see if xz splits s
+                y = splitter.list[0].y
+                print(y)
+                top = []
+                bottom = []
+                shared = []
+                for b in s:
+                    if b.y > y: top.append(b)
+                    elif b.y < y: bottom.append(b)
+                    if b.y == y:
+                        bottom.append(b)
+                if len(top) == 0 or len(bottom) == 0:
+                    continue
                 else:
-                    print("S")
-                    print(s)
-                    #Check the positions of xz and s to see if xz splits s
-                    y = xz.list[0].y
-                    print(y)
-                    top = []
-                    bottom = []
-                    shared = []
-                    for b in s:
-                        if b.y > y: top.append(b)
-                        elif b.y < y: bottom.append(b)
-                        if b.y == y:
-                            bottom.append(b)
-                    if len(top) == 0 or len(bottom) == 0:
-                        continue
-                    else:
-                        #top.extend(shared)
-                        #bottom.extend(shared)
-                        remove.append(s)
-                        add.append(shape_from_blocks(top,s.plane))
-                        add.append(shape_from_blocks(bottom,s.plane))
-    for r in remove:
-        remove_copy(shapes,r)
-    for a in add:
-        shapes.append(a)
+                    #top.extend(shared)
+                    #bottom.extend(shared)
+                    remove.append(s)
+                    add.append(shape_from_blocks(top,s.plane))
+                    add.append(shape_from_blocks(bottom,s.plane))
+        #for r in remove:
+        #    remove_copy(shapes,r)
+        shapes = [i for i in shapes if not remove.__contains__(i)]
+        for a in add:
+            shapes.append(a)
     return shapes
-
 
 def shape_from_blocks(blocks,plane):
     s = Shape(blocks[0], plane)
