@@ -10,73 +10,63 @@ from sem2_shape import Block, Shape
 import sem2_shape as shp
 
 inputs = (
-    ("Thesis filter", "label"),
+    ("Shape grammar induction and production", "label"),
     ("Creator: Gillis Hermans", "label"),
-    ("Split grammar:", 0)
+    ("Split grammar:", 0),
+    ("Apply post split operation:", 0),
+    ("Overlap allowed:", 1),
+    ("Visualize overlap:", 0),
+    ("Add rotated shapes:", 1)
 )
 
 
+# Perform the filter: scan the structure, extract the shapes and shape relations and produce a new structure.
 def perform(level, box, options):
     m = scan_structure(level, box, options)
     shapes = initial_shapes(m)
-    # ms = read_array(0)
-    # print(ms)
-    # shapes = initial_shapes(ms)
-    # print(shapes)
     shapes = shp.hill_climbing(shapes)
-    shapes = shp.filter_final_shapes_total(shapes, m)
+    if options["Overlap allowed:"] != 0:
+        shapes = shp.filter_final_shapes_overlap(shapes, m)
+    else:
+        shapes = shp.filter_final_shapes_no_overlap(shapes)
     i = 0
-    #for s in shapes:
-    #    build_shape(s, level, box, 5 + i)
-    #    i = i + 1
-    shapes = shp.post_xz_splits(shapes, 'xz')
-    shapes = shp.post_xz_splits(shapes,'xy')
-    shapes = shp.post_xz_splits(shapes, 'zy')
     for s in shapes:
-        build_shape(s, level, box, 5 + i)
+        build_shape(s, level, box, options, 5 + i)
         i = i + 1
-    new_shapes = []
-    for s in shapes:
-        if (s.plane == 'xy'):
-            ns = s.copy()
-            ns = shp.to_zy(ns)
-            # ns.edit_pos([ns.f[0],ns.f[1],ns.f[2]])
-            new_shapes.append(ns)
-        if (s.plane == 'zy'):
-            ns = s.copy()
-            ns = shp.to_xy(ns)
-            # ns.edit_pos([ns.f[0],ns.f[1],ns.f[2]])
-            new_shapes.append(ns)
-        else:
-            continue
-    shapes.extend(new_shapes)
+    if options["Apply post split operation:"] != 0:
+        shapes = shp.post_plane_split(shapes, 'xz')
+        shapes = shp.post_plane_split(shapes, 'xy')
+        shapes = shp.post_plane_split(shapes, 'zy')
+        for s in shapes:
+            build_shape(s, level, box, options, 25 + i)
+            i = i + 1
+    if options["Add rotated shapes:"] == 1:
+        new_shapes = []
+        for s in shapes:
+            if s.plane == 'xy':
+                ns = s.copy()
+                ns = shp.to_zy(ns)
+                new_shapes.append(ns)
+            if s.plane == 'zy':
+                ns = s.copy()
+                ns = shp.to_xy(ns)
+                new_shapes.append(ns)
+            else:
+                continue
+        shapes.extend(new_shapes)
     rel = shp.relation_learning(shp.copy_shapes(shapes))
-    #print("REL")
-    #for r in rel:
-        #print(r)
+    if options["Split grammar:"] == 0:
+        final = shp.production_limit(shp.copy_shapes(shapes), rel, [40, 40, 40], 100)
+    else:
+        final = shp.split_grammar(shp.copy_shapes(shapes), rel)
     i = 0
-    if (options["Split grammar:"] == 0): final = shp.production_limit(shp.copy_shapes(shapes), rel, [40, 40, 40], 100)
-    else: final = shp.split_grammar(shp.copy_shapes(shapes),rel)
     for s in final:
-        # if(s.plane == 'xz'): continue
-        build_shape(s, level, box, 1)
-        # build_shape(s, level, box,10+i)
+        build_shape(s, level, box, options, 1)
+        # build_shape(s, level, box,options,10+i)
         i = i + 1
-    #i = 0
-    # final = shp.production(shp.copy_shapes(shapes), rel, 15)
-    # for s in final:
-    #    build_shape(s, level, box, 20)
-    #    build_shape(s, level, box,25+i)
-    #    i = i + 1
-    # i = 0
-    # final = shp.production(shp.copy_shapes(shapes), rel, 25)
-    # for s in final:
-    #    build_shape(s, level, box,40)
-    #    build_shape(s, level, box,45+i)
-    #    i = i + 1
 
 
-# scan the box for a structure and the probabilities of the blocks used in the structure
+# Scan the box for a structure and the probabilities of the blocks used in the structure.
 def scan_structure(level, box, options):
     nb = 0
     prob = []
@@ -93,12 +83,12 @@ def scan_structure(level, box, options):
                 if blockid != 0 and blockid != 2 and blockid != 3:
                     nb = nb + 1
                     shp.add_block(nb, prob, blockid, dmg)
-    write_array(m)
-    write_to_file(prob)
+    # write_array(m)
+    # write_to_file(prob)
     return ma
 
 
-# writes the probabilities to a text file
+# Writes the probabilities to a text file.
 def write_to_file(prob):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -109,7 +99,7 @@ def write_to_file(prob):
     file.close()
 
 
-# writes a 3d array to a text file
+# Writes a 3-dimensional array to a text file.
 def write_array(array):
     # Find path
     __location__ = os.path.realpath(
@@ -127,7 +117,7 @@ def write_array(array):
     return i
 
 
-# Reads a 3d array in from a text file
+# Reads a 3d array in from a text file.
 def read_array(i):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -151,17 +141,14 @@ def read_array(i):
     return m
 
 
-# SHAPE FITTER
-
-# start with every block a shape of length 1
+# Start with every block a shape of length 1 in every plane.
 def initial_shapes(m):
     shapes = []
     for row in m:
         for col in row:
             for b in col:
-                # if block is not air
+                # If block is not air.
                 if b.id != 0:
-                    # start shape matching procedure
                     s = Shape(b, 'xy')
                     shapes.append(s)
                     s = Shape(b, 'xz')
@@ -171,22 +158,17 @@ def initial_shapes(m):
     return shapes
 
 
-# SHAPE BUILDER
-
-def build_shape(s, level, box, i=0):
-    #print("BUILD")
-    #print(s)
+# Build a shape. Place it in the world at it's position.
+def build_shape(s, level, box, options, i=0):
+    # print("BUILD")
+    # print(s)
     y = box.miny
     for b in s:
-        # print("BUILD")
-        # print(b)
-        # print(b.id)
-        # print(b.dmg)
-        # utilityFunctions.setBlock(level, (b.id, b.dmg), box.maxx + b.rx, box.maxy + b.ry, box.minz + b.rz + 10 + (i * 6))
-        if (level.blockAt(box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i * 6)) != 0):
+        if options["Visualize overlap:"] == 1 and level.blockAt(box.minx + b.x, y + b.y,
+                                                                box.minz + b.z + 10 + (i * 6)) != 0:
             utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i * 6))
-        # else :
-        utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i * 6))
+        else:
+            utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i * 6))
 
 
 def main():
@@ -197,7 +179,7 @@ def main():
     shapes = shp.hill_climbing(shapes)
     print(shapes)
     for s in shapes:
-        build_shape(s, level, box)
+        build_shape(s, level, box, options)
 
 
 if __name__ == "__main__":
