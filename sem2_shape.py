@@ -179,7 +179,7 @@ def remove_copy(shapes, sr):
 
 
 # Returns the first merge that decreased the cost.
-def just_merge(shapes, prev_cost):
+def just_merge(shapes, prev_cost, cost_function):
     shapes = copy_shapes(shapes)
     # random.shuffle(shapes)
     for s1 in shapes:
@@ -192,14 +192,14 @@ def just_merge(shapes, prev_cost):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
-                new_cost = shapes_cost(new_shapes)
+                new_cost = shapes_cost(new_shapes, cost_function)
                 if prev_cost - new_cost >= 0:
                     return new_shapes, new_cost
     return shapes, prev_cost
 
 
 # Returns the best possible merge for a set of shapes
-def best_merge(shapes, prev_cost):
+def best_merge(shapes, prev_cost, cost_function=0):
     saved_cost = 0
     best = []
     for s1 in shapes:
@@ -212,7 +212,7 @@ def best_merge(shapes, prev_cost):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
-                saved = prev_cost - shapes_cost(new_shapes)
+                saved = prev_cost - shapes_cost(new_shapes, cost_function)
                 if saved >= saved_cost:
                     saved_cost = saved
                     best = new_shapes
@@ -609,12 +609,19 @@ def shapes_cost2(shapes):
 
 
 # Returns the cost of the given set of shapes.
-def shapes_cost(shapes):
-    alpha = 1.01
-    cost = (1 + dl(shapes)) * alpha
-    for s in shapes:
-        cost = cost + shape_cost(s)
-    return cost
+def shapes_cost(shapes, cost_function=0):
+    if cost_function == 0:
+        alpha = 1.01
+        cost = (1 + dl(shapes)) * alpha
+        for s in shapes:
+            cost = cost + shape_cost(s)
+        return cost
+    else:
+        alpha = 150
+        cost = (1 + dl(shapes)) * alpha
+        for s in shapes:
+            cost = cost + other_entropy(s)
+        return cost
 
 
 # Cost function of a shape: entropy (and hamming distance - maybe later).
@@ -646,7 +653,9 @@ def other_entropy(s):
     for b in s:
         add_block(nb, prob, b.id, b.dmg)
     # Probability of certain block type * log of prob
-    e = len(prob)
+    for p in prob:
+        e = e + p[2] * math.log(p[2], 2)
+    e = - e*math.exp(len(prob))
     return e
 
 
@@ -656,13 +665,13 @@ def dl(shapes):
 
 
 # Perform the hill climbing algorithm on a set of shapes.
-def hill_climbing(shapes):
+def hill_climbing(shapes, cost_function=0):
     same = 0
     prev_shape_cost = 99999999
     while (same < 2):
         # choice
         cpy = shapes[:]  # shapes.copy()
-        new, cost = just_merge(cpy, prev_shape_cost)  # best_merge(cpy) #
+        new, cost = just_merge(cpy, prev_shape_cost, cost_function)  # best_merge(cpy) #
         if cost == prev_shape_cost:
             same = same + 1
         shapes = new

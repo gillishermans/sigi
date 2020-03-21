@@ -12,6 +12,7 @@ import sem2_shape as shp
 inputs = (
     ("Shape grammar induction and production", "label"),
     ("Creator: Gillis Hermans", "label"),
+    ("Cost function:", 0),
     ("Split grammar:", 0),
     ("Apply post split operation:", 0),
     ("Overlap allowed:", 1),
@@ -24,7 +25,7 @@ inputs = (
 def perform(level, box, options):
     m = scan_structure(level, box, options)
     shapes = initial_shapes(m)
-    shapes = shp.hill_climbing(shapes)
+    shapes = shp.hill_climbing(shapes,options["Cost function:"])
     if options["Overlap allowed:"] != 0:
         shapes = shp.filter_final_shapes_overlap(shapes, m)
     else:
