@@ -1286,7 +1286,7 @@ class Beam():
         # first xy
         c = []
         for s in shapes:
-            if (s.plane == 'xy'):
+            if s.plane == 'xy':
                 s = s.copy()
                 s.edit_pos([s.f[0], s.f[1], s.f[2]])
                 s.edit_pos([self.x, self.y, self.z + (self.zz - 1)])
@@ -1310,7 +1310,7 @@ class Beam():
         # first xy
         c = []
         for s in shapes:
-            if (s.plane == 'xy'):
+            if s.plane == 'xy':
                 s = s.copy()
                 s.edit_pos([s.f[0], s.f[1], s.f[2]])
                 s.edit_pos([self.x, self.y, self.z + (self.zz - 1)])
@@ -1320,22 +1320,37 @@ class Beam():
         p = self.find_plane_shape(final[0], rules, 'zy')
         final.append(p)
 
-        # if(p.depth() < self.zz):
-        #    print("in if")
-        #    p = self.find_plane_shape(p, rules, 'zy',0,p.depth())
-        #    final.append(p)
+        if p.depth() < self.zz:
+            p = self.find_plane_shape(p, rules, 'zy',0,p.depth())
+            final.append(p)
 
         p = self.find_plane_shape(p, rules, 'xy')
         final.append(p)
         p = self.find_plane_shape(p, rules, 'xz', +(self.yy + 1))
         final.append(p)
+
+        if p.depth() < self.zz:
+            print("depth")
+            p = self.find_plane_shape(p, rules, 'xz',+(self.yy + 1),p.depth())
+            final.append(p)
+
+        if p.width() < self.xx:
+            print("width")
+            p = self.find_plane_shape(p, rules, 'xz',+(self.yy + 1),0,p.width())
+            final.append(p)
+
         p = self.find_plane_shape(p, rules, 'zy', -(self.xx - 1))
         final.append(p)
+
+        if p.depth() < self.zz:
+            p = self.find_plane_shape(p, rules, 'zy',-(self.xx - 1),p.depth())
+            final.append(p)
+
         print("FILL")
         print(final)
         return final
 
-    def find_plane_shape(self, prev, rules, plane, j=0, e=0):
+    def find_plane_shape(self, prev, rules, plane, j=0, zz=0, xx=0):
         rrel = []
         for r in rules:
             for s in r[0]:
@@ -1347,17 +1362,17 @@ class Beam():
         p = r[1].copy()
         p.edit_pos([p.f[0], p.f[1], p.f[2]])
         if plane == 'xy':
-            p.edit_pos([self.x + e, self.y, (self.z + j)])
+            p.edit_pos([self.x + xx, self.y, (self.z + j)])
         if plane == 'xz':
-            p.edit_pos([self.x, self.y + j, self.z])
+            p.edit_pos([self.x + xx, self.y + j, self.z + zz])
         if plane == 'zy':
-            p.edit_pos([self.x + j, self.y, self.z + e])
+            p.edit_pos([self.x + j, self.y, self.z + zz])
         return p
 
 
 def split_grammar(shapes, rules):
     print("SPLIT")
-    b = Beam(0, 0, 0, 5, -4, 10)  # b = Beam(-10,0,0,6,3,3)#
+    b = Beam(0, 0, 0, 5, -4, 9)  # b = Beam(-10,0,0,6,3,3)#
     # print(b)
     # b = b.split_y(-4)
     # bb = []
@@ -1380,15 +1395,15 @@ def split_grammar(shapes, rules):
         print(final)
         # i = i+1
 
-    final = []
-    list = automatic_split()
-    i = 0
-    e = random.randrange(1, len(list))
-    for beam in list:
-        if (i > e): break
-        if (random.randrange(0, 10) == 0): continue
-        final.extend(beam.fill_beam(shapes, rules))
-        i = i + 1
+    #final = []
+    #list = automatic_split()
+    #i = 0
+    #e = random.randrange(1, len(list))
+    #for beam in list:
+    #    if (i > e): break
+    #    if (random.randrange(0, 10) == 0): continue
+    #    final.extend(beam.fill_beam(shapes, rules))
+    #    i = i + 1
     return final
 
 
