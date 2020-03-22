@@ -41,6 +41,11 @@ def perform(level, box, options):
         for s in shapes:
             build_shape(s, level, box, options, 25 + i)
             i = i + 1
+    write_shapes(shapes)
+    default = read_shapes(0)
+    print(default)
+    print("SCORE")
+    print(shp.compare_shape_sets(default,shapes))
     if options["Add rotated shapes:"] == 1:
         new_shapes = []
         for s in shapes:
@@ -89,19 +94,8 @@ def scan_structure(level, box, options):
     return ma
 
 
-# Writes the probabilities to a text file.
-def write_to_file(prob):
-    __location__ = os.path.realpath(
-        os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    file_to_open = os.path.join(__location__, 'g_data.txt')
-    file = open(file_to_open, "w")
-    for p in prob:
-        file.write(str(p[0]) + " " + str(p[3]) + " " + str(p[2]) + "\n")
-    file.close()
-
-
-# Writes a 3-dimensional array to a text file.
-def write_array(array):
+# Writes a shape set to a text file.
+def write_shapes(shapes):
     # Find path
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -109,13 +103,40 @@ def write_array(array):
     while os.path.exists(__location__ + "\data\data%s.txt" % i):
         i += 1
     file_to_open = __location__ + "\data\data%s.txt" % i
+
     # Save the array in slices so it is readable
     with open(file_to_open, 'w') as f:
-        f.write("#" + str(array.shape[0]) + ',' + str(array.shape[1]) + ',' + str(array.shape[2]) + '\n')
-        for slice in array:
-            np.savetxt(f, slice, fmt='%-7.2f')
-            f.write('# slice\n')
+        #f.write("#" + str(array.shape[0]) + ',' + str(array.shape[1]) + ',' + str(array.shape[2]) + '\n')
+        for s in shapes:
+            print(s)
+            f.write(s.write_str())
+            f.write('\n')
     return i
+
+def read_shapes(i):
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+    shapes = []
+
+    # parse the shape of the array
+    with open(__location__ + "\data\data%s.txt" % i) as f:
+        lines = list(f)
+        #l = f.readline()
+        for l in lines:
+            a = l.split(' ')
+
+            # Build a shape for every line
+            # Remove the last element (\n)
+            a.pop(len(a)-1)
+            # Remove the first element (the plane)
+            plane = a.pop(0)
+            blocks = []
+            for i in range (0,int(len(a)/5)):
+                blocks.append(Block(int(a[i*5]),int(a[i*5+1]),int(a[i*5+2]),int(a[i*5+3]),int(a[i*5+4])))
+            shapes.append(shp.shape_from_blocks(blocks,plane))
+
+    return shapes
 
 
 # Reads a 3d array in from a text file.
@@ -140,6 +161,35 @@ def read_array(i):
     m = [[[Block(int(na[x, y, z]), round(100 * (na[x, y, z] - int(na[x, y, z]))), x, y, z) for z in
            range(0, len(na[0][0]))] for y in range(0, len(na[0]))] for x in range(0, len(na))]
     return m
+
+
+# Writes the probabilities to a text file.
+def write_to_file(prob):
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    file_to_open = os.path.join(__location__, 'g_data.txt')
+    file = open(file_to_open, "w")
+    for p in prob:
+        file.write(str(p[0]) + " " + str(p[3]) + " " + str(p[2]) + "\n")
+    file.close()
+
+
+# Writes a 3-dimensional array to a text file.
+def write_array(array):
+    # Find path
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    i = 0
+    while os.path.exists(__location__ + "\data\data%s.txt" % i):
+        i += 1
+    file_to_open = __location__ + "\data\data%s.txt" % i
+    # Save the array in slices so it is readable
+    with open(file_to_open, 'w') as f:
+        #f.write("#" + str(array.shape[0]) + ',' + str(array.shape[1]) + ',' + str(array.shape[2]) + '\n')
+        for slice in array:
+            np.savetxt(f, slice, fmt='%-7.2f')
+            f.write('# slice\n')
+    return i
 
 
 # Start with every block a shape of length 1 in every plane.

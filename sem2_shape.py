@@ -28,6 +28,11 @@ class Block:
         self.ry = y
         self.rz = z
 
+    def compare_eq(self, other):
+        if self.id == other.id and self.dmg == other.dmg and self.x == other.x and self.y == other.y and self.z == other.z:
+            return True
+        else: return False
+
     def __float__(self):
         return float(self.id + float(self.dmg) / 100)
 
@@ -36,8 +41,12 @@ class Block:
 
     def __str__(self):
         # return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
-        # return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
+        return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
         return str(float(self.id + float(self.dmg) / 100))
+
+    def write_str(self):
+        return str(self.id) + " " + str(self.dmg) + " " + str(self.x) + " " + str(self.y) + " " + str(
+            self.z) + " "
 
     def set_relative(self, f):
         self.rx = self.x - f[0]
@@ -74,6 +83,18 @@ class Shape:
         else:
             return False
 
+    def compare_eq(self,other):
+        if self.plane == other.plane and self.f == other.f:
+            c = 0
+            for b in self.list:
+                for o in other.list:
+                    if b.compare_eq(o):
+                        c = c + 1
+            if c == len(self.list) and c == len(other.list):
+                return True
+        else:
+            return False
+
     def eq_production(self, other):
         if self.tag == other.tag:
             return True
@@ -88,6 +109,12 @@ class Shape:
 
     def __str__(self):
         return str(self.plane) + " " + str(self.list)
+
+    def write_str(self):
+        string = str(self.plane) + " "
+        for s in self.list:
+            string = string + s.write_str()
+        return string
 
     def __len__(self):
         return len(self.list)
@@ -148,6 +175,19 @@ class Shape:
 
     def height(self):
         return self.max[1] - self.min[1]
+
+
+def compare_shape_sets(default,shapes):
+    score = 0
+    if len(default) == len(shapes):
+        for d in default:
+            for s in shapes:
+                if d.compare_eq(s):
+                    score = score + 1
+        if score == len(default):
+            score = score + 0.5
+    return score
+
 
 
 # Create a shape from a list of blocks and a plane.
@@ -1316,6 +1356,12 @@ class Beam():
                 s.edit_pos([self.x, self.y, self.z + (self.zz - 1)])
                 c.append(s)
         final.append(random.choice(c))
+
+        if final[0].width() < self.xx:
+            p = self.find_plane_shape(final[0], rules, 'xy',+ (self.zz - 1),final[0].width())
+            final.append(p)
+
+
         # first zy
         p = self.find_plane_shape(final[0], rules, 'zy')
         final.append(p)
@@ -1335,15 +1381,14 @@ class Beam():
             final.append(p)
 
         if p.width() < self.xx:
-            print("width")
-            p = self.find_plane_shape(p, rules, 'xz',+(self.yy + 1),0,p.width())
+            p = self.find_plane_shape(p, rules, 'xz',+(self.yy + 1),0,-p.width())
             final.append(p)
 
-        p = self.find_plane_shape(p, rules, 'zy', -(self.xx - 1))
+        p = self.find_plane_shape(p, rules, 'zy', -(self.xx-1))
         final.append(p)
 
         if p.depth() < self.zz:
-            p = self.find_plane_shape(p, rules, 'zy',-(self.xx - 1),p.depth())
+            p = self.find_plane_shape(p, rules, 'zy',-(self.xx-1),p.depth())
             final.append(p)
 
         print("FILL")
@@ -1372,7 +1417,7 @@ class Beam():
 
 def split_grammar(shapes, rules):
     print("SPLIT")
-    b = Beam(0, 0, 0, 5, -4, 9)  # b = Beam(-10,0,0,6,3,3)#
+    b = Beam(0, 0, 0, 9, -4, 9)  # b = Beam(-10,0,0,6,3,3)#
     # print(b)
     # b = b.split_y(-4)
     # bb = []
