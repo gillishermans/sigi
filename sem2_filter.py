@@ -34,6 +34,8 @@ def perform(level, box, options):
     for s in shapes:
         build_shape(s, level, box, options, 5 + i)
         i = i + 1
+    #print("Hill climbing results:")
+    #print(shapes)
     if options["Apply post split operation:"] != 0:
         shapes = shp.post_plane_split(shapes, 'xz')
         shapes = shp.post_plane_split(shapes, 'xy')
@@ -41,11 +43,13 @@ def perform(level, box, options):
         for s in shapes:
             build_shape(s, level, box, options, 25 + i)
             i = i + 1
-    write_shapes(shapes)
+        #print("Post split results:")
+        #print(shapes)
+    #write_shapes(shapes)
     default = read_shapes(0)
     print(default)
     print("SCORE")
-    print(shp.compare_shape_sets(default,shapes))
+    print(shp.similarity_shape_sets(default,shapes))
     if options["Add rotated shapes:"] == 1:
         new_shapes = []
         for s in shapes:
@@ -60,7 +64,11 @@ def perform(level, box, options):
             else:
                 continue
         shapes.extend(new_shapes)
+        #print("Rotated shapes results:")
+        #print(shapes)
     rel = shp.relation_learning(shp.copy_shapes(shapes))
+    #print("Relation learning results:")
+    #print(rel)
     if options["Split grammar:"] == 0:
         final = shp.production_limit(shp.copy_shapes(shapes), rel, [40, 40, 40], 100)
     else:

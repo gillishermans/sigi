@@ -177,16 +177,24 @@ class Shape:
         return self.max[1] - self.min[1]
 
 
-def compare_shape_sets(default,shapes):
-    score = 0
+# Compare two shape sets and return a score for their similarity.
+def similarity_shape_sets(default,shapes):
+    score = 0.0
+    nb = len(default)
     if len(default) == len(shapes):
         for d in default:
             for s in shapes:
                 if d.compare_eq(s):
-                    score = score + 1
-        if score == len(default):
-            score = score + 0.5
+                    score = score + 1.0
+                    #Found the matching s with d
+                    break
+    score = (score / nb)
     return score
+
+
+# Return the similarity of two shapes.
+#def similarity_shapes(d,s):
+
 
 
 
@@ -940,10 +948,12 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
             i = 0
             for s2 in final:
                 if contact(s1,s2): i = i+1
-                if i > 1: break
-            if i <= 1: remove.append(s1)
+                if i > 2: break
+            if i <= 2: remove.append(s1)
         if len(remove) == 0:
             done = True
+        print("PRUNE")
+        print(remove)
         final = [s for s in final if not remove.__contains__(s)]
     return final
 
