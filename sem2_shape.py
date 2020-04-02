@@ -5,6 +5,7 @@ from itertools import combinations
 import itertools
 import random
 
+# Based on A* implementation by Nicholas Swift.
 class Node():
     """A node class for A* Pathfinding"""
 
@@ -22,14 +23,23 @@ class Node():
     def __repr__(self):
         return str(self.position)
 
-def astar(maze, start, end):
-    """Returns True if a path is found."""
+# Searches for path to all ends. Based on A* implementation by Nicholas Swift.
+def search_for_3d(shapes_space,shapes,ends):
 
-    # Create start and end node
-    start_node = Node(None, start)
+    found = [[0 for col in range(2)] for row in range(len(shapes))]
+    print(found)
+
+    end_nodes = []
+    for e in ends:
+        end_node = Node(None, e[0])
+        end_node.g = end_node.h = end_node.f = 0
+        start_node = Node(None, e[1])
+        start_node.g = start_node.h = start_node.f = 0
+        end_nodes.append([end_node,start_node])
+    print(ends)
+    print(end_nodes)
+    start_node = Node(None, [0, 0, 0])
     start_node.g = start_node.h = start_node.f = 0
-    end_node = Node(None, end)
-    end_node.g = end_node.h = end_node.f = 0
 
     # Initialize both open and closed list
     open_list = []
@@ -37,10 +47,12 @@ def astar(maze, start, end):
 
     # Add the start node
     open_list.append(start_node)
+    print("Open list")
+    print(open_list)
 
     # Loop until you find the end
     while len(open_list) > 0:
-
+        #print(open_list)
         # Get the current node
         current_node = open_list[0]
         current_index = 0
@@ -49,34 +61,38 @@ def astar(maze, start, end):
                 current_node = item
                 current_index = index
 
-        #print("Open")
-        #print(current_node.position)
-
         # Pop current off open list, add to closed list
         open_list.pop(current_index)
         closed_list.append(current_node)
 
         # Found the goal
-        if current_node == end_node:
-            return True
+        #if current_node == end_node:
+        #    return True
+        i = 0
+        for e in end_nodes:
+            if current_node == e[0]:
+                found[i][0] = 1
+                print("found",found)
+            if current_node == e[1]:
+                found[i][1] = 1
+                print("found",found)
+            i += 1
 
         # Generate children
         children = []
-        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]: # Adjacent squares
+        for new_position in [[0,0,1],[0,0,-1],[0,1,0],[0,-1,0],[1,0,0],[-1,0,0]]:#[(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]: # Adjacent squares
 
             # Get node position
-            node_position = [current_node.position[0] + new_position[0], current_node.position[1] + new_position[1]]
-
-            pos_node = Node(None, node_position)
-            if pos_node == end_node:
-                return True
+            node_position = [current_node.position[0] + new_position[0], current_node.position[1] + new_position[1], current_node.position[2] + new_position[2]]
 
             # Make sure within range
-            if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:
+            if node_position[0] > (len(shapes_space) - 1) or node_position[0] < 0 or\
+               node_position[1] > (len(shapes_space[len(shapes_space)-1]) -1) or node_position[1] < 0 or\
+               node_position[2] > len(shapes_space[0][0]) -1 or node_position[2] < 0:
                 continue
 
             # Make sure walkable terrain
-            if maze[node_position[0]][node_position[1]] != 0:
+            if shapes_space[node_position[0]][node_position[1]][node_position[2]] != 0:
                 continue
 
             # Create new node
@@ -85,7 +101,6 @@ def astar(maze, start, end):
             # Append
             children.append(new_node)
 
-        #print("New children")
         # Loop through children
         for child in children:
 
@@ -98,22 +113,31 @@ def astar(maze, start, end):
 
             # Create the f, g, and h values
             child.g = current_node.g + 1
-            child.h = 5*((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
+            child.h = 0 #5*((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
             child.f = child.g + child.h
 
             # Child is already in the open list
             c = False
             for open_node in open_list:
-                if child == open_node and child.g > open_node.g:
+                if child == open_node: #and child.g > open_node.g:
                     c = True
             if c: continue
 
             # Add the child to the open list
             open_list.append(child)
-            #print(child.position)
-    return False
+            #print(child)
 
+    remove = []
+    i = 0
+    for f in found:
+        if f[0] == 1 and f[1] == 1:
+            remove.append(shapes[i])
+        i += 1
+    return remove
+
+# Searches for path to all ends. Based on A* implementation by Nicholas Swift.
 def search_for(shapes_space,shapes,ends):
+
     found = [[0 for col in range(2)] for row in range(len(shapes))]
     print(found)
 
@@ -140,7 +164,7 @@ def search_for(shapes_space,shapes,ends):
 
     # Loop until you find the end
     while len(open_list) > 0:
-        print(open_list)
+        #print(open_list)
         # Get the current node
         current_node = open_list[0]
         current_index = 0
@@ -172,17 +196,6 @@ def search_for(shapes_space,shapes,ends):
 
             # Get node position
             node_position = [current_node.position[0] + new_position[0], current_node.position[1] + new_position[1]]
-
-            #pos_node = Node(None, node_position)
-            #i = 0
-            #for e in end_nodes:
-            #    if pos_node == e[0]:
-            #        found[i][0] = 1
-            #        print(found)
-            #    if pos_node == e[1]:
-            #        found[i][1] = 1
-            #        print(found)
-            #    i += 1
 
             # Make sure within range
             if node_position[0] > (len(shapes_space) - 1) or node_position[0] < 0 or node_position[1] > (len(shapes_space[len(shapes_space)-1]) -1) or node_position[1] < 0:
@@ -233,6 +246,42 @@ def search_for(shapes_space,shapes,ends):
     return remove
 
 
+def build_production_space_3d(shapes):
+    minx = 99999999
+    maxx = 0
+    miny = 99999999
+    maxy = 0
+    minz = 99999999
+    maxz = 0
+    for s in shapes:
+        for b in s:
+            if b.x < minx: minx = b.x
+            if b.x > maxx: maxx = b.x
+            if b.y < miny: miny = b.y
+            if b.y > maxy: maxy = b.y
+            if b.z < minz: minz = b.z
+            if b.z > maxz: maxz = b.z
+    print(minx)
+    print(maxx)
+    print(miny)
+    print(maxy)
+    print(minz)
+    print(maxz)
+    space = [[[0 for e in range(maxz-minz+3)] for col in range(maxy-miny+2)] for row in range(maxx-minx+3)]
+    print(space)
+    print(len(space))
+    print(len(space[0]))
+    print(len(space[0][0]))
+    for s in shapes:
+        for b in s:
+            #print(b.x - minx)
+            #print(b.z - minz)
+            space[b.x - minx+1][b.y - miny][b.z - minz+1] = b.id
+            #print(space)
+    for s in space:
+        print(s)
+    return space, minx, miny, minz
+
 def build_production_space(shapes):
     minx = 99999999
     maxx = 0
@@ -263,7 +312,35 @@ def build_production_space(shapes):
     return space, minx, minz
 
 # Find all enclosures in just one path finding sweep.
-def enclosure_update_v2(shapes):
+def enclosure_update_3d(shapes):
+    shapes_space, minx, miny, minz = build_production_space_3d(shapes)
+    ends = []
+    for s in shapes:
+        start = []
+        end = []
+        if s.plane == 'xy':
+            for i in range(len(s.list)):
+                start = [s.list[i].x - minx + 1, s.list[i].y - miny, s.list[i].z + 1 - minz + 1]
+                end = [s.list[i].x - minx + 1, s.list[i].y - miny, s.list[i].z - 1 - minz + 1]
+                if shapes_space[start[0]][start[1]][start[2]] == 0 and shapes_space[end[0]][end[1]][end[2]] == 0: break
+        elif s.plane == 'xz':
+            for i in range(len(s.list)):
+                start = [s.list[i].x - minx + 1, s.list[i].y + 1 - miny, s.list[i].z - minz + 1]
+                end = [s.list[i].x - minx + 1, s.list[i].y - 1 - miny, s.list[i].z - minz + 1]
+                if shapes_space[start[0]][start[1]][start[2]] == 0 and shapes_space[end[0]][end[1]][end[2]] == 0: break
+        elif s.plane == 'zy':
+            for i in range(len(s.list)):
+                start = [s.list[i].x + 1 - minx + 1, s.list[i].y - miny, s.list[i].z - minz + 1]
+                end = [s.list[i].x - 1 - minx + 1, s.list[i].y - miny, s.list[i].z - minz + 1]
+                if shapes_space[start[0]][start[1]][start[2]] == 0 and shapes_space[end[0]][end[1]][end[2]] == 0: break
+        ends.append([start, end])
+    remove = search_for_3d(shapes_space, shapes, ends)
+    print("Not enclosed: ")
+    print(remove)
+    return [x for x in shapes if not remove.__contains__(x)]
+
+# Find all enclosures in just one path finding sweep.
+def enclosure_update(shapes):
     shapes_space, minx, minz = build_production_space(shapes)
     ends = []
     for s in shapes:
@@ -289,7 +366,7 @@ def enclosure_update_v2(shapes):
     return [x for x in shapes if not remove.__contains__(x)]
 
 # Updates the shape set by deleting non enclosed shapes.
-def enclosure_update(shapes):
+def enclosure_update_old(shapes):
     remove = []
     shapes_space, minx, minz = build_production_space(shapes)
     for s in shapes:

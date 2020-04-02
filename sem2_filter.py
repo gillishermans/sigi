@@ -28,7 +28,7 @@ def perform(level, box, options):
     #default = read_shapes(1)
     #for s in default:
     #    build_shape(s, level, box, options, 1)
-    #enclosed = shp.enclosure_update_v2(default)
+    #enclosed = shp.enclosure_update_3d(default)
     #for s in enclosed:
     #    build_shape(s, level, box, options, 10)
     #return
@@ -81,7 +81,7 @@ def perform(level, box, options):
     #print(rel)
 
     if options["Split grammar:"] == 0:
-        final = shp.production_limit(shp.copy_shapes(shapes), rel, [15, 15, 15], 20)
+        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], 100)
         print("Production shapes")
     else:
         final = shp.split_grammar(shp.copy_shapes(shapes), rel)
@@ -93,7 +93,7 @@ def perform(level, box, options):
         i = i + 1
 
 
-    enclosed = shp.enclosure_update_v2(final)
+    enclosed = shp.enclosure_update_3d(final)
     for s in enclosed:
         build_shape(s, level, box, options, 10)
         # build_shape(s, level, box,options,10+i)
