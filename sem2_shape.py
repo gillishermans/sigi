@@ -5,6 +5,329 @@ from itertools import combinations
 import itertools
 import random
 
+class Node():
+    """A node class for A* Pathfinding"""
+
+    def __init__(self, parent=None, position=None):
+        self.parent = parent
+        self.position = position
+
+        self.g = 0
+        self.h = 0
+        self.f = 0
+
+    def __eq__(self, other):
+        return self.position == other.position
+
+    def __repr__(self):
+        return str(self.position)
+
+def astar(maze, start, end):
+    """Returns True if a path is found."""
+
+    # Create start and end node
+    start_node = Node(None, start)
+    start_node.g = start_node.h = start_node.f = 0
+    end_node = Node(None, end)
+    end_node.g = end_node.h = end_node.f = 0
+
+    # Initialize both open and closed list
+    open_list = []
+    closed_list = []
+
+    # Add the start node
+    open_list.append(start_node)
+
+    # Loop until you find the end
+    while len(open_list) > 0:
+
+        # Get the current node
+        current_node = open_list[0]
+        current_index = 0
+        for index, item in enumerate(open_list):
+            if item.f < current_node.f:
+                current_node = item
+                current_index = index
+
+        #print("Open")
+        #print(current_node.position)
+
+        # Pop current off open list, add to closed list
+        open_list.pop(current_index)
+        closed_list.append(current_node)
+
+        # Found the goal
+        if current_node == end_node:
+            return True
+
+        # Generate children
+        children = []
+        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]: # Adjacent squares
+
+            # Get node position
+            node_position = [current_node.position[0] + new_position[0], current_node.position[1] + new_position[1]]
+
+            pos_node = Node(None, node_position)
+            if pos_node == end_node:
+                return True
+
+            # Make sure within range
+            if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:
+                continue
+
+            # Make sure walkable terrain
+            if maze[node_position[0]][node_position[1]] != 0:
+                continue
+
+            # Create new node
+            new_node = Node(current_node, node_position)
+
+            # Append
+            children.append(new_node)
+
+        #print("New children")
+        # Loop through children
+        for child in children:
+
+            # Child is on the closed list
+            c = False
+            for closed_child in closed_list:
+                if child == closed_child:
+                    c = True
+            if c: continue
+
+            # Create the f, g, and h values
+            child.g = current_node.g + 1
+            child.h = 5*((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
+            child.f = child.g + child.h
+
+            # Child is already in the open list
+            c = False
+            for open_node in open_list:
+                if child == open_node and child.g > open_node.g:
+                    c = True
+            if c: continue
+
+            # Add the child to the open list
+            open_list.append(child)
+            #print(child.position)
+    return False
+
+def search_for(shapes_space,shapes,ends):
+    found = [[0 for col in range(2)] for row in range(len(shapes))]
+    print(found)
+
+    end_nodes = []
+    for e in ends:
+        end_node = Node(None, e[0])
+        end_node.g = end_node.h = end_node.f = 0
+        start_node = Node(None, e[1])
+        start_node.g = start_node.h = start_node.f = 0
+        end_nodes.append([end_node,start_node])
+    print(ends)
+    print(end_nodes)
+    start_node = Node(None, [0, 0])
+    start_node.g = start_node.h = start_node.f = 0
+
+    # Initialize both open and closed list
+    open_list = []
+    closed_list = []
+
+    # Add the start node
+    open_list.append(start_node)
+    print("Open list")
+    print(open_list)
+
+    # Loop until you find the end
+    while len(open_list) > 0:
+        print(open_list)
+        # Get the current node
+        current_node = open_list[0]
+        current_index = 0
+        for index, item in enumerate(open_list):
+            if item.f < current_node.f:
+                current_node = item
+                current_index = index
+
+        # Pop current off open list, add to closed list
+        open_list.pop(current_index)
+        closed_list.append(current_node)
+
+        # Found the goal
+        #if current_node == end_node:
+        #    return True
+        i = 0
+        for e in end_nodes:
+            if current_node == e[0]:
+                found[i][0] = 1
+                print("found",found)
+            if current_node == e[1]:
+                found[i][1] = 1
+                print("found",found)
+            i += 1
+
+        # Generate children
+        children = []
+        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]: # Adjacent squares
+
+            # Get node position
+            node_position = [current_node.position[0] + new_position[0], current_node.position[1] + new_position[1]]
+
+            #pos_node = Node(None, node_position)
+            #i = 0
+            #for e in end_nodes:
+            #    if pos_node == e[0]:
+            #        found[i][0] = 1
+            #        print(found)
+            #    if pos_node == e[1]:
+            #        found[i][1] = 1
+            #        print(found)
+            #    i += 1
+
+            # Make sure within range
+            if node_position[0] > (len(shapes_space) - 1) or node_position[0] < 0 or node_position[1] > (len(shapes_space[len(shapes_space)-1]) -1) or node_position[1] < 0:
+                continue
+
+            # Make sure walkable terrain
+            if shapes_space[node_position[0]][node_position[1]] != 0:
+                continue
+
+            # Create new node
+            new_node = Node(current_node, node_position)
+
+            # Append
+            children.append(new_node)
+
+        # Loop through children
+        for child in children:
+
+            # Child is on the closed list
+            c = False
+            for closed_child in closed_list:
+                if child == closed_child:
+                    c = True
+            if c: continue
+
+            # Create the f, g, and h values
+            child.g = current_node.g + 1
+            child.h = 0 #5*((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
+            child.f = child.g + child.h
+
+            # Child is already in the open list
+            c = False
+            for open_node in open_list:
+                if child == open_node: #and child.g > open_node.g:
+                    c = True
+            if c: continue
+
+            # Add the child to the open list
+            open_list.append(child)
+            #print(child)
+
+    remove = []
+    i = 0
+    for f in found:
+        if f[0] == 1 and f[1] == 1:
+            remove.append(shapes[i])
+        i += 1
+    return remove
+
+
+def build_production_space(shapes):
+    minx = 99999999
+    maxx = 0
+    minz = 99999999
+    maxz = 0
+    for s in shapes:
+        for b in s:
+            #if b.y > 1: continue
+            if b.x < minx: minx = b.x
+            if b.x > maxx: maxx = b.x
+            if b.z < minz: minz = b.z
+            if b.z > maxz: maxz = b.z
+    print(minx)
+    print(maxx)
+    print(minz)
+    print(maxz)
+    space = [[0 for col in range(maxz-minz+3)] for row in range(maxx-minx+3)]
+    print(space)
+    for s in shapes:
+        for b in s:
+            if b.y > 1: continue
+            #print(b.x - minx)
+            #print(b.z - minz)
+            space[b.x - minx+1][b.z - minz+1] = b.id
+            #print(space)
+    for s in space:
+        print(s)
+    return space, minx, minz
+
+# Find all enclosures in just one path finding sweep.
+def enclosure_update_v2(shapes):
+    shapes_space, minx, minz = build_production_space(shapes)
+    ends = []
+    for s in shapes:
+        start = []
+        end = []
+        if s.plane == 'xy':
+            for i in range(len(s.list)):
+                start = [s.list[i].x - minx + 1, s.list[i].z + 1 - minz + 1]
+                end = [s.list[i].x - minx + 1, s.list[i].z - 1 - minz + 1]
+                if shapes_space[start[0]][start[1]] == 0 and shapes_space[end[0]][end[1]] == 0: break
+
+        elif s.plane == 'xz':
+            continue
+        elif s.plane == 'zy':
+            for i in range(len(s.list)):
+                start = [s.list[i].x + 1 - minx + 1, s.list[i].z - minz + 1]
+                end = [s.list[i].x - 1 - minx + 1, s.list[i].z - minz + 1]
+                if shapes_space[start[0]][start[1]] == 0 and shapes_space[end[0]][end[1]] == 0: break
+        ends.append([start, end])
+    remove = search_for(shapes_space, [x for x in shapes if x.plane != 'xz'], ends)
+    print("Not enclosed: ")
+    print(remove)
+    return [x for x in shapes if not remove.__contains__(x)]
+
+# Updates the shape set by deleting non enclosed shapes.
+def enclosure_update(shapes):
+    remove = []
+    shapes_space, minx, minz = build_production_space(shapes)
+    for s in shapes:
+        #Find start (one side of shape)
+        #Find end (other side of shape)
+        start = []
+        end = []
+        if s.plane == 'xy':
+            #start = [s.list[0].x,s.list[0].y,s.list[0].z + 1]
+            #end = [s.list[0].x, s.list[0].y, s.list[0].z - 1]
+            for i in range(len(s.list)):
+                start = [s.list[i].x - minx + 1, s.list[i].z + 1 - minz + 1]
+                end = [s.list[i].x - minx + 1, s.list[i].z - 1 - minz + 1]
+                if shapes_space[start[0]][start[1]] == 0 and shapes_space[end[0]][end[1]] == 0: break
+
+        elif s.plane == 'xz':
+            #start = [s.list[0].x, s.list[0].y + 1, s.list[0].z]
+            #end = [s.list[0].x, s.list[0].y - 1, s.list[0].z]
+            continue
+        elif s.plane == 'zy':
+            #start = [s.list[0].x + 1, s.list[0].y, s.list[0].z]
+            #end = [s.list[0].x - 1, s.list[0].y, s.list[0].z]
+            for i in range(len(s.list)):
+                start = [s.list[i].x + 1 - minx + 1, s.list[i].z - minz + 1]
+                end = [s.list[i].x - 1 - minx + 1, s.list[i].z - minz + 1]
+                if shapes_space[start[0]][start[1]] == 0 and shapes_space[end[0]][end[1]] == 0: break
+
+        print("Find path")
+        print(start)
+        print(end)
+        if astar(shapes_space,start,end):
+            print("Found a path.")
+            remove.append(s)
+    print("Not enclosed: ")
+    print(remove)
+    return [x for x in shapes if not remove.__contains__(x)]
+
+
 
 # Updates a list of probabilities for blocks.
 def add_block(nb, prob, blockid, dmg):
@@ -227,7 +550,7 @@ def remove_copy(shapes, sr):
 
 
 # Returns the first merge that decreased the cost.
-def just_merge(shapes, prev_cost, cost_function):
+def just_merge(shapes, prev_cost, cost_function=0, alpha=1.1):
     shapes = copy_shapes(shapes)
     # random.shuffle(shapes)
     for s1 in shapes:
@@ -240,14 +563,14 @@ def just_merge(shapes, prev_cost, cost_function):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
-                new_cost = shapes_cost(new_shapes, cost_function)
+                new_cost = shapes_cost(new_shapes, cost_function, alpha)
                 if prev_cost - new_cost >= 0:
                     return new_shapes, new_cost
     return shapes, prev_cost
 
 
 # Returns the best possible merge for a set of shapes
-def best_merge(shapes, prev_cost, cost_function=0):
+def best_merge(shapes, prev_cost, cost_function=0, alpha=1.1):
     saved_cost = 0
     best = []
     for s1 in shapes:
@@ -260,7 +583,7 @@ def best_merge(shapes, prev_cost, cost_function=0):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
-                saved = prev_cost - shapes_cost(new_shapes, cost_function)
+                saved = prev_cost - shapes_cost(new_shapes, cost_function, alpha)
                 if saved >= saved_cost:
                     saved_cost = saved
                     best = new_shapes
@@ -657,15 +980,14 @@ def shapes_cost2(shapes):
 
 
 # Returns the cost of the given set of shapes.
-def shapes_cost(shapes, cost_function=0):
+def shapes_cost(shapes, cost_function=0, alpha = 1.1):
     if cost_function == 0:
-        alpha = 1.01
-        cost = (1 + dl(shapes)) * alpha
+        cost = (1.0 + dl(shapes)) * alpha
         for s in shapes:
             cost = cost + shape_cost(s)
         return cost
     else:
-        alpha = 150
+        #alpha = 150
         cost = (1 + dl(shapes)) * alpha
         for s in shapes:
             cost = cost + other_entropy(s)
@@ -689,7 +1011,7 @@ def entropy(s):
     for p in prob:
         e = e + p[2] * math.log(p[2], 2)
     e = - e
-    return e
+    return e + 0.00001
 
 
 # returns the entropy of a shape
@@ -713,13 +1035,13 @@ def dl(shapes):
 
 
 # Perform the hill climbing algorithm on a set of shapes.
-def hill_climbing(shapes, cost_function=0):
+def hill_climbing(shapes, cost_function=0, alpha=1.1):
     same = 0
     prev_shape_cost = 99999999
-    while (same < 2):
+    while same < 2:
         # choice
         cpy = shapes[:]  # shapes.copy()
-        new, cost = just_merge(cpy, prev_shape_cost, cost_function)  # best_merge(cpy) #
+        new, cost = just_merge(cpy, prev_shape_cost, cost_function, alpha)  # best_merge(cpy) #
         if cost == prev_shape_cost:
             same = same + 1
         shapes = new
@@ -880,6 +1202,29 @@ def production(shapes, rel, n=5):
     return final
 
 
+# Checks for overlap between the final shape set and a new shape s.
+def check_overlap(final, s):
+    for f in final:
+        if f.plane != s.plane: continue
+        fmin = [f.list[0].x,f.list[0].y,f.list[0].z]
+        fmax = [f.list[0].x, f.list[0].y,f.list[0].z]
+        for b in f:
+            if fmin[0] > b.x or fmin[1] > b.y or fmin[2] > b.z:
+                fmin = [b.x,b.y,b.z]
+            if fmax[0] < b.x or fmax[1] < b.y or fmax[2] < b.z:
+                fmax = [b.x,b.y,b.z]
+        smin = [s.list[0].x, s.list[0].y, s.list[0].z]
+        smax = [s.list[0].x, s.list[0].y, s.list[0].z]
+        for b in s:
+            if smin[0] > b.x or smin[1] > b.y or smin[2] > b.z:
+                smin = [b.x, b.y, b.z]
+            if smax[0] < b.x or smax[1] < b.y or smax[2] < b.z:
+                smax = [b.x, b.y, b.z]
+        if smin[0] >= fmin[0] and smin[1] >= fmin[1] and smin[2] >= fmin[2] and smax[0] <= fmax[0] and smax[1] <= fmax[1] and smax[2] <= fmax[2]:
+            return True
+    return False
+
+
 # Return a production of shapes with a size limitation.
 def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
     w = random.choice(shapes)
@@ -890,9 +1235,10 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
     nrtries = 0
     blocked = []
     while n > 0:
-        if (tries > 1000):
+        w = random.choice(final)
+        if (tries > 100):
             break
-        if (nrtries > 1000):
+        if (nrtries > 100):
             break
         rrel = []
         for r in rel:
@@ -930,6 +1276,8 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
             else:
                 if final.__contains__(shape):
                     continue
+                if check_overlap(final,shape):
+                    continue
                 tries = 0
                 blocked = []
                 final.append(shape)
@@ -948,14 +1296,26 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
             i = 0
             for s2 in final:
                 if contact(s1,s2): i = i+1
-                if i > 2: break
-            if i <= 2: remove.append(s1)
+                if i > 1: break
+            if i <= 1: remove.append(s1)
         if len(remove) == 0:
             done = True
         print("PRUNE")
         print(remove)
         final = [s for s in final if not remove.__contains__(s)]
     return final
+
+
+def one_plane_contact(shape,shapes):
+    contact_blocks = []
+    contact_shape = 0
+    for s in shapes:
+        for b1 in shape:
+            for b2 in s:
+                if distance(b1, b2) == 1:
+                    contact_blocks.append(b2)
+                    #if()
+        return False
 
 
 # Edit the position of a new shape according to the position of the shape that produced it.

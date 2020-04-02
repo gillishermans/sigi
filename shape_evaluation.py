@@ -8,6 +8,7 @@ import utilityFunctions as utilityFunctions
 import sys
 from sem2_shape import Block, Shape
 import sem2_shape as shp
+import timeit
 
 inputs = (
     ("Shape grammar induction and production", "label"),
@@ -22,82 +23,57 @@ inputs = (
 )
 
 
-# Perform the filter: scan the structure, extract the shapes and shape relations and produce a new structure.
-def perform(level, box, options):
-
-    #default = read_shapes(1)
-    #for s in default:
-    #    build_shape(s, level, box, options, 1)
-    #enclosed = shp.enclosure_update_v2(default)
-    #for s in enclosed:
-    #    build_shape(s, level, box, options, 10)
-    #return
-
+def evaluate_alpha(level,box,options):
     m = scan_structure(level, box, options)
-    shapes = initial_shapes(m)
-    shapes = shp.hill_climbing(shapes,options["Cost function:"],float(options["Alpha:"])/100.0)
-    if options["Overlap allowed:"] != 0:
-        shapes = shp.filter_final_shapes_overlap(shapes, m)
-    else:
-        shapes = shp.filter_final_shapes_no_overlap(shapes)
+    initial = initial_shapes(m)
+    av = [0.0,0.25,0.5,0.75,1.0,1.1,1.25,1.5,1.75,2,5,10]
+    i = 0
+    for alpha in av:
+        tic = timeit.default_timer()
+        shapes = shp.hill_climbing(initial, options["Cost function:"], alpha)
+        if options["Overlap allowed:"] != 0:
+            shapes = shp.filter_final_shapes_overlap(shapes, m)
+        else:
+            shapes = shp.filter_final_shapes_no_overlap(shapes)
+        toc = timeit.default_timer()
+        print("Experiment", i)
+        print("Alpha", alpha)
+        print("Number of shapes",len(shapes))
+        avg = 0
+        smallest = 99999
+        largest = 0
+        avg_c = 0
+        most = 0
+        least = 99999
+        for s in shapes:
+            avg += len(s)
+            if smallest > len(s): smallest = len(s)
+            if largest < len(s): largest = len(s)
+            blocktypes = set([(x.id + x.dmg/100) for x in s])
+            avg_c += len(blocktypes)
+            if least > len(blocktypes): least = len(blocktypes)
+            if most < len(blocktypes): most = len(blocktypes)
+        avg = float(avg) / float(len(shapes))
+        avg_c = float(avg_c) / float(len(shapes))
+        print("Average shape size", avg)
+        print("Largest shape", largest)
+        print("Smallest shape", smallest)
+        print("Average complexity", avg_c)
+        print("Max complexity", least)
+        print("Min complexity", most)
+        print("Number of identical shapes")
+        print("Time spent",(toc - tic))
+        #print("Cost",shp.shapes_cost(shapes, options["Cost function:"], alpha))
+        print("\n")
+        i += 1
     i = 0
     for s in shapes:
-        #build_shape(s, level, box, options, 5 + i)
-        i = i + 1
-    #print("Hill climbing results:")
-    #print(shapes)
-    if options["Apply post split operation:"] != 0:
-        shapes = shp.post_plane_split(shapes, 'xz')
-        shapes = shp.post_plane_split(shapes, 'xy')
-        shapes = shp.post_plane_split(shapes, 'zy')
-        for s in shapes:
-            build_shape(s, level, box, options, 25 + i)
-            i = i + 1
-        #print("Post split results:")
-        #print(shapes)
-    #write_shapes(shapes)
-    #default = read_shapes(0)
-    #print(default)
-    #print("SCORE")
-    #print(shp.similarity_shape_sets(default,shapes))
-    if options["Add rotated shapes:"] == 1:
-        new_shapes = []
-        for s in shapes:
-            if s.plane == 'xy':
-                ns = s.copy()
-                ns = shp.to_zy(ns)
-                new_shapes.append(ns)
-            if s.plane == 'zy':
-                ns = s.copy()
-                ns = shp.to_xy(ns)
-                new_shapes.append(ns)
-            else:
-                continue
-        shapes.extend(new_shapes)
-        #print("Rotated shapes results:")
-        #print(shapes)
-    rel = shp.relation_learning(shp.copy_shapes(shapes))
-    #print("Relation learning results:")
-    #print(rel)
-
-    if options["Split grammar:"] == 0:
-        final = shp.production_limit(shp.copy_shapes(shapes), rel, [15, 15, 15], 20)
-        print("Production shapes")
-    else:
-        final = shp.split_grammar(shp.copy_shapes(shapes), rel)
-    i = 0
-    print("Building")
-    for s in final:
-        build_shape(s, level, box, options, 1)
-        # build_shape(s, level, box,options,10+i)
+        build_shape(s, level, box, options, 1 + i)
         i = i + 1
 
-
-    enclosed = shp.enclosure_update_v2(final)
-    for s in enclosed:
-        build_shape(s, level, box, options, 10)
-        # build_shape(s, level, box,options,10+i)
-        i = i + 1
+# Perform the filter: scan the structure, extract the shapes and shape relations and produce a new structure.
+def perform(level, box, options):
+    evaluate_alpha(level,box,options)
 
 
 # Scan the box for a structure and the probabilities of the blocks used in the structure.
@@ -236,7 +212,6 @@ def initial_shapes(m):
                     shapes.append(s)
     return shapes
 
-
 # Build a shape. Place it in the world at it's position.
 def build_shape(s, level, box, options, i=0):
     # print("BUILD")
@@ -248,18 +223,3 @@ def build_shape(s, level, box, options, i=0):
             utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i * 6))
         else:
             utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i * 6))
-
-
-def main():
-    ms = read_array(0)
-    print(ms)
-    shapes = initial_shapes(ms)
-    print(shapes)
-    shapes = shp.hill_climbing(shapes)
-    print(shapes)
-    for s in shapes:
-        build_shape(s, level, box, options)
-
-
-if __name__ == "__main__":
-    main()
