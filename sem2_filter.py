@@ -8,10 +8,13 @@ import utilityFunctions as utilityFunctions
 import sys
 from sem2_shape import Block, Shape
 import sem2_shape as shp
+import split_grammar as splt
+import enclosure as encl
 
 inputs = (
     ("Shape grammar induction and production", "label"),
     ("Creator: Gillis Hermans", "label"),
+    ("Merge or split:", 0),
     ("Cost function:", 0),
     ("Alpha:", 150),
     ("Split grammar:", 0),
@@ -28,21 +31,21 @@ def perform(level, box, options):
     #default = read_shapes(1)
     #for s in default:
     #    build_shape(s, level, box, options, 1)
-    #enclosed = shp.enclosure_update_3d(default)
+    #enclosed = encl.enclosure_update_3d(default)
     #for s in enclosed:
     #    build_shape(s, level, box, options, 10)
     #return
 
     m = scan_structure(level, box, options)
     shapes = initial_shapes(m)
-    shapes = shp.hill_climbing(shapes,options["Cost function:"],float(options["Alpha:"])/100.0)
+    shapes = shp.hill_climbing(shapes, options["Merge or split:"], options["Cost function:"], float(options["Alpha:"])/100.0)
     if options["Overlap allowed:"] != 0:
         shapes = shp.filter_final_shapes_overlap(shapes, m)
     else:
         shapes = shp.filter_final_shapes_no_overlap(shapes)
     i = 0
     for s in shapes:
-        #build_shape(s, level, box, options, 5 + i)
+        build_shape(s, level, box, options, 5 + i)
         i = i + 1
     #print("Hill climbing results:")
     #print(shapes)
@@ -81,10 +84,10 @@ def perform(level, box, options):
     #print(rel)
 
     if options["Split grammar:"] == 0:
-        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], 100)
+        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], 500)
         print("Production shapes")
     else:
-        final = shp.split_grammar(shp.copy_shapes(shapes), rel)
+        final = splt.split_grammar(shp.copy_shapes(shapes), rel)
     i = 0
     print("Building")
     for s in final:
@@ -92,8 +95,9 @@ def perform(level, box, options):
         # build_shape(s, level, box,options,10+i)
         i = i + 1
 
+    return
 
-    enclosed = shp.enclosure_update_3d(final)
+    enclosed = encl.enclosure_update_3d(final)
     for s in enclosed:
         build_shape(s, level, box, options, 10)
         # build_shape(s, level, box,options,10+i)
@@ -117,7 +121,7 @@ def scan_structure(level, box, options):
                 if blockid != 0 and blockid != 2 and blockid != 3:
                     nb = nb + 1
                     shp.add_block(nb, prob, blockid, dmg)
-    # write_array(m)
+    write_array(m)
     # write_to_file(prob)
     return ma
 
@@ -128,9 +132,9 @@ def write_shapes(shapes):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
     i = 0
-    while os.path.exists(__location__ + "\data\data%s.txt" % i):
+    while os.path.exists(__location__ + "\data\shapes%s.txt" % i):
         i += 1
-    file_to_open = __location__ + "\data\data%s.txt" % i
+    file_to_open = __location__ + "\data\shapes%s.txt" % i
 
     # Save the array in slices so it is readable
     with open(file_to_open, 'w') as f:
@@ -148,7 +152,7 @@ def read_shapes(i):
     shapes = []
 
     # parse the shape of the array
-    with open(__location__ + "\data\data%s.txt" % i) as f:
+    with open(__location__ + "\data\shapes%s.txt" % i) as f:
         lines = list(f)
         #l = f.readline()
         for l in lines:
@@ -173,7 +177,7 @@ def read_array(i):
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
     # parse the shape of the array
-    with open(__location__ + "\data\data%s.txt" % i) as f:
+    with open(__location__ + "\data\example%s.txt" % i) as f:
         l = f.readline()
         print(l)
         a = l.split(',')
@@ -183,7 +187,7 @@ def read_array(i):
         print(a)
 
     # load the array and reshape to 3d
-    na = np.loadtxt(__location__ + "\data\data%s.txt" % i)
+    na = np.loadtxt(__location__ + "\data\example%s.txt" % i)
     na = na.reshape((a[0], a[1], a[2]))
 
     m = [[[Block(int(na[x, y, z]), round(100 * (na[x, y, z] - int(na[x, y, z]))), x, y, z) for z in
@@ -208,9 +212,9 @@ def write_array(array):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
     i = 0
-    while os.path.exists(__location__ + "\data\data%s.txt" % i):
+    while os.path.exists(__location__ + "\data\example%s.txt" % i):
         i += 1
-    file_to_open = __location__ + "\data\data%s.txt" % i
+    file_to_open = __location__ + "\data\example%s.txt" % i
     # Save the array in slices so it is readable
     with open(file_to_open, 'w') as f:
         #f.write("#" + str(array.shape[0]) + ',' + str(array.shape[1]) + ',' + str(array.shape[2]) + '\n')

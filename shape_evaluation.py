@@ -8,11 +8,13 @@ import utilityFunctions as utilityFunctions
 import sys
 from sem2_shape import Block, Shape
 import sem2_shape as shp
+import split_grammar as splt
 import timeit
 
 inputs = (
     ("Shape grammar induction and production", "label"),
     ("Creator: Gillis Hermans", "label"),
+    ("Merge or split:", 0),
     ("Cost function:", 0),
     ("Alpha:", 150),
     ("Split grammar:", 0),
@@ -30,7 +32,7 @@ def evaluate_alpha(level,box,options):
     i = 0
     for alpha in av:
         tic = timeit.default_timer()
-        shapes = shp.hill_climbing(initial, options["Cost function:"], alpha)
+        shapes = shp.hill_climbing(initial, options["Merge or split:"], options["Cost function:"], alpha)
         if options["Overlap allowed:"] != 0:
             shapes = shp.filter_final_shapes_overlap(shapes, m)
         else:
