@@ -32,7 +32,7 @@ def evaluate_alpha(level,box,options):
     i = 0
     for alpha in av:
         tic = timeit.default_timer()
-        shapes = shp.hill_climbing(initial, options["Merge or split:"], options["Cost function:"], alpha)
+        shapes = shp.hill_climbing(initial, options["Merge or split:"], options["Cost function:"], alpha, m)
         if options["Overlap allowed:"] != 0:
             shapes = shp.filter_final_shapes_overlap(shapes, m)
         else:

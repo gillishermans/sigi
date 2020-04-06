@@ -38,7 +38,7 @@ def perform(level, box, options):
 
     m = scan_structure(level, box, options)
     shapes = initial_shapes(m)
-    shapes = shp.hill_climbing(shapes, options["Merge or split:"], options["Cost function:"], float(options["Alpha:"])/100.0)
+    shapes = shp.hill_climbing(shapes, options["Merge or split:"], options["Cost function:"], float(options["Alpha:"])/100.0, m)
     if options["Overlap allowed:"] != 0:
         shapes = shp.filter_final_shapes_overlap(shapes, m)
     else:
@@ -121,7 +121,7 @@ def scan_structure(level, box, options):
                 if blockid != 0 and blockid != 2 and blockid != 3:
                     nb = nb + 1
                     shp.add_block(nb, prob, blockid, dmg)
-    write_array(m)
+    # write_array(m)
     # write_to_file(prob)
     return ma
 

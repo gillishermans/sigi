@@ -228,7 +228,7 @@ def just_merge(shapes, prev_cost, cost_function=0, alpha=1.1):
             # if (len(s2) > 25): continue
             if s1.__ne__(s2) and s1.plane == s2.plane:
                 s = merge_shape(s1, s2)
-                if not is_rect(s):
+                if not is_rect(s,s.plane):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
@@ -248,7 +248,7 @@ def best_merge(shapes, prev_cost, cost_function=0, alpha=1.1):
             # if (len(s2) > 9): continue
             if s1.__ne__(s2) and s1.plane == s2.plane:
                 s = merge_shape(s1, s2)
-                if not is_rect(s):
+                if not is_rect(s,s.plane):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
@@ -274,7 +274,7 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1):
     for s in shapes:
         if len(s) % 2 != 0:
             continue
-        split = split_shape(s)
+        split = split_shape_v2(s)
         if s.__eq__(split[0]) and s.__eq__(split[1]):
             continue
 
@@ -282,6 +282,9 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1):
         new_shapes.append(split[0])
         new_shapes.append(split[1])
         new_cost = shapes_cost(new_shapes, cost_function, alpha)
+        print("New split")
+        print(new_shapes)
+        print(new_cost)
         if prev_cost - new_cost >= 0:
             return new_shapes, new_cost
     return shapes, prev_cost
@@ -306,19 +309,33 @@ def best_split(shapes):
     return shapes
 
 
+def split_shape_v2(s):
+    possible_splits = []
+    comb = []
+    for i in range(1,len(s)-1):
+        comb.extend(list(combinations(s,i)))
+    print(len(comb))
+    for c in comb:
+        if is_rect(c,s.plane):
+            print("rect")
+            c_opp = [x for x in s if not c.__contains__(x)]
+            possible_splits.append([shape_from_blocks(c,s.plane),shape_from_blocks(c_opp,s.plane)])
+    print(possible_splits)
+    return random.choice(possible_splits)
+
 # Splits a shape into two shapes - find the best split according to the minimal cost of the shapes
 def split_shape(s):
     # r = find_rect(s)
     subshapes = sub_shapes(s)
-    # print(subshapes)
+    print(subshapes)
     possible_splits = []
     for sub in subshapes:
         # print("SUB")
         # print(sub)
-        if is_rect(sub[0]) and is_rect(sub[1]):
+        if is_rect(sub[0],sub[0].plane) and is_rect(sub[1],sub[1].plane):
             possible_splits.append(sub)
-    # print("POSSIBLE")
-    # print(possible_splits)
+    print("POSSIBLE")
+    print(possible_splits)
     # print(s)
     best = [s, s]
     cost = shape_cost(best[0])
@@ -341,7 +358,6 @@ def sub_shapes(s):
     comb = combinations(s, size / 2)
     #print("Comb")
     for c in comb:
-        #print(c)
         if len(c) == 1:
             sub.append([c[0]])
         else:
@@ -361,8 +377,8 @@ def sub_shapes(s):
 
 
 # Returns true if a shape is a rectangle.
-def is_rect(s):
-    r = find_rect(s)
+def is_rect(s,plane):
+    r = find_rect(s,plane)
     if len(r) == 1:
         if abs(1 + r[0][2] - r[0][0]) * abs(1 + r[0][3] - r[0][1]) == len(s):
             return True
@@ -370,10 +386,10 @@ def is_rect(s):
 
 
 # Finds the shape rectangles.
-def find_rect(s):
+def find_rect(s,plane):
     test = np.zeros((2 * len(s) + 1, 2 * len(s) + 1))
 
-    if s.plane == 'xy':
+    if plane == 'xy':
         z = 999999
         for b in s:
             if z == 999999:
@@ -383,7 +399,7 @@ def find_rect(s):
             if b.rx + len(s) >= 2 * len(s) + 1 or b.ry + len(s) >= 2 * len(s) + 1: return []
             if b.rx + len(s) < 0 or b.ry + len(s) < 0: return []
             test[b.rx + len(s)][b.ry + len(s)] = 1.0
-    if s.plane == 'xz':
+    if plane == 'xz':
         y = 999999
         for b in s:
             if y == 999999:
@@ -394,7 +410,7 @@ def find_rect(s):
             if b.rx + len(s) >= 2 * len(s) + 1 or b.rz + len(s) >= 2 * len(s) + 1: return []
             if b.rx + len(s) < 0 or b.rz + len(s) < 0: return []
             test[b.rx + len(s)][b.rz + len(s)] = 1.0
-    if s.plane == 'zy':
+    if plane == 'zy':
         x = 999999
         for b in s:
             if x == 999999:
@@ -478,10 +494,15 @@ def shapes_cost2(shapes):
 
 # Returns the cost of the given set of shapes.
 def shapes_cost(shapes, cost_function=0, alpha = 1.1):
+    # Standard entropy + DL cost function
     if cost_function == 0:
         cost = (1.0 + dl(shapes)) * alpha
         for s in shapes:
             cost = cost + shape_cost(s)
+        return cost
+    # Cost function for largest possible shapes
+    elif cost_function == 1:
+        cost = (1.0 + dl(shapes))
         return cost
     else:
         #alpha = 150
@@ -532,7 +553,7 @@ def dl(shapes):
 
 
 # Perform the hill climbing algorithm on a set of shapes.
-def hill_climbing(shapes, merge_split, cost_function=0, alpha=1.1):
+def hill_climbing(shapes, merge_split, cost_function=0, alpha=1.1, m=None):
     same = 0
     prev_shape_cost = 99999999
     while same < 2:
@@ -553,6 +574,13 @@ def hill_climbing(shapes, merge_split, cost_function=0, alpha=1.1):
             print(cost)
             #print(new)
         elif merge_split == 1:
+            # start with every shape as large as possible
+            if prev_shape_cost == 99999999:
+                cpy = hill_climbing(cpy, 0, 1)
+                cpy = filter_final_shapes_overlap(cpy, m)
+                print("START SHAPES")
+                print(cpy)
+                prev_shape_cost = shapes_cost(cpy,cost_function, alpha)
             new, cost = just_split(cpy, prev_shape_cost, cost_function, alpha)
         else:
             new, cost = just_merge(cpy, prev_shape_cost, cost_function, alpha)
