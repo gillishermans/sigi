@@ -40,7 +40,8 @@ class Block:
 
     def __str__(self):
         # return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
-        return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
+        #return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
+        return str("(" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")")
         return str(float(self.id + float(self.dmg) / 100))
 
     def write_str(self):
@@ -274,7 +275,7 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1):
     for s in shapes:
         if len(s) % 2 != 0:
             continue
-        split = split_shape_v2(s)
+        split = split_shape_v3(s)
         if s.__eq__(split[0]) and s.__eq__(split[1]):
             continue
 
@@ -307,6 +308,39 @@ def best_split(shapes):
     shapes.append(split[0])
     shapes.append(split[1])
     return shapes
+
+
+
+
+def split_shape_v3(s):
+    possible_splits = []
+    if s.plane == 'xy':
+        for w in range(s.min[0]+1,s.max[0]):
+            print("w", w)
+            one = []
+            two = []
+            for b in s:
+                if b.x < w:
+                    one.append(b)
+                else:
+                    two.append(b)
+            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
+        for h in range(s.min[1]+1,s.max[1]):
+            print("h", h)
+            one = []
+            two = []
+            for b in s:
+                if b.y < h:
+                    one.append(b)
+                else:
+                    two.append(b)
+            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
+    print(possible_splits)
+    return random.choice(possible_splits)
+
+
+
+
 
 
 def split_shape_v2(s):
@@ -585,6 +619,7 @@ def hill_climbing(shapes, merge_split, cost_function=0, alpha=1.1, m=None):
         else:
             new, cost = just_merge(cpy, prev_shape_cost, cost_function, alpha)
         if cost == prev_shape_cost:
+            print("same")
             same = same + 1
         shapes = new
         prev_shape_cost = cost
@@ -597,6 +632,7 @@ def hill_climbing(shapes, merge_split, cost_function=0, alpha=1.1, m=None):
     #    if shapes_cost(shapes) == shapes_cost(new):
     #       same = same +1
     #    shapes = new
+    print("return")
     return shapes
 
 
@@ -875,21 +911,26 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
                 tries = tries + 1
                 blocked.append(r)
                 w = random.choice(final)
+                print(tries)
                 continue
             else:
                 if final.__contains__(shape):
+                    tries = tries + 1
                     continue
                 if check_overlap(final,shape):
+                    tries = tries + 1
                     continue
                 tries = 0
                 blocked = []
                 final.append(shape)
                 # Continue with a random shape or the newly appended shape.
                 w = random.choice(final)  # w = shape
+                print(final)
         else:
             w = random.choice(final)
             nrtries = nrtries + 1
             continue
+        print(n)
         n = n - 1
     # If contact with none or only one other shape: remove the shape.
     done = False

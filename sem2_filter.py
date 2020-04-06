@@ -47,8 +47,8 @@ def perform(level, box, options):
     for s in shapes:
         build_shape(s, level, box, options, 5 + i)
         i = i + 1
-    #print("Hill climbing results:")
-    #print(shapes)
+    print("Hill climbing results:")
+    print(shapes)
     if options["Apply post split operation:"] != 0:
         shapes = shp.post_plane_split(shapes, 'xz')
         shapes = shp.post_plane_split(shapes, 'xy')
@@ -80,8 +80,8 @@ def perform(level, box, options):
         #print("Rotated shapes results:")
         #print(shapes)
     rel = shp.relation_learning(shp.copy_shapes(shapes))
-    #print("Relation learning results:")
-    #print(rel)
+    print("Relation learning results:")
+    print(rel)
 
     if options["Split grammar:"] == 0:
         final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], 500)
