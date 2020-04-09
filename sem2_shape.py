@@ -41,7 +41,7 @@ class Block:
     def __str__(self):
         # return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
         #return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
-        return str("(" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")")
+        #return str("(" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")")
         return str(float(self.id + float(self.dmg) / 100))
 
     def write_str(self):
@@ -220,16 +220,16 @@ def remove_copy(shapes, sr):
 
 
 # Returns the first merge that decreased the cost.
-def just_merge(shapes, prev_cost, cost_function=0, alpha=1.1):
+def just_merge(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
     shapes = copy_shapes(shapes)
     # random.shuffle(shapes)
     for s1 in shapes:
-        # if (len(s1) > 25): continue
         for s2 in shapes:
-            # if (len(s2) > 25): continue
-            if s1.__ne__(s2) and s1.plane == s2.plane:
+            if (rect == 0 and s1.__ne__(s2) and s1.plane == s2.plane)\
+                    or (rect == 1 and is_legal_merge(s1,s2))\
+                    or (rect == 2 and s1.__ne__(s2) and s1.plane == s2.plane and contact(s1,s2)):
                 s = merge_shape(s1, s2)
-                if not is_rect(s,s.plane):
+                if rect == 0 and not is_rect(s,s.plane):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
@@ -275,24 +275,89 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1):
     for s in shapes:
         if len(s) % 2 != 0:
             continue
-        split = split_shape_v3(s)
-        if s.__eq__(split[0]) and s.__eq__(split[1]):
-            continue
+        splits = split_shape_v3(s)
+        for split in splits:
+            if s.__eq__(split[0]) and s.__eq__(split[1]):
+                continue
 
-        new_shapes = [x for x in shapes if x != s]
-        new_shapes.append(split[0])
-        new_shapes.append(split[1])
-        new_cost = shapes_cost(new_shapes, cost_function, alpha)
-        print("New split")
-        print(new_shapes)
-        print(new_cost)
-        if prev_cost - new_cost >= 0:
-            return new_shapes, new_cost
+            new_shapes = [x for x in shapes if x != s]
+            new_shapes.append(split[0])
+            new_shapes.append(split[1])
+            new_cost = shapes_cost(new_shapes, cost_function, alpha)
+            print("New split")
+            print(split)
+            print(new_cost)
+            print(prev_cost)
+            if prev_cost - new_cost >= 0:
+                print("Split succ")
+                return new_shapes, new_cost
     return shapes, prev_cost
 
 
+def best_split(shapes, prev_cost, cost_function=0, alpha=1.1):
+    saved_cost = 0
+    best = [shapes,prev_cost]
+    shapes = copy_shapes(shapes)
+    for s in shapes:
+        if len(s) % 2 != 0:
+            continue
+        splits = split_shape(s)
+        for split in splits:
+            if s.__eq__(split[0]) and s.__eq__(split[1]):
+                continue
+
+            new_shapes = [x for x in shapes if x != s]
+            new_shapes.append(split[0])
+            new_shapes.append(split[1])
+            new_cost = shapes_cost(new_shapes, cost_function, alpha)
+            print("New split")
+            print(split)
+            print(new_cost)
+            print(prev_cost)
+            if prev_cost - new_cost >= 0:
+                if saved_cost < prev_cost - new_cost:
+                    saved_cost = prev_cost - new_cost
+                    best = [new_shapes,new_cost]
+
+    return best[0], best[1]
+
+
+def split_shape(s):
+    possible_splits = []
+    if s.plane != 'zy':
+        for w in range(s.min[0]+1,s.max[0]+1):
+            one = []
+            two = []
+            for b in s:
+                if b.x < w:
+                    one.append(b)
+                else:
+                    two.append(b)
+            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
+    if s.plane != 'xz':
+        for h in range(s.min[1]+1,s.max[1]+1):
+            one = []
+            two = []
+            for b in s:
+                if b.y < h:
+                    one.append(b)
+                else:
+                    two.append(b)
+            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
+    if s.plane != 'xy':
+        for d in range(s.min[2]+1,s.max[2]+1):
+            one = []
+            two = []
+            for b in s:
+                if b.z < d:
+                    one.append(b)
+                else:
+                    two.append(b)
+            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
+    return possible_splits
+
 # Returns the best possible split for a set of shapes
-def best_split(shapes):
+def best_split_old(shapes):
     saved_cost = 0
     best = []
     for s in shapes:
@@ -309,56 +374,8 @@ def best_split(shapes):
     shapes.append(split[1])
     return shapes
 
-
-
-
-def split_shape_v3(s):
-    possible_splits = []
-    if s.plane == 'xy':
-        for w in range(s.min[0]+1,s.max[0]):
-            print("w", w)
-            one = []
-            two = []
-            for b in s:
-                if b.x < w:
-                    one.append(b)
-                else:
-                    two.append(b)
-            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
-        for h in range(s.min[1]+1,s.max[1]):
-            print("h", h)
-            one = []
-            two = []
-            for b in s:
-                if b.y < h:
-                    one.append(b)
-                else:
-                    two.append(b)
-            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
-    print(possible_splits)
-    return random.choice(possible_splits)
-
-
-
-
-
-
-def split_shape_v2(s):
-    possible_splits = []
-    comb = []
-    for i in range(1,len(s)-1):
-        comb.extend(list(combinations(s,i)))
-    print(len(comb))
-    for c in comb:
-        if is_rect(c,s.plane):
-            print("rect")
-            c_opp = [x for x in s if not c.__contains__(x)]
-            possible_splits.append([shape_from_blocks(c,s.plane),shape_from_blocks(c_opp,s.plane)])
-    print(possible_splits)
-    return random.choice(possible_splits)
-
 # Splits a shape into two shapes - find the best split according to the minimal cost of the shapes
-def split_shape(s):
+def split_shape_old(s):
     # r = find_rect(s)
     subshapes = sub_shapes(s)
     print(subshapes)
@@ -408,6 +425,24 @@ def sub_shapes(s):
         subsob = [subs, sobs]
         subshapes.append(subsob)
     return subshapes
+
+
+def is_legal_merge(s1,s2):
+    if s1.__eq__(s2) or s1.plane != s2.plane: return False
+    else:
+        if not contact(s1,s2):
+            return False
+        else:
+            if s1.plane == 'xy':
+                if s1.list[0].z != s2.list[0].z:
+                    return False
+            elif s1.plane == 'xz':
+                if s1.list[0].y != s2.list[0].y:
+                    return False
+            else:
+                if s1.list[0].x != s2.list[0].x:
+                    return False
+    return True
 
 
 # Returns true if a shape is a rectangle.
@@ -538,6 +573,15 @@ def shapes_cost(shapes, cost_function=0, alpha = 1.1):
     elif cost_function == 1:
         cost = (1.0 + dl(shapes))
         return cost
+    #Cost +1 for every block type
+    elif cost_function == 2:
+        cost = (1.0 + dl(shapes)) * alpha
+        for s in shapes:
+            prob = []
+            for b in s:
+                add_block(len(s), prob, b.id, b.dmg)
+            cost = cost + len(prob)*len(prob)
+        return cost
     else:
         #alpha = 150
         cost = (1 + dl(shapes)) * alpha
@@ -553,12 +597,11 @@ def shape_cost(s):
 
 # Returns the entropy of a shape.
 def entropy(s):
-    nb = len(s)
     e = 0
     prob = []
     # sum block types = for
     for b in s:
-        add_block(nb, prob, b.id, b.dmg)
+        add_block(len(s), prob, b.id, b.dmg)
     # Probability of certain block type * log of prob
     for p in prob:
         e = e + p[2] * math.log(p[2], 2)
@@ -568,12 +611,11 @@ def entropy(s):
 
 # returns the entropy of a shape
 def other_entropy(s):
-    nb = len(s)
     e = 0
     prob = []
     # sum block types = for
     for b in s:
-        add_block(nb, prob, b.id, b.dmg)
+        add_block(len(s), prob, b.id, b.dmg)
     # Probability of certain block type * log of prob
     for p in prob:
         e = e + p[2] * math.log(p[2], 2)
@@ -587,16 +629,15 @@ def dl(shapes):
 
 
 # Perform the hill climbing algorithm on a set of shapes.
-def hill_climbing(shapes, merge_split, cost_function=0, alpha=1.1, m=None):
+def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None):
     same = 0
     prev_shape_cost = 99999999
     while same < 2:
-        # choice
         cpy = shapes[:]  # shapes.copy()
         if merge_split == 2:
-            new_m, cost_m = just_merge(cpy, prev_shape_cost, cost_function, alpha)
+            new_m, cost_m = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect)
 
-            new_s, cost_s = just_split(cpy, prev_shape_cost, cost_function, alpha)
+            new_s, cost_s = best_split(cpy, prev_shape_cost, cost_function, alpha)
             if cost_m < cost_s:
                 print("Merge")
                 new = new_m
@@ -614,12 +655,11 @@ def hill_climbing(shapes, merge_split, cost_function=0, alpha=1.1, m=None):
                 cpy = filter_final_shapes_overlap(cpy, m)
                 print("START SHAPES")
                 print(cpy)
-                prev_shape_cost = shapes_cost(cpy,cost_function, alpha)
-            new, cost = just_split(cpy, prev_shape_cost, cost_function, alpha)
+                prev_shape_cost = shapes_cost(cpy, cost_function, alpha)
+            new, cost = best_split(cpy, prev_shape_cost, cost_function, alpha)
         else:
-            new, cost = just_merge(cpy, prev_shape_cost, cost_function, alpha)
+            new, cost = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect)
         if cost == prev_shape_cost:
-            print("same")
             same = same + 1
         shapes = new
         prev_shape_cost = cost
@@ -632,7 +672,6 @@ def hill_climbing(shapes, merge_split, cost_function=0, alpha=1.1, m=None):
     #    if shapes_cost(shapes) == shapes_cost(new):
     #       same = same +1
     #    shapes = new
-    print("return")
     return shapes
 
 
@@ -766,18 +805,7 @@ def split_on_i(plane, b):
 
 # Learn the relations between shapes in a shape set.
 def relation_learning(shapes):
-    copy = copy_shapes(shapes)
-    shape_dupe_list = []
-    for s1 in copy:
-        if in_shape_dupe_list(s1, shape_dupe_list):
-            continue
-        s = [s1]
-        for s2 in copy:
-            if in_shape_dupe_list(s2, shape_dupe_list):
-                continue
-            if s1.__ne__(s2) and is_duplicate_shape(s1, s2):
-                s.append(s2)
-        shape_dupe_list.append(s)
+    shape_dupe_list = get_duplicate_shapes(shapes)
     rel = []
     copy = copy_shapes(shapes)
     for sl1 in shape_dupe_list:
@@ -793,6 +821,21 @@ def relation_learning(shapes):
     rel = new_rel
     return rel
 
+
+def get_duplicate_shapes(shapes):
+    copy = copy_shapes(shapes)
+    shape_dupe_list = []
+    for s1 in copy:
+        if in_shape_dupe_list(s1, shape_dupe_list):
+            continue
+        s = [s1]
+        for s2 in copy:
+            if in_shape_dupe_list(s2, shape_dupe_list):
+                continue
+            if s1.__ne__(s2) and is_duplicate_shape(s1, s2):
+                s.append(s2)
+        shape_dupe_list.append(s)
+    return shape_dupe_list
 
 # Check if the shape is in the shape duplication list.
 def in_shape_dupe_list(shape, shape_dupe_list):
@@ -911,7 +954,6 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
                 tries = tries + 1
                 blocked.append(r)
                 w = random.choice(final)
-                print(tries)
                 continue
             else:
                 if final.__contains__(shape):
@@ -925,28 +967,26 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
                 final.append(shape)
                 # Continue with a random shape or the newly appended shape.
                 w = random.choice(final)  # w = shape
-                print(final)
         else:
             w = random.choice(final)
             nrtries = nrtries + 1
             continue
-        print(n)
         n = n - 1
     # If contact with none or only one other shape: remove the shape.
-    done = False
-    while not done:
-        remove = []
-        for s1 in final:
-            i = 0
-            for s2 in final:
-                if contact(s1,s2): i = i+1
-                if i > 1: break
-            if i <= 1: remove.append(s1)
-        if len(remove) == 0:
-            done = True
-        print("PRUNE")
-        print(remove)
-        final = [s for s in final if not remove.__contains__(s)]
+    #done = False
+    #while not done:
+    #    remove = []
+    #    for s1 in final:
+    #        i = 0
+    #        for s2 in final:
+    #            if contact(s1,s2): i = i+1
+    #            if i > 1: break
+    #        if i <= 1: remove.append(s1)
+    #    if len(remove) == 0:
+    #        done = True
+    #    print("PRUNE")
+    #    print(remove)
+    #    final = [s for s in final if not remove.__contains__(s)]
     return final
 
 

@@ -14,26 +14,27 @@ import timeit
 inputs = (
     ("Shape grammar induction and production", "label"),
     ("Creator: Gillis Hermans", "label"),
-    ("Merge or split:", 0),
+    ("Merge(0), split(1) or both(2):", 0),
+    ("Rect(0), same plane(1) or 3D shapes(2):", 0),
     ("Cost function:", 0),
     ("Alpha:", 150),
-    ("Split grammar:", 0),
-    ("Apply post split operation:", 0),
-    ("Overlap allowed:", 1),
-    ("Visualize overlap:", 0),
-    ("Add rotated shapes:", 1)
+    ("Split grammar:", False),
+    ("Apply post split operation:", False),
+    ("Overlap allowed:", True),
+    ("Visualize overlap:", False),
+    ("Add rotated shapes:", True)
 )
 
 
 def evaluate_alpha(level,box,options):
     m = scan_structure(level, box, options)
     initial = initial_shapes(m)
-    av = [0.0,0.25,0.5,0.75,1.0,1.1,1.25,1.5,1.75,2,5,10]
+    av = [1.5]#[0.0,0.25,0.5,0.75,1.0,1.1,1.25,1.5,1.75,2,5,10]
     i = 0
     for alpha in av:
         tic = timeit.default_timer()
-        shapes = shp.hill_climbing(initial, options["Merge or split:"], options["Cost function:"], alpha, m)
-        if options["Overlap allowed:"] != 0:
+        shapes = shp.hill_climbing(initial, options["Rect(0), same plane(1) or 3D shapes(2):"], options["Merge(0), split(1) or both(2):"], options["Cost function:"], alpha, m)
+        if options["Overlap allowed:"]:
             shapes = shp.filter_final_shapes_overlap(shapes, m)
         else:
             shapes = shp.filter_final_shapes_no_overlap(shapes)
@@ -63,7 +64,12 @@ def evaluate_alpha(level,box,options):
         print("Average complexity", avg_c)
         print("Max complexity", least)
         print("Min complexity", most)
-        print("Number of identical shapes")
+        duplicate_list = shp.get_duplicate_shapes(shapes)
+        print(duplicate_list)
+        identical = 0
+        for d in duplicate_list:
+            identical += len(d) -1
+        print("Number of identical shapes", identical)
         print("Time spent",(toc - tic))
         #print("Cost",shp.shapes_cost(shapes, options["Cost function:"], alpha))
         print("\n")

@@ -14,14 +14,15 @@ import enclosure as encl
 inputs = (
     ("Shape grammar induction and production", "label"),
     ("Creator: Gillis Hermans", "label"),
-    ("Merge or split:", 0),
+    ("Merge(0), split(1) or both(2):", 0),
+    ("Rect(0), same plane(1) or 3D shapes(2):", 0),
     ("Cost function:", 0),
     ("Alpha:", 150),
-    ("Split grammar:", 0),
-    ("Apply post split operation:", 0),
-    ("Overlap allowed:", 1),
-    ("Visualize overlap:", 0),
-    ("Add rotated shapes:", 1)
+    ("Split grammar:", False),
+    ("Apply post split operation:", False),
+    ("Overlap allowed:", True),
+    ("Visualize overlap:", False),
+    ("Add rotated shapes:", True)
 )
 
 
@@ -38,18 +39,18 @@ def perform(level, box, options):
 
     m = scan_structure(level, box, options)
     shapes = initial_shapes(m)
-    shapes = shp.hill_climbing(shapes, options["Merge or split:"], options["Cost function:"], float(options["Alpha:"])/100.0, m)
-    if options["Overlap allowed:"] != 0:
+    shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"], options["Merge(0), split(1) or both(2):"], options["Cost function:"], float(options["Alpha:"])/100.0, m)
+    if options["Overlap allowed:"]:
         shapes = shp.filter_final_shapes_overlap(shapes, m)
     else:
         shapes = shp.filter_final_shapes_no_overlap(shapes)
     i = 0
     for s in shapes:
-        build_shape(s, level, box, options, 5 + i)
+        build_shape(s, level, box, options, 10 + i)
         i = i + 1
-    print("Hill climbing results:")
+    print("Hill climbing done")
     print(shapes)
-    if options["Apply post split operation:"] != 0:
+    if options["Apply post split operation:"]:
         shapes = shp.post_plane_split(shapes, 'xz')
         shapes = shp.post_plane_split(shapes, 'xy')
         shapes = shp.post_plane_split(shapes, 'zy')
@@ -63,7 +64,7 @@ def perform(level, box, options):
     #print(default)
     #print("SCORE")
     #print(shp.similarity_shape_sets(default,shapes))
-    if options["Add rotated shapes:"] == 1:
+    if options["Add rotated shapes:"]:
         new_shapes = []
         for s in shapes:
             if s.plane == 'xy':
@@ -77,17 +78,18 @@ def perform(level, box, options):
             else:
                 continue
         shapes.extend(new_shapes)
-        #print("Rotated shapes results:")
+        print("Rotated shapes done")
         #print(shapes)
     rel = shp.relation_learning(shp.copy_shapes(shapes))
-    print("Relation learning results:")
-    print(rel)
+    print("Relation learning done")
+    #print(rel)
 
-    if options["Split grammar:"] == 0:
-        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], 500)
-        print("Production shapes")
-    else:
+    if options["Split grammar:"]:
         final = splt.split_grammar(shp.copy_shapes(shapes), rel)
+
+    else:
+        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], 500)
+    print("Production shapes done")
     i = 0
     print("Building")
     for s in final:
@@ -98,8 +100,9 @@ def perform(level, box, options):
     return
 
     enclosed = encl.enclosure_update_3d(final)
+    print("enclosure done")
     for s in enclosed:
-        build_shape(s, level, box, options, 10)
+        build_shape(s, level, box, options, 20)
         # build_shape(s, level, box,options,10+i)
         i = i + 1
 
@@ -247,7 +250,7 @@ def build_shape(s, level, box, options, i=0):
     # print(s)
     y = box.miny
     for b in s:
-        if options["Visualize overlap:"] == 1 and level.blockAt(box.minx + b.x, y + b.y,
+        if options["Visualize overlap:"] and level.blockAt(box.minx + b.x, y + b.y,
                                                                 box.minz + b.z + 10 + (i * 6)) != 0:
             utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x, y + b.y, box.minz + b.z + 10 + (i * 6))
         else:

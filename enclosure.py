@@ -243,7 +243,7 @@ def build_production_space_3d(shapes):
             if b.y > maxy: maxy = b.y
             if b.z < minz: minz = b.z
             if b.z > maxz: maxz = b.z
-    space = [[[0 for e in range(maxz-minz+3)] for col in range(maxy-miny+2)] for row in range(maxx-minx+3)]
+    space = [[[0 for e in range(maxz-minz+3)] for col in range(maxy-miny+3)] for row in range(maxx-minx+3)]
     for s in shapes:
         for b in s:
             space[b.x - minx+1][b.y - miny][b.z - minz+1] = b.id
