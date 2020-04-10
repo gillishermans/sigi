@@ -69,7 +69,7 @@ def evaluate_alpha(level,box,options):
         identical = 0
         for d in duplicate_list:
             identical += len(d) -1
-        print("Number of identical shapes", identical)
+        print("Number of 'redundant' identical shapes", identical)
         print("Time spent",(toc - tic))
         #print("Cost",shp.shapes_cost(shapes, options["Cost function:"], alpha))
         print("\n")

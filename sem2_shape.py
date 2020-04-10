@@ -40,7 +40,7 @@ class Block:
 
     def __str__(self):
         # return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
-        #return str(float(self.id + float(self.dmg) / 100)) + " rel pos (" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
+        return str(float(self.id + float(self.dmg) / 100)) + "(" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
         #return str("(" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")")
         return str(float(self.id + float(self.dmg) / 100))
 
@@ -59,6 +59,11 @@ class Block:
         b.ry = self.ry
         b.rz = self.rz
         return b
+
+    def basic_rel_pos(self,plane):
+        if plane == 'xy': return [self.rx,self.ry]
+        elif plane == 'zy': return [self.rz,self.ry]
+        else: return [self.rx,self.rz]
 
 
 # A shape class consisting of a collection of blocks.
@@ -139,6 +144,7 @@ class Shape:
 
     def append(self, b):
         bn = (Block(b.id, b.dmg, b.x, b.y, b.z))
+        self.new_relative(bn)
         bn.set_relative(self.f)
         self.list.append(bn)
         self.edit_min_max([b.x, b.y, b.z])
@@ -175,6 +181,13 @@ class Shape:
 
     def height(self):
         return self.max[1] - self.min[1]
+
+    def new_relative(self,b):
+        if self.f[0] >= b.x and self.f[1] >= b.y and self.f[2] >= b.z:
+            self.f = [b.x,b.y,b.z]
+            for block in self.list:
+                block.set_relative(self.f)
+
 
 
 # Compare two shape sets and return a score for their similarity.
@@ -914,26 +927,15 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
     max = [w.list[0].x, w.list[0].y, w.list[0].z]
     final = [w]
     tries = 0
-    nrtries = 0
-    blocked = []
     while n > 0:
         w = random.choice(final)
         if (tries > 100):
             break
-        if (nrtries > 100):
-            break
         rrel = []
-        for r in rel:
+        for r in rel: #of the form [[s1, possible identical s], s2, s1]
             for s in r[0]:
                 if s.eq_production(w):
                     rrel.append(r)
-        remove = []
-        for rr in blocked:
-            for r in rrel:
-                if (r == rr):
-                    remove.append(r)
-        for r in remove:
-            rrel.remove(r)
         if len(rrel) != 0:
             r = random.choice(rrel)
             og = r[2]
@@ -952,8 +954,6 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
                 min = tempmin
                 max = tempmax
                 tries = tries + 1
-                blocked.append(r)
-                w = random.choice(final)
                 continue
             else:
                 if final.__contains__(shape):
@@ -968,8 +968,6 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
                 # Continue with a random shape or the newly appended shape.
                 w = random.choice(final)  # w = shape
         else:
-            w = random.choice(final)
-            nrtries = nrtries + 1
             continue
         n = n - 1
     # If contact with none or only one other shape: remove the shape.
@@ -1021,6 +1019,22 @@ def edit_pos_relation(w, og, shape):
 
 
 # Check if the shape is the same except for location and orientation
+def is_duplicate_shape_n(s1, s2):
+    if len(s1) != len(s2):
+        return False
+    m = len(s1)
+    # FLIP S2 ON FOUR SIDES TO CHECK IF EQUAL
+    for b1 in s1:
+        for b2 in s2:
+            if b1.id == b2.id and b1.dmg == b2.dmg and b1.basic_rel_pos(s1.plane) == b2.basic_rel_pos(s2.plane):
+                m = m - 1
+                break
+    if m == 0:
+        return True
+    return False
+
+
+# Check if the shape is the same except for location and orientation
 def is_duplicate_shape(s1, s2):
     if len(s1) != len(s2):
         return False
@@ -1032,7 +1046,7 @@ def is_duplicate_shape(s1, s2):
                 if b1.id == b2.id and b1.dmg == b2.dmg and b1.rx == b2.rx and b1.ry == b2.ry and b1.rz == b2.rz:
                     m = m - 1
                     break
-        if (m == 0):
+        if m == 0:
             return True
     else:
         m = len(s1)
