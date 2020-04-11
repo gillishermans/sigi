@@ -330,10 +330,10 @@ def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
             new_shapes.append(split[0])
             new_shapes.append(split[1])
             new_cost = shapes_cost(new_shapes, cost_function, alpha)
-            print("New split")
-            print(split)
-            print(new_cost)
-            print(prev_cost)
+            #print("New split")
+            #print(split)
+            #print(new_cost)
+            #print(prev_cost)
             if prev_cost - new_cost >= 0:
                 if saved_cost < prev_cost - new_cost:
                     saved_cost = prev_cost - new_cost
@@ -392,7 +392,7 @@ def split_shape_3d(s):
     for e in splits1:
         remainder = [x for x in s if x not in e]
         if remainder not in check and remainder:
-            print([e,remainder])
+            #print([e,remainder])
             possible_splits.append([shape_from_blocks(e,'xy'),shape_from_blocks(remainder,'xy')])
             check.append(e)
     return possible_splits
