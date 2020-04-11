@@ -307,14 +307,21 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1):
     return shapes, prev_cost
 
 
-def best_split(shapes, prev_cost, cost_function=0, alpha=1.1):
+def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
     saved_cost = 0
     best = [shapes,prev_cost]
     shapes = copy_shapes(shapes)
     for s in shapes:
         if len(s) % 2 != 0:
             continue
-        splits = split_shape(s)
+        if rect == 0:
+            splits = split_shape_rect(s)
+        elif rect == 1:
+            splits = split_shape_rect(s)
+            splits = legal_splits(splits)
+        else:
+            splits = split_shape_3d(s)
+            splits = legal_splits(splits)
         for split in splits:
             if s.__eq__(split[0]) and s.__eq__(split[1]):
                 continue
@@ -335,7 +342,62 @@ def best_split(shapes, prev_cost, cost_function=0, alpha=1.1):
     return best[0], best[1]
 
 
-def split_shape(s):
+def legal_splits(splits):
+    remove = []
+    for split in splits:
+        if not legal_split(split):
+            remove.append(split)
+    return [x for x in splits if not remove.__contains__(x)]
+
+def legal_split(split):
+    for s in split:
+        if not legal_shape(s):
+            return False
+    return True
+
+def legal_shape(s):
+    found = [s.list[0]]
+    not_found = s.list[1:]
+    current = found[0]
+    closed_list = [current]
+    while len(found) != 0:
+        current = found.pop(0)
+        closed_list.append(current)
+
+        fnd = []
+        for b in not_found:
+            if distance(current, b) == 1:
+                c = False
+                for closed_block in closed_list:
+                    if b == closed_block:
+                        c = True
+                if c: continue
+                fnd.append(b)
+        found.extend(fnd)
+        not_found = [x for x in not_found if not found.__contains__(x)]
+    if len(not_found) != 0:
+        return False
+    return True
+
+
+def split_shape_3d(s):
+    splits1 = [list(c) for i in xrange(len(s.list)) for c in itertools.combinations(s.list, i + 1)]
+    remove = []
+    for s in splits1:
+        if not legal_shape(shape_from_blocks(s,'xy')):
+            remove.append(s)
+    splits1 = [x for x in splits1 if not remove.__contains__(x)]
+    check = []
+    possible_splits = []
+    for e in splits1:
+        remainder = [x for x in s if x not in e]
+        if remainder not in check and remainder:
+            print([e,remainder])
+            possible_splits.append([shape_from_blocks(e,'xy'),shape_from_blocks(remainder,'xy')])
+            check.append(e)
+    return possible_splits
+
+def split_shape_rect(s):
     possible_splits = []
     if s.plane != 'zy':
         for w in range(s.min[0]+1,s.max[0]+1):
@@ -346,6 +408,8 @@ def split_shape(s):
                     one.append(b)
                 else:
                     two.append(b)
+            if len(one) == 0 or len(two) == 0:
+                continue
             possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
     if s.plane != 'xz':
         for h in range(s.min[1]+1,s.max[1]+1):
@@ -356,6 +420,8 @@ def split_shape(s):
                     one.append(b)
                 else:
                     two.append(b)
+            if len(one) == 0 or len(two) == 0:
+                continue
             possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
     if s.plane != 'xy':
         for d in range(s.min[2]+1,s.max[2]+1):
@@ -366,6 +432,8 @@ def split_shape(s):
                     one.append(b)
                 else:
                     two.append(b)
+            if len(one) == 0 or len(two) == 0:
+                continue
             possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
     return possible_splits
 
@@ -650,7 +718,7 @@ def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None)
         if merge_split == 2:
             new_m, cost_m = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect)
 
-            new_s, cost_s = best_split(cpy, prev_shape_cost, cost_function, alpha)
+            new_s, cost_s = best_split(cpy, prev_shape_cost, cost_function, alpha, rect)
             if cost_m < cost_s:
                 print("Merge")
                 new = new_m
@@ -664,12 +732,12 @@ def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None)
         elif merge_split == 1:
             # start with every shape as large as possible
             if prev_shape_cost == 99999999:
-                cpy = hill_climbing(cpy, 0, 1)
+                cpy = hill_climbing(cpy, rect, 0)
                 cpy = filter_final_shapes_overlap(cpy, m)
                 print("START SHAPES")
                 print(cpy)
                 prev_shape_cost = shapes_cost(cpy, cost_function, alpha)
-            new, cost = best_split(cpy, prev_shape_cost, cost_function, alpha)
+            new, cost = best_split(cpy, prev_shape_cost, cost_function, alpha, rect)
         else:
             new, cost = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect)
         if cost == prev_shape_cost:
@@ -1019,11 +1087,10 @@ def edit_pos_relation(w, og, shape):
 
 
 # Check if the shape is the same except for location and orientation
-def is_duplicate_shape_n(s1, s2):
+def is_duplicate_shape(s1, s2):
     if len(s1) != len(s2):
         return False
     m = len(s1)
-    # FLIP S2 ON FOUR SIDES TO CHECK IF EQUAL
     for b1 in s1:
         for b2 in s2:
             if b1.id == b2.id and b1.dmg == b2.dmg and b1.basic_rel_pos(s1.plane) == b2.basic_rel_pos(s2.plane):
@@ -1035,7 +1102,7 @@ def is_duplicate_shape_n(s1, s2):
 
 
 # Check if the shape is the same except for location and orientation
-def is_duplicate_shape(s1, s2):
+def is_duplicate_shape_old(s1, s2):
     if len(s1) != len(s2):
         return False
     if s1.plane == s2.plane:
@@ -1071,9 +1138,6 @@ def is_duplicate_shape(s1, s2):
     return False
 
 
-# def flip(shape):
-
-# EDIT RELATIVE HERE?
 def to_xz(s):
     if s.plane == 'xz': return s.copy()
     if s.plane == 'xy':

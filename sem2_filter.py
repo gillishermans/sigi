@@ -82,7 +82,7 @@ def perform(level, box, options):
         #print(shapes)
     rel = shp.relation_learning(shp.copy_shapes(shapes))
     print("Relation learning done")
-    #print(rel)
+    print(rel)
 
     if options["Split grammar:"]:
         final = splt.split_grammar(shp.copy_shapes(shapes), rel)
