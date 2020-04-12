@@ -77,6 +77,7 @@ class Shape:
         self.max = [b.x, b.y, b.z]
         self.append(b)
         self.tag = self.__str__()
+        self.rotated = False
 
     def __iter__(self):
         for b in self.list:
@@ -720,14 +721,14 @@ def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None)
 
             new_s, cost_s = best_split(cpy, prev_shape_cost, cost_function, alpha, rect)
             if cost_m < cost_s:
-                print("Merge")
+                #print("Merge")
                 new = new_m
                 cost = cost_m
             else:
-                print("Split")
+                #print("Split")
                 new = new_s
                 cost = cost_s
-            print(cost)
+            #print(cost)
             #print(new)
         elif merge_split == 1:
             # start with every shape as large as possible
@@ -989,26 +990,31 @@ def check_overlap(final, s):
 
 
 # Return a production of shapes with a size limitation.
-def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
-    w = random.choice(shapes)
+def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first = False):
+    f = None
+    if rotate_first:
+        w = random_rotate(f,random.choice(shapes))
+    else:
+        w = random.choice(shapes)
     min = [w.list[0].x, w.list[0].y, w.list[0].z]
     max = [w.list[0].x, w.list[0].y, w.list[0].z]
     final = [w]
     tries = 0
+
     while n > 0:
-        w = random.choice(final)
+        f = random.choice(final)
         if (tries > 100):
             break
         rrel = []
         for r in rel: #of the form [[s1, possible identical s], s2, s1]
             for s in r[0]:
-                if s.eq_production(w):
+                if s.eq_production(f):
                     rrel.append(r)
         if len(rrel) != 0:
             r = random.choice(rrel)
             og = r[2]
             shape = r[1].copy()
-            edit_pos_relation(w, og, shape)
+            edit_pos_relation(f, og, shape)
 
             tempmin = min
             tempmax = max
@@ -1024,36 +1030,49 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5):
                 tries = tries + 1
                 continue
             else:
-                if final.__contains__(shape):
-                    tries = tries + 1
-                    continue
-                if check_overlap(final,shape):
-                    tries = tries + 1
-                    continue
+                #if final.__contains__(shape):
+                #    tries = tries + 1
+                #    continue
+                #if check_overlap(final,shape):
+                #    tries = tries + 1
+                #    continue
                 tries = 0
                 blocked = []
-                final.append(shape)
+                final.append(random_rotate(f,shape))
                 # Continue with a random shape or the newly appended shape.
-                w = random.choice(final)  # w = shape
+                #f = random.choice(final)  # w = shape
         else:
             continue
         n = n - 1
-    # If contact with none or only one other shape: remove the shape.
-    #done = False
-    #while not done:
-    #    remove = []
-    #    for s1 in final:
-    #        i = 0
-    #        for s2 in final:
-    #            if contact(s1,s2): i = i+1
-    #            if i > 1: break
-    #        if i <= 1: remove.append(s1)
-    #    if len(remove) == 0:
-    #        done = True
-    #    print("PRUNE")
-    #    print(remove)
-    #    final = [s for s in final if not remove.__contains__(s)]
     return final
+
+
+def random_rotate(w,s):
+    print(s)
+    if w is None:
+        #return s
+        return rotate_shape(s)
+    else:
+        if not w.rotated:
+            print("prev not rot")
+            return s
+        else:
+            print("prev rot")
+            return rotate_shape(s)
+
+def rotate_shape(s):
+    print(s.plane)
+    if s.plane == 'xy':
+        rs = s.copy()
+        rs = to_zy(rs)
+    if s.plane == 'zy':
+        rs = s.copy()
+        rs = to_xy(rs)
+    else:
+        rs = rotate_xz(s)
+    print(s.plane)
+    rs.rotated = True
+    return rs
 
 
 def one_plane_contact(shape,shapes):
@@ -1077,12 +1096,14 @@ def edit_pos_relation(w, og, shape):
         p[2] = og.f[2] - w.f[2]
         shape.edit_pos(p)
     else:
-        if og.plane == 'xy':
-            shape = to_xy(shape)
-        if og.plane == 'xz':
-            shape = to_xz(shape)
-        if og.plane == 'zy':
-            shape = to_zy(shape)
+        print("w and og not the same")
+        shape = rotate_shape(shape)
+    #    if og.plane == 'xy':
+    #        shape = to_xy(shape)
+    #    if og.plane == 'xz':
+    #        shape = to_xz(shape)
+    #    if og.plane == 'zy':
+    #        shape = to_zy(shape)
     return shape
 
 
@@ -1202,6 +1223,17 @@ def to_zy(s):
         sd.plane = 'zy'
         sd.set_relative([sd.list[0].x, sd.list[0].y, sd.list[0].z])
         return sd
+
+
+def rotate_xz(s):
+    new = []
+    copy = s.copy()
+    for b in copy:
+        tmp = b.x
+        b.x = b.z
+        b.z = tmp
+        new.append(b)
+    return shape_from_blocks(new,s.plane)
 
 
 def extend_shape(s, l=1):

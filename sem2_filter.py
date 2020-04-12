@@ -22,7 +22,7 @@ inputs = (
     ("Apply post split operation:", False),
     ("Overlap allowed:", True),
     ("Visualize overlap:", False),
-    ("Add rotated shapes:", True)
+    ("Rotate the first produced shape:", False)
 )
 
 
@@ -64,22 +64,6 @@ def perform(level, box, options):
     #print(default)
     #print("SCORE")
     #print(shp.similarity_shape_sets(default,shapes))
-    if options["Add rotated shapes:"]:
-        new_shapes = []
-        for s in shapes:
-            if s.plane == 'xy':
-                ns = s.copy()
-                ns = shp.to_zy(ns)
-                new_shapes.append(ns)
-            if s.plane == 'zy':
-                ns = s.copy()
-                ns = shp.to_xy(ns)
-                new_shapes.append(ns)
-            else:
-                continue
-        shapes.extend(new_shapes)
-        print("Rotated shapes done")
-        #print(shapes)
     rel = shp.relation_learning(shp.copy_shapes(shapes))
     print("Relation learning done")
     print(rel)
@@ -88,7 +72,7 @@ def perform(level, box, options):
         final = splt.split_grammar(shp.copy_shapes(shapes), rel)
 
     else:
-        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], 500)
+        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], 200, options["Rotate the first produced shape:"])
     print("Production shapes done")
     i = 0
     print("Building")
