@@ -1,7 +1,7 @@
 Example: 1
 Rect(0), same plane(1) or 3D shapes(2): 0
 Merge(0), split(1) or both(2): 1
-Cost function: 0
+Cost function: 1
 Overlap allowed: True
 
 Alpha: 0.5
@@ -15,7 +15,7 @@ Median complexity: 3.0
 Max complexity: 3
 Min complexity: 2
 Number of 'redundant' identical shapes: 2
-Time spent: 1.3300442
+Time spent: 1.3127529
 
 Alpha: 1.0
 Number of shapes: 5
@@ -28,7 +28,7 @@ Median complexity: 3.0
 Max complexity: 3
 Min complexity: 2
 Number of 'redundant' identical shapes: 2
-Time spent: 1.3423507
+Time spent: 1.3807861
 
 Alpha: 1.5
 Number of shapes: 5
@@ -41,5 +41,5 @@ Median complexity: 3.0
 Max complexity: 3
 Min complexity: 2
 Number of 'redundant' identical shapes: 2
-Time spent: 1.4342269
+Time spent: 1.3195878
 

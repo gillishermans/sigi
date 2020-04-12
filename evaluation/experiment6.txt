@@ -1,45 +1,45 @@
 Example: 1
 Rect(0), same plane(1) or 3D shapes(2): 0
-Merge(0), split(1) or both(2): 1
+Merge(0), split(1) or both(2): 0
 Cost function: 1
-Overlap allowed: True
+Overlap allowed: False
 
 Alpha: 0.5
-Number of shapes: 5
-Mean shape size: 21.0
-Median shape size: 20.0
+Number of shapes: 13
+Mean shape size: 5.615384615384615
+Median shape size: 4.0
 Largest shape: 25
-Smallest shape: 20
-Mean complexity: 2.8
-Median complexity: 3.0
+Smallest shape: 4
+Mean complexity: 2.3846153846153846
+Median complexity: 2.0
 Max complexity: 3
 Min complexity: 2
-Number of 'redundant' identical shapes: 2
-Time spent: 1.3234843
+Number of 'redundant' identical shapes: 3
+Time spent: 1.2470367
 
 Alpha: 1.0
-Number of shapes: 5
-Mean shape size: 21.0
-Median shape size: 20.0
+Number of shapes: 13
+Mean shape size: 5.615384615384615
+Median shape size: 4.0
 Largest shape: 25
-Smallest shape: 20
-Mean complexity: 2.8
-Median complexity: 3.0
+Smallest shape: 4
+Mean complexity: 2.3846153846153846
+Median complexity: 2.0
 Max complexity: 3
 Min complexity: 2
-Number of 'redundant' identical shapes: 2
-Time spent: 1.4007616
+Number of 'redundant' identical shapes: 3
+Time spent: 1.2354126
 
 Alpha: 1.5
-Number of shapes: 5
-Mean shape size: 21.0
-Median shape size: 20.0
+Number of shapes: 13
+Mean shape size: 5.615384615384615
+Median shape size: 4.0
 Largest shape: 25
-Smallest shape: 20
-Mean complexity: 2.8
-Median complexity: 3.0
+Smallest shape: 4
+Mean complexity: 2.3846153846153846
+Median complexity: 2.0
 Max complexity: 3
 Min complexity: 2
-Number of 'redundant' identical shapes: 2
-Time spent: 1.3485523
+Number of 'redundant' identical shapes: 3
+Time spent: 1.3049448
 

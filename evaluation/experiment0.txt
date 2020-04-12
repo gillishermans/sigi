@@ -15,7 +15,7 @@ Median complexity: 1.0
 Max complexity: 1
 Min complexity: 1
 Number of 'redundant' identical shapes: 22
-Time spent: 10.5001285
+Time spent: 10.7574783
 
 Alpha: 1.0
 Number of shapes: 5
@@ -28,7 +28,7 @@ Median complexity: 3.0
 Max complexity: 3
 Min complexity: 2
 Number of 'redundant' identical shapes: 2
-Time spent: 1.2993123
+Time spent: 1.3042454
 
 Alpha: 1.5
 Number of shapes: 5
@@ -41,5 +41,5 @@ Median complexity: 3.0
 Max complexity: 3
 Min complexity: 2
 Number of 'redundant' identical shapes: 2
-Time spent: 1.3723187
+Time spent: 1.3155942
 
