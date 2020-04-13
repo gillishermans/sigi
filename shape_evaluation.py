@@ -13,16 +13,17 @@ import timeit
 import in_out as io
 
 inputs = (
-    ("Shape grammar induction and production", "label"),
+    ("Evaluate procedural models.", "label"),
     ("Creator: Gillis Hermans", "label")
 )
 
 def perform(level, box, options):
-    evaluate_alpha(level,box,options)
+    evaluate_alpha(level,box)
 
 
-def evaluate_alpha(level,box,options):
-    m = io.scan_structure(level, box, options)
+#Evaluate different algorithms for a set of alpha values.
+def evaluate_alpha(level,box):
+    m = io.scan_structure(level, box)
     initial = io.initial_shapes(m)
     av = [0.5,1.0,1.5]#[0.0,0.25,0.5,0.75,1.0,1.1,1.25,1.5,1.75,2,5,10]
 
@@ -38,6 +39,7 @@ def evaluate_alpha(level,box,options):
                         file_nb += 1
 
 
+#Perform an experiment for a certain algorithm and a number of alpha values.
 def alpha_experiment(initial, alpha_list, rect, operation, cost, overlap, post_split, m, file_nb):
     for alpha in alpha_list:
         tic = timeit.default_timer()
@@ -69,8 +71,8 @@ def alpha_experiment(initial, alpha_list, rect, operation, cost, overlap, post_s
             avg_complex += len(blocktypes)
             if min_complex > len(blocktypes): min_complex = len(blocktypes)
             if max_complex < len(blocktypes): max_complex = len(blocktypes)
-        mean_size = np.mean(sizes)#float(avg) / float(len(shapes))
-        mean_complex = np.mean(complexity)#float(avg_c) / float(len(shapes))
+        mean_size = np.mean(sizes)
+        mean_complex = np.mean(complexity)
         median_size = np.median(sizes)
         median_complex = np.median(complexity)
 
@@ -78,11 +80,12 @@ def alpha_experiment(initial, alpha_list, rect, operation, cost, overlap, post_s
         identical = 0
         for d in duplicate_list:
             identical += len(d) -1
-        #print("Cost",shp.shapes_cost(shapes, options["Cost function:"], alpha))
 
         time_spent = (toc - tic)
         write_alpha_experiment(file_nb,alpha,len(shapes),mean_size,median_size,max_size,min_size,mean_complex,median_complex,max_complex,min_complex,identical,time_spent)
 
+
+#Write the initial specifications of an experiment to disk.
 def write_experiment(file_nb, example, rect, operation, cost, overlap):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -97,6 +100,7 @@ def write_experiment(file_nb, example, rect, operation, cost, overlap):
     file.close()
 
 
+#Write the results of an experiment to disk.
 def write_alpha_experiment(file_nb,alpha,nb_shapes,avg_size,mean_size,max_size,min_size,avg_complex,mean_complex,max_complex,min_complex,identical,time):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))

@@ -13,12 +13,13 @@ import enclosure as encl
 import in_out as io
 
 inputs = (
-    ("Shape grammar induction and production", "label"),
+    ("Generate procedural model for example structure.", "label"),
     ("Creator: Gillis Hermans", "label"),
     ("Merge(0), split(1) or both(2):", 0),
     ("Rect(0), same plane(1) or 3D shapes(2):", 0),
     ("Cost function:", 0),
-    ("Alpha:", 150),
+    ("Alpha:", 1.5),
+    ("Number of production shapes:", 100),
     ("Split grammar:", False),
     ("Apply post split operation:", False),
     ("Overlap allowed:", True),
@@ -27,7 +28,6 @@ inputs = (
 )
 
 
-# Perform the filter: scan the structure, extract the shapes and shape relations and produce a new structure.
 def perform(level, box, options):
 
     #default = io.read_shapes(1)
@@ -38,9 +38,9 @@ def perform(level, box, options):
     #    io.build_shape(s, level, box, options, 10)
     #return
 
-    m = io.scan_structure(level, box, options)
+    m = io.scan_structure(level, box)
     shapes = io.initial_shapes(m)
-    shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"], options["Merge(0), split(1) or both(2):"], options["Cost function:"], float(options["Alpha:"])/100.0, m)
+    shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"], options["Merge(0), split(1) or both(2):"], options["Cost function:"], float(options["Alpha:"]), m)
     if options["Overlap allowed:"]:
         shapes = shp.filter_final_shapes_overlap(shapes, m)
     else:
@@ -73,7 +73,7 @@ def perform(level, box, options):
         final = splt.split_grammar(shp.copy_shapes(shapes), rel)
 
     else:
-        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], 200, options["Rotate the first produced shape:"])
+        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], options["Number of production shapes:"], options["Rotate the first produced shape:"])
     print("Production shapes done")
     i = 0
     print("Building")

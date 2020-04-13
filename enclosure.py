@@ -1,6 +1,5 @@
 # Based on A* implementation by Nicholas Swift.
 class Node():
-    """A node class for A* Pathfinding"""
 
     def __init__(self, position=None):
         self.position = position

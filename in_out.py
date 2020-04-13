@@ -11,7 +11,7 @@ import sem2_shape as shp
 import split_grammar as splt
 
 # Scan the box for a structure and the probabilities of the blocks used in the structure.
-def scan_structure(level, box, options):
+def scan_structure(level, box):
     nb = 0
     prob = []
     m = np.zeros((box.maxx - box.minx, box.maxy - box.miny, box.maxz - box.minz))
@@ -21,14 +21,12 @@ def scan_structure(level, box, options):
     for x in range(box.minx, box.maxx):
         for y in range(box.miny, box.maxy):
             for z in range(box.minz, box.maxz):
-                blockid = level.blockAt(x, y, z)
+                block_id = level.blockAt(x, y, z)
                 dmg = level.blockDataAt(x, y, z)
-                m[x - box.minx][y - box.miny][z - box.minz] = Block(blockid, dmg, x, y, z)
-                if blockid != 0 and blockid != 2 and blockid != 3:
+                m[x - box.minx][y - box.miny][z - box.minz] = Block(block_id, dmg, x, y, z)
+                if block_id != 0 and block_id != 2 and block_id != 3:
                     nb = nb + 1
-                    shp.add_block(nb, prob, blockid, dmg)
-    # write_array(m)
-    # write_to_file(prob)
+                    shp.add_block(nb, prob, block_id, dmg)
     return ma
 
 # Writes the probabilities to a text file.
@@ -41,7 +39,7 @@ def write_to_file(prob):
         file.write(str(p[0]) + " " + str(p[3]) + " " + str(p[2]) + "\n")
     file.close()
 
-# Reads a 3d array in from a text file.
+# Reads a 3d array from a text file.
 def read_array(i):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -76,8 +74,8 @@ def write_array(array):
     # Save the array in slices so it is readable
     with open(file_to_open, 'w') as f:
         #f.write("#" + str(array.shape[0]) + ',' + str(array.shape[1]) + ',' + str(array.shape[2]) + '\n')
-        for slice in array:
-            np.savetxt(f, slice, fmt='%-7.2f')
+        for slc in array:
+            np.savetxt(f, slc, fmt='%-7.2f')
             f.write('# slice\n')
     return i
 
@@ -100,6 +98,8 @@ def write_shapes(shapes):
             f.write('\n')
     return i
 
+
+# Reads a shape set from a text file.
 def read_shapes(i):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -109,7 +109,6 @@ def read_shapes(i):
     # parse the shape of the array
     with open(__location__ + "\data\data%s.txt" % i) as f:
         lines = list(f)
-        #l = f.readline()
         for l in lines:
             a = l.split(' ')
 

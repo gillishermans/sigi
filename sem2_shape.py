@@ -5,20 +5,21 @@ from itertools import combinations
 import itertools
 import random
 
+
 # Updates a list of probabilities for blocks.
-def add_block(nb, prob, blockid, dmg):
+def add_block(nb, prob, block_id, dmg):
     for b in prob:
-        if b[0] == blockid and b[3] == dmg:
+        if b[0] == block_id and b[3] == dmg:
             b[1] = b[1] + 1.0
             b[2] = b[1] / nb
             return
-    prob.append([blockid, 1.0, 1.0 / nb, dmg])
+    prob.append([block_id, 1.0, 1.0 / nb, dmg])
 
 
-# A single block class
+# A single block class.
 class Block:
-    def __init__(self, blockid, dmg, x, y, z):
-        self.id = blockid
+    def __init__(self, block_id, dmg, x, y, z):
+        self.id = block_id
         self.dmg = dmg
         self.x = x
         self.y = y
@@ -30,7 +31,8 @@ class Block:
     def compare_eq(self, other):
         if self.id == other.id and self.dmg == other.dmg and self.x == other.x and self.y == other.y and self.z == other.z:
             return True
-        else: return False
+        else:
+            return False
 
     def __float__(self):
         return float(self.id + float(self.dmg) / 100)
@@ -40,9 +42,10 @@ class Block:
 
     def __str__(self):
         # return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
-        return str(float(self.id + float(self.dmg) / 100)) + "(" + str(self.rx) + "," + str(self.ry) + "," +str(self.rz) + ")"
-        #return str("(" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")")
-        return str(float(self.id + float(self.dmg) / 100))
+        return str(float(self.id + float(self.dmg) / 100)) + "(" + str(self.rx) + "," + str(self.ry) + "," + str(
+            self.rz) + ")"
+        # return str("(" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")")
+        # return str(float(self.id + float(self.dmg) / 100))
 
     def write_str(self):
         return str(self.id) + " " + str(self.dmg) + " " + str(self.x) + " " + str(self.y) + " " + str(
@@ -60,10 +63,13 @@ class Block:
         b.rz = self.rz
         return b
 
-    def basic_rel_pos(self,plane):
-        if plane == 'xy': return [self.rx,self.ry]
-        elif plane == 'zy': return [self.rz,self.ry]
-        else: return [self.rx,self.rz]
+    def basic_rel_pos(self, plane):
+        if plane == 'xy':
+            return [self.rx, self.ry]
+        elif plane == 'zy':
+            return [self.rz, self.ry]
+        else:
+            return [self.rx, self.rz]
 
 
 # A shape class consisting of a collection of blocks.
@@ -89,7 +95,7 @@ class Shape:
         else:
             return False
 
-    def compare_eq(self,other):
+    def compare_eq(self, other):
         if self.plane == other.plane and self.f == other.f:
             c = 0
             for b in self.list:
@@ -183,16 +189,15 @@ class Shape:
     def height(self):
         return self.max[1] - self.min[1]
 
-    def new_relative(self,b):
+    def new_relative(self, b):
         if self.f[0] >= b.x and self.f[1] >= b.y and self.f[2] >= b.z:
-            self.f = [b.x,b.y,b.z]
+            self.f = [b.x, b.y, b.z]
             for block in self.list:
                 block.set_relative(self.f)
 
 
-
 # Compare two shape sets and return a score for their similarity.
-def similarity_shape_sets(default,shapes):
+def similarity_shape_sets(default, shapes):
     score = 0.0
     nb = len(default)
     if len(default) == len(shapes):
@@ -200,10 +205,11 @@ def similarity_shape_sets(default,shapes):
             for s in shapes:
                 if d.compare_eq(s):
                     score = score + 1.0
-                    #Found the matching s with d
+                    # Found the matching s with d
                     break
     score = (score / nb)
     return score
+
 
 # Create a shape from a list of blocks and a plane.
 def shape_from_blocks(blocks, plane):
@@ -225,7 +231,7 @@ def copy_shapes(shapes):
 def remove_copy(shapes, sr):
     tr = []
     for s in shapes:
-        if (s.eq_production(sr)):
+        if s.eq_production(sr):
             tr.append(s)
             break
     for r in tr:
@@ -239,11 +245,11 @@ def just_merge(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
     # random.shuffle(shapes)
     for s1 in shapes:
         for s2 in shapes:
-            if (rect == 0 and s1.__ne__(s2) and s1.plane == s2.plane)\
-                    or (rect == 1 and is_legal_merge(s1,s2))\
-                    or (rect == 2 and s1.__ne__(s2) and s1.plane == s2.plane and contact(s1,s2)):
+            if (rect == 0 and s1.__ne__(s2) and s1.plane == s2.plane) \
+                    or (rect == 1 and is_legal_merge(s1, s2)) \
+                    or (rect == 2 and s1.__ne__(s2) and s1.plane == s2.plane and contact(s1, s2)):
                 s = merge_shape(s1, s2)
-                if rect == 0 and not is_rect(s,s.plane):
+                if rect == 0 and not is_rect(s, s.plane):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
@@ -263,7 +269,7 @@ def best_merge(shapes, prev_cost, cost_function=0, alpha=1.1):
             # if (len(s2) > 9): continue
             if s1.__ne__(s2) and s1.plane == s2.plane:
                 s = merge_shape(s1, s2)
-                if not is_rect(s,s.plane):
+                if not is_rect(s, s.plane):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
@@ -310,15 +316,15 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1):
 
 def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
     saved_cost = 0
-    best = [shapes,prev_cost]
+    best = [shapes, prev_cost]
     shapes = copy_shapes(shapes)
     for s in shapes:
         if len(s) % 2 != 0:
             continue
         if rect == 0:
-            splits = split_shape_rect(s)
+            splits = split_shape_2d(s)
         elif rect == 1:
-            splits = split_shape_rect(s)
+            splits = split_shape_2d(s)
             splits = legal_splits(splits)
         else:
             splits = split_shape_3d(s)
@@ -331,18 +337,19 @@ def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
             new_shapes.append(split[0])
             new_shapes.append(split[1])
             new_cost = shapes_cost(new_shapes, cost_function, alpha)
-            #print("New split")
-            #print(split)
-            #print(new_cost)
-            #print(prev_cost)
+            # print("New split")
+            # print(split)
+            # print(new_cost)
+            # print(prev_cost)
             if prev_cost - new_cost >= 0:
                 if saved_cost < prev_cost - new_cost:
                     saved_cost = prev_cost - new_cost
-                    best = [new_shapes,new_cost]
+                    best = [new_shapes, new_cost]
 
     return best[0], best[1]
 
 
+#Returns the splits that provide legal shapes.
 def legal_splits(splits):
     remove = []
     for split in splits:
@@ -350,12 +357,16 @@ def legal_splits(splits):
             remove.append(split)
     return [x for x in splits if not remove.__contains__(x)]
 
+
+#Check if a split is legal.
 def legal_split(split):
     for s in split:
         if not legal_shape(s):
             return False
     return True
 
+
+#Checks if a shape is legal: all blocks can reach each other.
 def legal_shape(s):
     found = [s.list[0]]
     not_found = s.list[1:]
@@ -381,11 +392,12 @@ def legal_shape(s):
     return True
 
 
+#Returns all 3d splits for a 3d shape.
 def split_shape_3d(s):
     splits1 = [list(c) for i in xrange(len(s.list)) for c in itertools.combinations(s.list, i + 1)]
     remove = []
     for s in splits1:
-        if not legal_shape(shape_from_blocks(s,'xy')):
+        if not legal_shape(shape_from_blocks(s, 'xy')):
             remove.append(s)
     splits1 = [x for x in splits1 if not remove.__contains__(x)]
     check = []
@@ -393,15 +405,16 @@ def split_shape_3d(s):
     for e in splits1:
         remainder = [x for x in s if x not in e]
         if remainder not in check and remainder:
-            #print([e,remainder])
-            possible_splits.append([shape_from_blocks(e,'xy'),shape_from_blocks(remainder,'xy')])
+            possible_splits.append([shape_from_blocks(e, 'xy'), shape_from_blocks(remainder, 'xy')])
             check.append(e)
     return possible_splits
 
-def split_shape_rect(s):
+
+#Returns all 2d splits for a 2d shape.
+def split_shape_2d(s):
     possible_splits = []
     if s.plane != 'zy':
-        for w in range(s.min[0]+1,s.max[0]+1):
+        for w in range(s.min[0] + 1, s.max[0] + 1):
             one = []
             two = []
             for b in s:
@@ -411,9 +424,9 @@ def split_shape_rect(s):
                     two.append(b)
             if len(one) == 0 or len(two) == 0:
                 continue
-            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
+            possible_splits.append([shape_from_blocks(one, s.plane), shape_from_blocks(two, s.plane)])
     if s.plane != 'xz':
-        for h in range(s.min[1]+1,s.max[1]+1):
+        for h in range(s.min[1] + 1, s.max[1] + 1):
             one = []
             two = []
             for b in s:
@@ -423,9 +436,9 @@ def split_shape_rect(s):
                     two.append(b)
             if len(one) == 0 or len(two) == 0:
                 continue
-            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
+            possible_splits.append([shape_from_blocks(one, s.plane), shape_from_blocks(two, s.plane)])
     if s.plane != 'xy':
-        for d in range(s.min[2]+1,s.max[2]+1):
+        for d in range(s.min[2] + 1, s.max[2] + 1):
             one = []
             two = []
             for b in s:
@@ -435,84 +448,16 @@ def split_shape_rect(s):
                     two.append(b)
             if len(one) == 0 or len(two) == 0:
                 continue
-            possible_splits.append([shape_from_blocks(one,s.plane),shape_from_blocks(two,s.plane)])
+            possible_splits.append([shape_from_blocks(one, s.plane), shape_from_blocks(two, s.plane)])
     return possible_splits
 
-# Returns the best possible split for a set of shapes
-def best_split_old(shapes):
-    saved_cost = 0
-    best = []
-    for s in shapes:
-        split = split_shape(s)
-        if (s.__eq__(split[0]) and s.__eq__(split[1])):
-            continue
-        if shape_cost(s) - (shape_cost(split[0]) + shape_cost(split[1])) > saved_cost:
-            saved_cost = shape_cost(s) - (shape_cost(split[0]) + shape_cost(split[1]))
-            best = [s, split[0], split[1]]
-    if len(best) == 0:
-        return shapes
-    shapes.remove(s)
-    shapes.append(split[0])
-    shapes.append(split[1])
-    return shapes
 
-# Splits a shape into two shapes - find the best split according to the minimal cost of the shapes
-def split_shape_old(s):
-    # r = find_rect(s)
-    subshapes = sub_shapes(s)
-    print(subshapes)
-    possible_splits = []
-    for sub in subshapes:
-        # print("SUB")
-        # print(sub)
-        if is_rect(sub[0],sub[0].plane) and is_rect(sub[1],sub[1].plane):
-            possible_splits.append(sub)
-    print("POSSIBLE")
-    print(possible_splits)
-    # print(s)
-    best = [s, s]
-    cost = shape_cost(best[0])
-    # print("COST")
-    # print(cost)
-    for i in range(0, len(possible_splits)):
-        # print("COSTif")
-        # print(shape_cost(possible_splits[i][0]) + shape_cost(possible_splits[i][1]))
-        if shape_cost(possible_splits[i][0]) + shape_cost(possible_splits[i][1]) < cost:
-            best = possible_splits[i]
-            cost = shape_cost(best[0]) + shape_cost(best[1])
-    return best
-
-
-# finds the sub_shape combinations for a certain shape
-def sub_shapes(s):
-    subshapes = []
-    sub = []
-    size = len(s)
-    comb = combinations(s, size / 2)
-    #print("Comb")
-    for c in comb:
-        if len(c) == 1:
-            sub.append([c[0]])
-        else:
-            l = []
-            for e in c:
-                l.append(e)
-            sub.append(l)
-    for i in range(0, len(sub)):
-        subs = Shape(sub[i][0], s.plane)
-        subs.extend(sub[i][1:])
-        sob = [a for a in s if a not in sub[i]]
-        sobs = Shape(sob[0], s.plane)
-        sobs.extend(sob[1:])
-        subsob = [subs, sobs]
-        subshapes.append(subsob)
-    return subshapes
-
-
-def is_legal_merge(s1,s2):
-    if s1.__eq__(s2) or s1.plane != s2.plane: return False
+#Returns true if the merge is a legal merge: merging two different shapes of the same plane that touch each other.
+def is_legal_merge(s1, s2):
+    if s1.__eq__(s2) or s1.plane != s2.plane:
+        return False
     else:
-        if not contact(s1,s2):
+        if not contact(s1, s2):
             return False
         else:
             if s1.plane == 'xy':
@@ -528,8 +473,8 @@ def is_legal_merge(s1,s2):
 
 
 # Returns true if a shape is a rectangle.
-def is_rect(s,plane):
-    r = find_rect(s,plane)
+def is_rect(s, plane):
+    r = find_rect(s, plane)
     if len(r) == 1:
         if abs(1 + r[0][2] - r[0][0]) * abs(1 + r[0][3] - r[0][1]) == len(s):
             return True
@@ -537,7 +482,7 @@ def is_rect(s,plane):
 
 
 # Finds the shape rectangles.
-def find_rect(s,plane):
+def find_rect(s, plane):
     test = np.zeros((2 * len(s) + 1, 2 * len(s) + 1))
 
     if plane == 'xy':
@@ -557,7 +502,6 @@ def find_rect(s,plane):
                 y = b.y
             else:
                 if y != b.y: return []
-            # print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             if b.rx + len(s) >= 2 * len(s) + 1 or b.rz + len(s) >= 2 * len(s) + 1: return []
             if b.rx + len(s) < 0 or b.rz + len(s) < 0: return []
             test[b.rx + len(s)][b.rz + len(s)] = 1.0
@@ -568,7 +512,6 @@ def find_rect(s,plane):
                 x = b.x
             else:
                 if x != b.x: return []
-            # print(str(b.rx) + ', ' + str(b.ry) + ', ' + str(b.rz))
             if b.ry + len(s) >= 2 * len(s) + 1 or b.rz + len(s) >= 2 * len(s) + 1: return []
             if b.ry + len(s) < 0 or b.rz + len(s) < 0: return []
             test[b.ry + len(s)][b.rz + len(s)] = 1.0
@@ -591,12 +534,12 @@ def get_rectangle(s):
                 # will be used for the
                 # last position
                 index = index + 1
-                findend(i, j, s, out, index)
+                find_end(i, j, s, out, index)
     return out
 
 
 # Get_rectangle help function. Based on Prabhat Jha (https://www.geeksforgeeks.org/find-rectangles-filled-0/)
-def findend(i, j, s, out, index):
+def find_end(i, j, s, out, index):
     flagc = 0
     flagr = 0
 
@@ -636,45 +579,40 @@ def shapes_cost2(shapes):
     shapes = [x for x in shapes if x not in to_remove]
     cost = (1 + dl(shapes) + dl(to_remove) / 2) ** alpha  # cost = (1 + dl(shapes)) ** alpha
     for s in shapes:
-        cost = cost + shape_cost(s)
+        cost = cost + entropy(s)
     for s in to_remove:
-        cost = cost + shape_cost(s)
+        cost = cost + entropy(s)
 
     return cost
 
 
 # Returns the cost of the given set of shapes.
-def shapes_cost(shapes, cost_function=0, alpha = 1.1):
+def shapes_cost(shapes, cost_function=0, alpha=1.1):
     # Standard entropy + DL cost function
     if cost_function == 0:
         cost = (1.0 + dl(shapes)) * alpha
         for s in shapes:
-            cost = cost + shape_cost(s)
+            cost = cost + entropy(s)
         return cost
     # Cost function for largest possible shapes
     elif cost_function == 1:
         cost = (1.0 + dl(shapes))
         return cost
-    #Cost +1 for every block type
+    # Cost +1 for every block type
     elif cost_function == 2:
         cost = (1.0 + dl(shapes)) * alpha
         for s in shapes:
             prob = []
             for b in s:
                 add_block(len(s), prob, b.id, b.dmg)
-            cost = cost + len(prob)*len(prob)
+            cost = cost + len(prob) * len(prob)
         return cost
     else:
-        #alpha = 150
+        # alpha = 150
         cost = (1 + dl(shapes)) * alpha
         for s in shapes:
             cost = cost + other_entropy(s)
         return cost
-
-
-# Cost function of a shape: entropy (and hamming distance - maybe later).
-def shape_cost(s):
-    return entropy(s)
 
 
 # Returns the entropy of a shape.
@@ -701,7 +639,7 @@ def other_entropy(s):
     # Probability of certain block type * log of prob
     for p in prob:
         e = e + p[2] * math.log(p[2], 2)
-    e = - e*math.exp(len(prob))
+    e = - e * math.exp(len(prob))
     return e
 
 
@@ -721,15 +659,13 @@ def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None)
 
             new_s, cost_s = best_split(cpy, prev_shape_cost, cost_function, alpha, rect)
             if cost_m < cost_s:
-                #print("Merge")
                 new = new_m
                 cost = cost_m
             else:
-                #print("Split")
                 new = new_s
                 cost = cost_s
-            #print(cost)
-            #print(new)
+            # print(cost)
+            # print(new)
         elif merge_split == 1:
             # start with every shape as large as possible
             if prev_shape_cost == 99999999:
@@ -745,15 +681,6 @@ def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None)
             same = same + 1
         shapes = new
         prev_shape_cost = cost
-    # until we reach an optima
-    # same = 0
-    # while(same < 2 ):
-    #    #choice
-    #    cpy = shapes[:]  # shapes.copy()
-    #    new = just_split(cpy)
-    #    if shapes_cost(shapes) == shapes_cost(new):
-    #       same = same +1
-    #    shapes = new
     return shapes
 
 
@@ -768,7 +695,7 @@ def filter_final_shapes_overlap(shapes, m):
                 if b.id != 0:
                     blocks.append(b)
     sort = sorted(shapes, key=len, reverse=True)
-    while blocks != []:
+    while blocks is not []:
         for s in sort:
             if len(final) == 0:
                 final.append(s)
@@ -919,6 +846,7 @@ def get_duplicate_shapes(shapes):
         shape_dupe_list.append(s)
     return shape_dupe_list
 
+
 # Check if the shape is in the shape duplication list.
 def in_shape_dupe_list(shape, shape_dupe_list):
     for sl in shape_dupe_list:
@@ -944,7 +872,7 @@ def distance(b1, b2):
 
 # Return a production of shapes.
 def production(shapes, rel, n=5):
-    #Start with a random initial shape.
+    # Start with a random initial shape.
     w = random.choice(shapes)
     final = [w]
     while n > 0:
@@ -960,7 +888,7 @@ def production(shapes, rel, n=5):
             shape = r.copy()
             edit_pos_relation(w, og, shape)
             final.append(shape)
-            #Continue with a random shape or the newly appended shape.
+            # Continue with a random shape or the newly appended shape.
             w = random.choice(final)  # w = shape
         n = n - 1
     return final
@@ -970,13 +898,13 @@ def production(shapes, rel, n=5):
 def check_overlap(final, s):
     for f in final:
         if f.plane != s.plane: continue
-        fmin = [f.list[0].x,f.list[0].y,f.list[0].z]
-        fmax = [f.list[0].x, f.list[0].y,f.list[0].z]
+        fmin = [f.list[0].x, f.list[0].y, f.list[0].z]
+        fmax = [f.list[0].x, f.list[0].y, f.list[0].z]
         for b in f:
             if fmin[0] > b.x or fmin[1] > b.y or fmin[2] > b.z:
-                fmin = [b.x,b.y,b.z]
+                fmin = [b.x, b.y, b.z]
             if fmax[0] < b.x or fmax[1] < b.y or fmax[2] < b.z:
-                fmax = [b.x,b.y,b.z]
+                fmax = [b.x, b.y, b.z]
         smin = [s.list[0].x, s.list[0].y, s.list[0].z]
         smax = [s.list[0].x, s.list[0].y, s.list[0].z]
         for b in s:
@@ -984,16 +912,17 @@ def check_overlap(final, s):
                 smin = [b.x, b.y, b.z]
             if smax[0] < b.x or smax[1] < b.y or smax[2] < b.z:
                 smax = [b.x, b.y, b.z]
-        if smin[0] >= fmin[0] and smin[1] >= fmin[1] and smin[2] >= fmin[2] and smax[0] <= fmax[0] and smax[1] <= fmax[1] and smax[2] <= fmax[2]:
+        if smin[0] >= fmin[0] and smin[1] >= fmin[1] and smin[2] >= fmin[2] and smax[0] <= fmax[0] and smax[1] <= fmax[
+            1] and smax[2] <= fmax[2]:
             return True
     return False
 
 
 # Return a production of shapes with a size limitation.
-def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first = False):
+def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first=False):
     f = None
     if rotate_first:
-        w = random_rotate(f,random.choice(shapes))
+        w = random_rotate(f, shapes[2])  # random.choice(shapes))
     else:
         w = random.choice(shapes)
     min = [w.list[0].x, w.list[0].y, w.list[0].z]
@@ -1002,11 +931,12 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first = False)
     tries = 0
 
     while n > 0:
+        # Continue with a random shape.
         f = random.choice(final)
-        if (tries > 100):
+        if tries > 100:
             break
         rrel = []
-        for r in rel: #of the form [[s1, possible identical s], s2, s1]
+        for r in rel:  # of the form [[s1, possible identical s], s2, s1]
             for s in r[0]:
                 if s.eq_production(f):
                     rrel.append(r)
@@ -1014,7 +944,7 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first = False)
             r = random.choice(rrel)
             og = r[2]
             shape = r[1].copy()
-            edit_pos_relation(f, og, shape)
+            shape = edit_pos_relation(f, og, shape)
 
             tempmin = min
             tempmax = max
@@ -1030,27 +960,27 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first = False)
                 tries = tries + 1
                 continue
             else:
-                #if final.__contains__(shape):
+                # if final.__contains__(shape):
                 #    tries = tries + 1
                 #    continue
-                #if check_overlap(final,shape):
+                # if check_overlap(final,shape):
                 #    tries = tries + 1
                 #    continue
                 tries = 0
                 blocked = []
-                final.append(random_rotate(f,shape))
-                # Continue with a random shape or the newly appended shape.
-                #f = random.choice(final)  # w = shape
+                # if shape.plane == 'xz':
+                #    continue
+                final.append(shape)  # final.append(random_rotate(f,shape))
         else:
             continue
         n = n - 1
     return final
 
 
-def random_rotate(w,s):
-    print(s)
+# Rotate s if w is rotated.
+def random_rotate(w, s):
     if w is None:
-        #return s
+        print("first")
         return rotate_shape(s)
     else:
         if not w.rotated:
@@ -1060,54 +990,44 @@ def random_rotate(w,s):
             print("prev rot")
             return rotate_shape(s)
 
+
+#Rotate a shape.
 def rotate_shape(s):
+    print(s)
     print(s.plane)
     if s.plane == 'xy':
         rs = s.copy()
         rs = to_zy(rs)
-    if s.plane == 'zy':
+    elif s.plane == 'zy':
         rs = s.copy()
         rs = to_xy(rs)
     else:
         rs = rotate_xz(s)
-    print(s.plane)
+    print(rs)
+    print(rs.plane)
     rs.rotated = True
     return rs
 
 
-def one_plane_contact(shape,shapes):
-    contact_blocks = []
-    contact_shape = 0
-    for s in shapes:
-        for b1 in shape:
-            for b2 in s:
-                if distance(b1, b2) == 1:
-                    contact_blocks.append(b2)
-                    #if()
-        return False
-
-
-# Edit the position of a new shape according to the position of the shape that produced it.
+# Edit the position of a new shape according to the position, and orientation of the shape that produced it.
 def edit_pos_relation(w, og, shape):
+    copy = shape.copy()
     p = [0, 0, 0]
-    if w.plane == og.plane:
+    if w.plane == 'xz' and w.rotated and w.plane == og.plane:
+        print("rotate xz")
+        copy = rotate_shape(copy)
+    elif w.plane == og.plane:
         p[0] = og.f[0] - w.f[0]
         p[1] = og.f[1] - w.f[1]
         p[2] = og.f[2] - w.f[2]
-        shape.edit_pos(p)
+        copy.edit_pos(p)
     else:
-        print("w and og not the same")
-        shape = rotate_shape(shape)
-    #    if og.plane == 'xy':
-    #        shape = to_xy(shape)
-    #    if og.plane == 'xz':
-    #        shape = to_xz(shape)
-    #    if og.plane == 'zy':
-    #        shape = to_zy(shape)
-    return shape
+        print("not og plane")
+        copy = rotate_shape(copy)
+    return copy
 
 
-# Check if the shape is the same except for location and orientation
+# Check if the s2 is the same as s1 aside from it's location and orientation
 def is_duplicate_shape(s1, s2):
     if len(s1) != len(s2):
         return False
@@ -1122,43 +1042,7 @@ def is_duplicate_shape(s1, s2):
     return False
 
 
-# Check if the shape is the same except for location and orientation
-def is_duplicate_shape_old(s1, s2):
-    if len(s1) != len(s2):
-        return False
-    if s1.plane == s2.plane:
-        m = len(s1)
-        # FLIP S2 ON FOUR SIDES TO CHECK IF EQUAL
-        for b1 in s1:
-            for b2 in s2:
-                if b1.id == b2.id and b1.dmg == b2.dmg and b1.rx == b2.rx and b1.ry == b2.ry and b1.rz == b2.rz:
-                    m = m - 1
-                    break
-        if m == 0:
-            return True
-    else:
-        m = len(s1)
-        # FLIP S2 ON FOUR SIDES TO CHECK IF EQUAL
-        for b1 in s1:
-            for b2 in s2:
-                if b1.id == b2.id and b1.dmg == b2.dmg:
-                    if (s1.plane == 'zy' and s2.plane == 'xy') or (s1.plane == 'xy' and s2.plane == 'zy'):
-                        if b1.rx == b2.rz and b1.ry == b2.ry and b1.rz == b2.rx:
-                            m = m - 1
-                            break
-                    if (s1.plane == 'xy' and s2.plane == 'xz') or (s1.plane == 'xz' and s2.plane == 'xy'):
-                        if b1.rx == b2.rx and b1.ry == b2.rz and b1.rz == b2.ry:
-                            m = m - 1
-                            break
-                    if (s1.plane == 'xz' and s2.plane == 'zy') or (s1.plane == 'zy' and s2.plane == 'xz'):
-                        if b1.rx == b2.ry and b1.ry == b2.rx and b1.rz == b2.rz:
-                            m = m - 1
-                            break
-        if m == 0:
-            return True
-    return False
-
-
+# Convert a shape to the same shape in the xz plane.
 def to_xz(s):
     if s.plane == 'xz': return s.copy()
     if s.plane == 'xy':
@@ -1181,6 +1065,7 @@ def to_xz(s):
         return s
 
 
+# Convert a shape to the same shape in the xy plane.
 def to_xy(s):
     if s.plane == 'xy': return s.copy()
     if s.plane == 'xz':
@@ -1203,6 +1088,7 @@ def to_xy(s):
         return sd
 
 
+# Convert a shape to the same shape in the zy plane.
 def to_zy(s):
     if s.plane == 'zy': return s.copy()
     if s.plane == 'xz':
@@ -1218,13 +1104,14 @@ def to_zy(s):
         sd = s.copy()
         for b in sd:
             temp = b.z
-            b.z = -b.x
+            b.z = b.x
             b.x = temp
         sd.plane = 'zy'
         sd.set_relative([sd.list[0].x, sd.list[0].y, sd.list[0].z])
         return sd
 
 
+# Rotate an xz shape.
 def rotate_xz(s):
     new = []
     copy = s.copy()
@@ -1233,9 +1120,10 @@ def rotate_xz(s):
         b.x = b.z
         b.z = tmp
         new.append(b)
-    return shape_from_blocks(new,s.plane)
+    return shape_from_blocks(new, s.plane)
 
 
+# [Unfinished] Extends a shape with a given length.
 def extend_shape(s, l=1):
     if (s.plane == 'xy'):
         print("EXTEND")
@@ -1324,30 +1212,3 @@ def extend_shape(s, l=1):
     print("res")
     print(s)
     return s
-
-
-def all_xy_to_zy(shapes, rules):
-    new_shapes = []
-    for s in shapes:
-        if s.plane == 'xy':
-            ns = s.copy()
-            ns = to_zy(ns)
-            ns.edit_pos([ns.f[0],ns.f[1],ns.f[2]])
-            new_shapes.append(ns)
-        if s.plane == 'zy':
-            ns = s.copy()
-            new_shapes.append(to_xy(ns))
-        else:
-            continue
-    shapes.extend(new_shapes)
-    new_rules = []
-    for r in rules:
-        for s in new_shapes:
-            if r[1].eq_production(s):
-                new_rules.append([r[0], s, r[2]])
-            for p in r[0]:
-                if p.eq_production(s):
-                    r[0].append(s)
-                    break
-    rules.extend(new_rules)
-    return [new_shapes, rules]
