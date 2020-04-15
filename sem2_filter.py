@@ -24,7 +24,8 @@ inputs = (
     ("Apply post split operation:", False),
     ("Overlap allowed:", True),
     ("Visualize overlap:", False),
-    ("Rotate the first produced shape:", False)
+    ("Rotate the first produced shape:", False),
+    ("Enclosure:", False)
 )
 
 
@@ -41,10 +42,12 @@ def perform(level, box, options):
     m = io.scan_structure(level, box)
     shapes = io.initial_shapes(m)
     shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"], options["Merge(0), split(1) or both(2):"], options["Cost function:"], float(options["Alpha:"]), m)
+    print("Hill climbing done")
     if options["Overlap allowed:"]:
         shapes = shp.filter_final_shapes_overlap(shapes, m)
     else:
         shapes = shp.filter_final_shapes_no_overlap(shapes)
+    print("overlap filter done")
     i = 0
     for s in shapes:
         io.build_shape(s, level, box, options, 10 + i)
@@ -68,6 +71,16 @@ def perform(level, box, options):
     rel = shp.relation_learning(shp.copy_shapes(shapes))
     print("Relation learning done")
     print(rel)
+    i = 0
+    for r in rel:
+        for f in r[0]:
+            s = shp.edit_pos_relation(f, r[2], r[1])
+            io.build_shape(f, level, box, options, 10+i,-15)
+            io.build_shape(s, level, box, options, 10 + i,-15)
+            i += 1
+        i += 2
+
+    return
 
     if options["Split grammar:"]:
         final = splt.split_grammar(shp.copy_shapes(shapes), rel)
@@ -76,20 +89,19 @@ def perform(level, box, options):
         final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], options["Number of production shapes:"], options["Rotate the first produced shape:"])
     print("Production shapes done")
     i = 0
-    print("Building")
-    for s in final:
-        io.build_shape(s, level, box, options, 1)
-        # build_shape(s, level, box,options,10+i)
-        i = i + 1
-
-    return
-
-    enclosed = encl.enclosure_update_3d(final)
-    print("enclosure done")
-    for s in enclosed:
-        io.build_shape(s, level, box, options, 20)
-        # build_shape(s, level, box,options,10+i)
-        i = i + 1
+    if not options["Enclosure:"]:
+        print("Building")
+        for s in final:
+            io.build_shape(s, level, box, options, 1)
+            # build_shape(s, level, box,options,10+i)
+            i = i + 1
+    else:
+        enclosed = encl.enclosure_update_3d(final)
+        print("enclosure done")
+        for s in enclosed:
+            io.build_shape(s, level, box, options, 20)
+            # build_shape(s, level, box,options,10+i)
+            i = i + 1
 
 def main():
     ms = read_array(0)

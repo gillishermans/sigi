@@ -42,10 +42,10 @@ class Block:
 
     def __str__(self):
         # return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
-        return str(float(self.id + float(self.dmg) / 100)) + "(" + str(self.rx) + "," + str(self.ry) + "," + str(
-            self.rz) + ")"
+        #return str(float(self.id + float(self.dmg) / 100)) + "(" + str(self.rx) + "," + str(self.ry) + "," + str(
+        #    self.rz) + ")"
         # return str("(" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")")
-        # return str(float(self.id + float(self.dmg) / 100))
+        return str(float(self.id + float(self.dmg) / 100))
 
     def write_str(self):
         return str(self.id) + " " + str(self.dmg) + " " + str(self.x) + " " + str(self.y) + " " + str(
@@ -585,6 +585,12 @@ def shapes_cost2(shapes):
 
     return cost
 
+def update_shape_duplicate_list(dupe,old,new):
+    #for d in dupe:
+    #    for o in old:
+    #        if d.
+    return
+
 
 # Returns the cost of the given set of shapes.
 def shapes_cost(shapes, cost_function=0, alpha=1.1):
@@ -595,11 +601,11 @@ def shapes_cost(shapes, cost_function=0, alpha=1.1):
             cost = cost + entropy(s)
         return cost
     # Cost function for largest possible shapes
-    elif cost_function == 1:
+    elif cost_function == -1:
         cost = (1.0 + dl(shapes))
         return cost
-    # Cost +1 for every block type
-    elif cost_function == 2:
+    # Cost grows for every block type
+    elif cost_function == 1:
         cost = (1.0 + dl(shapes)) * alpha
         for s in shapes:
             prob = []
@@ -669,7 +675,7 @@ def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None)
         elif merge_split == 1:
             # start with every shape as large as possible
             if prev_shape_cost == 99999999:
-                cpy = hill_climbing(cpy, rect, 0)
+                cpy = hill_climbing(cpy, rect, 0, -1)
                 cpy = filter_final_shapes_overlap(cpy, m)
                 print("START SHAPES")
                 print(cpy)
@@ -695,7 +701,7 @@ def filter_final_shapes_overlap(shapes, m):
                 if b.id != 0:
                     blocks.append(b)
     sort = sorted(shapes, key=len, reverse=True)
-    while blocks is not []:
+    while blocks != []:
         for s in sort:
             if len(final) == 0:
                 final.append(s)
@@ -820,7 +826,7 @@ def relation_learning(shapes):
     for sl1 in shape_dupe_list:
         for s1 in sl1:
             for s2 in copy:
-                if s1.__ne__(s2):
+                if not s1.eq_production(s2):#if s1.__ne__(s2):
                     if contact(s1, s2):
                         rel.append([sl1, s2, s1])
     new_rel = []
@@ -829,6 +835,18 @@ def relation_learning(shapes):
             new_rel.append(elem)
     rel = new_rel
     return rel
+
+def relation_learning_prob(shapes):
+    shape_dupe_list = get_duplicate_shapes(shapes)
+    print("dupe")
+    print(shape_dupe_list)
+    relations = []
+    for s in shapes:
+        for dupe in shape_dupe_list:
+            for d in dupe:
+                if not s.eq_production(d) and contact(s,d):
+                    relations.append([s,d,len(dupe)])
+    return relations
 
 
 def get_duplicate_shapes(shapes):
@@ -993,18 +1011,56 @@ def random_rotate(w, s):
 
 #Rotate a shape.
 def rotate_shape(s):
-    print(s)
-    print(s.plane)
+    #print(s)
+    #print(s.plane)
     if s.plane == 'xy':
         rs = s.copy()
         rs = to_zy(rs)
+        #rs[5].id = 14
+        #rs[5].dmg = 0
     elif s.plane == 'zy':
         rs = s.copy()
         rs = to_xy(rs)
+        #rs[5].id = 16
+        #rs[5].dmg = 0
     else:
         rs = rotate_xz(s)
-    print(rs)
-    print(rs.plane)
+    #print(rs)
+    #print(rs.plane)
+    rs.rotated = True
+    return rs
+
+#Rotate a shape.
+def rotate_shape_n(s,w,og):
+    #print(s)
+    #print(s.plane)
+    #p = [0, 0, 0]
+    if s.plane == 'xy':
+        rs = s.copy()
+        rs = to_zy(rs)
+        #p[0] = og.f[0] - w.f[0]
+        #p[1] = og.f[1] - w.f[1]
+        #p[2] = og.f[2] - w.f[2]
+        #print("edit p")
+        #print(p)
+        #print(og.f)
+        #print(w.f)
+        #rs.edit_pos(p)
+        #rs[5].id = 14
+        #rs[5].dmg = 0
+    elif s.plane == 'zy':
+        rs = s.copy()
+        rs = to_xy(rs)
+        #p[0] = og.f[2] - w.f[2]
+        #p[1] = og.f[1] - w.f[1]
+        #p[2] = -(og.f[0] - w.f[0])
+        #rs.edit_pos(p)
+        #rs[5].id = 16
+        #rs[5].dmg = 0
+    else:
+        rs = rotate_xz(s)
+    #print(rs)
+    #print(rs.plane)
     rs.rotated = True
     return rs
 
@@ -1014,7 +1070,7 @@ def edit_pos_relation(w, og, shape):
     copy = shape.copy()
     p = [0, 0, 0]
     if w.plane == 'xz' and w.rotated and w.plane == og.plane:
-        print("rotate xz")
+        #print("rotate xz")
         copy = rotate_shape(copy)
     elif w.plane == og.plane:
         p[0] = og.f[0] - w.f[0]
@@ -1022,8 +1078,8 @@ def edit_pos_relation(w, og, shape):
         p[2] = og.f[2] - w.f[2]
         copy.edit_pos(p)
     else:
-        print("not og plane")
-        copy = rotate_shape(copy)
+        #print("not og plane")
+        copy = rotate_shape_n(copy,w,og)
     return copy
 
 
@@ -1081,8 +1137,8 @@ def to_xy(s):
         sd = s.copy()
         for b in sd:
             temp = b.z
-            b.z = -b.x
-            b.x = -temp
+            b.z = b.x
+            b.x = temp
         sd.plane = 'xy'
         sd.set_relative([sd.list[0].x, sd.list[0].y, sd.list[0].z])
         return sd
