@@ -253,11 +253,12 @@ def just_merge(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
-                copy_list = update_shape_duplicate_list(cost_function, duplicate_list, [s1,s2], [s])
+                if cost_function == 2:
+                    copy_list = get_duplicate_shapes(new_shapes)#update_shape_duplicate_list(cost_function, duplicate_list, [s1,s2], [s])
+                else: copy_list = duplicate_list
                 new_cost = shapes_cost(new_shapes, cost_function, alpha, copy_list)
                 if prev_cost - new_cost >= 0:
-                    duplicate_list = copy_list
-                    return new_shapes, new_cost, duplicate_list
+                    return new_shapes, new_cost, copy_list
     return shapes, prev_cost, duplicate_list
 
 
@@ -275,7 +276,10 @@ def best_merge(shapes, prev_cost, cost_function=0, alpha=1.1, duplicate_list=Non
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
-                copy_list = update_shape_duplicate_list(cost_function, duplicate_list, [s1, s2], [s])
+                if cost_function == 2:
+                    copy_list = get_duplicate_shapes(new_shapes)#update_shape_duplicate_list(cost_function, duplicate_list, [s1,s2], [s])
+                else:
+                    copy_list = duplicate_list
                 saved = prev_cost - shapes_cost(new_shapes, cost_function, alpha, copy_list)
                 if saved >= saved_cost:
                     saved_cost = saved
@@ -314,9 +318,10 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_
             new_shapes.append(split[0])
             new_shapes.append(split[1])
             #copy_list = update_shape_duplicate_list(cost_function, duplicate_list, [s], split)
-            copy_list = get_duplicate_shapes(new_shapes)
-            #print("NEW")
-            #print(copy_list)
+            if cost_function == 2:
+                copy_list = get_duplicate_shapes(new_shapes) #update_shape_duplicate_list(cost_function, duplicate_list, [s1, s2], [s])
+            else:
+                copy_list = duplicate_list
             new_cost = shapes_cost(new_shapes, cost_function, alpha, copy_list)
             print("New split")
             print(split)
@@ -351,7 +356,11 @@ def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_
             new_shapes = [x for x in shapes if x != s]
             new_shapes.append(split[0])
             new_shapes.append(split[1])
-            copy_list = update_shape_duplicate_list(cost_function, duplicate_list, [s], split)
+            if cost_function == 2:
+                copy_list = get_duplicate_shapes(
+                    new_shapes)  # update_shape_duplicate_list(cost_function, duplicate_list, [s1, s2], [s])
+            else:
+                copy_list = duplicate_list
             new_cost = shapes_cost(new_shapes, cost_function, alpha, copy_list)
             # print("New split")
             # print(split)
@@ -362,8 +371,7 @@ def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_
                     saved_cost = prev_cost - new_cost
                     best = [new_shapes, new_cost, copy_list]
 
-    duplicate_list = copy_list
-    return best[0], best[1], duplicate_list
+    return best[0], best[1], best[2]
 
 
 #Returns the splits that provide legal shapes.
@@ -716,7 +724,7 @@ def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None,
         if merge_split == 2:
             new_m, cost_m, duplicate_list = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
 
-            new_s, cost_s, duplicate_list = best_split(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
+            new_s, cost_s, duplicate_list = just_split(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
             if cost_m < cost_s:
                 new = new_m
                 cost = cost_m
