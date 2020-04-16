@@ -240,7 +240,7 @@ def remove_copy(shapes, sr):
 
 
 # Returns the first merge that decreased the cost.
-def just_merge(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
+def just_merge(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_list=None):
     shapes = copy_shapes(shapes)
     # random.shuffle(shapes)
     for s1 in shapes:
@@ -253,14 +253,16 @@ def just_merge(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
-                new_cost = shapes_cost(new_shapes, cost_function, alpha)
+                copy_list = update_shape_duplicate_list(cost_function, duplicate_list, [s1,s2], [s])
+                new_cost = shapes_cost(new_shapes, cost_function, alpha, copy_list)
                 if prev_cost - new_cost >= 0:
-                    return new_shapes, new_cost
-    return shapes, prev_cost
+                    duplicate_list = copy_list
+                    return new_shapes, new_cost, duplicate_list
+    return shapes, prev_cost, duplicate_list
 
 
 # Returns the best possible merge for a set of shapes
-def best_merge(shapes, prev_cost, cost_function=0, alpha=1.1):
+def best_merge(shapes, prev_cost, cost_function=0, alpha=1.1, duplicate_list=None):
     saved_cost = 0
     best = []
     for s1 in shapes:
@@ -273,13 +275,14 @@ def best_merge(shapes, prev_cost, cost_function=0, alpha=1.1):
                     continue
                 new_shapes = [x for x in shapes if x != s1 and x != s2]
                 new_shapes.append(s)
-                saved = prev_cost - shapes_cost(new_shapes, cost_function, alpha)
+                copy_list = update_shape_duplicate_list(cost_function, duplicate_list, [s1, s2], [s])
+                saved = prev_cost - shapes_cost(new_shapes, cost_function, alpha, copy_list)
                 if saved >= saved_cost:
                     saved_cost = saved
                     best = new_shapes
     if len(best) == 0:
-        return shapes, prev_cost
-    return best, saved_cost
+        return shapes, prev_cost, duplicate_list
+    return best, saved_cost, duplicate_list
 
 
 # Merges two shapes into one.
@@ -290,12 +293,19 @@ def merge_shape(s1, s2):
 
 
 # Returns the first split found that decreases the cost.
-def just_split(shapes, prev_cost, cost_function=0, alpha=1.1):
+def just_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_list=None):
     shapes = copy_shapes(shapes)
     for s in shapes:
         if len(s) % 2 != 0:
             continue
-        splits = split_shape_v3(s)
+        if rect == 0:
+            splits = split_shape_2d(s)
+        elif rect == 1:
+            splits = split_shape_2d(s)
+            splits = legal_splits(splits)
+        else:
+            splits = split_shape_3d(s)
+            splits = legal_splits(splits)
         for split in splits:
             if s.__eq__(split[0]) and s.__eq__(split[1]):
                 continue
@@ -303,18 +313,23 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1):
             new_shapes = [x for x in shapes if x != s]
             new_shapes.append(split[0])
             new_shapes.append(split[1])
-            new_cost = shapes_cost(new_shapes, cost_function, alpha)
+            #copy_list = update_shape_duplicate_list(cost_function, duplicate_list, [s], split)
+            copy_list = get_duplicate_shapes(new_shapes)
+            #print("NEW")
+            #print(copy_list)
+            new_cost = shapes_cost(new_shapes, cost_function, alpha, copy_list)
             print("New split")
             print(split)
             print(new_cost)
             print(prev_cost)
             if prev_cost - new_cost >= 0:
                 print("Split succ")
-                return new_shapes, new_cost
-    return shapes, prev_cost
+                duplicate_list = copy_list
+                return new_shapes, new_cost, duplicate_list
+    return shapes, prev_cost, duplicate_list
 
 
-def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
+def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_list=None):
     saved_cost = 0
     best = [shapes, prev_cost]
     shapes = copy_shapes(shapes)
@@ -336,7 +351,8 @@ def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
             new_shapes = [x for x in shapes if x != s]
             new_shapes.append(split[0])
             new_shapes.append(split[1])
-            new_cost = shapes_cost(new_shapes, cost_function, alpha)
+            copy_list = update_shape_duplicate_list(cost_function, duplicate_list, [s], split)
+            new_cost = shapes_cost(new_shapes, cost_function, alpha, copy_list)
             # print("New split")
             # print(split)
             # print(new_cost)
@@ -344,9 +360,10 @@ def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0):
             if prev_cost - new_cost >= 0:
                 if saved_cost < prev_cost - new_cost:
                     saved_cost = prev_cost - new_cost
-                    best = [new_shapes, new_cost]
+                    best = [new_shapes, new_cost, copy_list]
 
-    return best[0], best[1]
+    duplicate_list = copy_list
+    return best[0], best[1], duplicate_list
 
 
 #Returns the splits that provide legal shapes.
@@ -585,15 +602,43 @@ def shapes_cost2(shapes):
 
     return cost
 
-def update_shape_duplicate_list(dupe,old,new):
-    #for d in dupe:
-    #    for o in old:
-    #        if d.
-    return
+def update_shape_duplicate_list(cost,dupe,old,new):
+    copy = None
+    if cost == 2:
+        copy = dupe[:]
+        #print("STRAIGHT COPY")
+        #print(copy)
+        for d in copy:
+            for o in old:
+                #print("REMOVE")
+                #print(d)
+                #print(o)
+                d = [x for x in d if not x.__eq__(o)]
+                #print(o)
+
+
+                #for e in d:
+                #    if e.eq_production(o):
+                #        d.remove(o)
+                #        print("removed")
+        copy = [x for x in copy if len(x)>0]
+        for d in copy:
+            #print("ADDING")
+            #print(d[0])
+            for n in new:
+                #print(n)
+                if is_duplicate_shape(d[0],n):
+                    d.append(n)
+                    #print("added")
+                else:
+                    copy.append([n])
+    #print("UPDATE")
+    #print(copy)
+    return copy
 
 
 # Returns the cost of the given set of shapes.
-def shapes_cost(shapes, cost_function=0, alpha=1.1):
+def shapes_cost(shapes, cost_function=0, alpha=1.1, duplicate_list=None):
     # Standard entropy + DL cost function
     if cost_function == 0:
         cost = (1.0 + dl(shapes)) * alpha
@@ -612,6 +657,14 @@ def shapes_cost(shapes, cost_function=0, alpha=1.1):
             for b in s:
                 add_block(len(s), prob, b.id, b.dmg)
             cost = cost + len(prob) * len(prob)
+        return cost
+    elif cost_function == 2:
+        no_duplicates = []
+        for d in duplicate_list:
+            no_duplicates.append(d[0])
+        cost = (1.0 + dl(no_duplicates)) * alpha
+        for s in no_duplicates:
+            cost = cost + entropy(s) #+ len(s)/10
         return cost
     else:
         # alpha = 150
@@ -655,15 +708,15 @@ def dl(shapes):
 
 
 # Perform the hill climbing algorithm on a set of shapes.
-def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None):
+def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None, duplicate_list=None):
     same = 0
     prev_shape_cost = 99999999
     while same < 2:
         cpy = shapes[:]  # shapes.copy()
         if merge_split == 2:
-            new_m, cost_m = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect)
+            new_m, cost_m, duplicate_list = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
 
-            new_s, cost_s = best_split(cpy, prev_shape_cost, cost_function, alpha, rect)
+            new_s, cost_s, duplicate_list = best_split(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
             if cost_m < cost_s:
                 new = new_m
                 cost = cost_m
@@ -679,10 +732,11 @@ def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None)
                 cpy = filter_final_shapes_overlap(cpy, m)
                 print("START SHAPES")
                 print(cpy)
-                prev_shape_cost = shapes_cost(cpy, cost_function, alpha)
-            new, cost = best_split(cpy, prev_shape_cost, cost_function, alpha, rect)
+                if cost_function == 2: duplicate_list = get_duplicate_shapes(cpy)
+                prev_shape_cost = shapes_cost(cpy, cost_function, alpha, duplicate_list)
+            new, cost, duplicate_list = just_split(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
         else:
-            new, cost = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect)
+            new, cost, duplicate_list = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
         if cost == prev_shape_cost:
             same = same + 1
         shapes = new
@@ -780,7 +834,6 @@ def post_plane_split(shapes, plane='xz'):
                     i = splitter.list[0].z
                 elif plane == 'zy':
                     i = splitter.list[0].x
-                print(i)
                 top = []
                 bottom = []
                 middle = []

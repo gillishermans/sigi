@@ -14,29 +14,31 @@ import in_out as io
 
 inputs = (
     ("Evaluate procedural models.", "label"),
-    ("Creator: Gillis Hermans", "label")
+    ("Creator: Gillis Hermans", "label"),
+    ("Example number: ", 0)
 )
 
 def perform(level, box, options):
-    evaluate_alpha(level,box)
+    evaluate_alpha(level,box,options)
 
 
 #Evaluate different algorithms for a set of alpha values.
-def evaluate_alpha(level,box):
+def evaluate_alpha(level,box,options):
     m = io.scan_structure(level, box)
     initial = io.initial_shapes(m)
-    av = [0.5,1.0,1.5]#[0.0,0.25,0.5,0.75,1.0,1.1,1.25,1.5,1.75,2,5,10]
+    av = [0.0,0.25,0.5,0.75,1.0,1.25,1.5,1.75,2,5,10,100]
 
-    example = 1
-    file_nb = 0
-    for rect in [0]:
+    file_nb = options["Example number: "]
+    write_example(file_nb)
+
+    for rect in [0,1,2]:
         for operation in [0,1,2]:
-            for cost in [0,1]:
+            for cost in [0,1,2]:
                 for overlap in [True,False]:
                     for post_split in [False, True]:
-                        write_experiment(file_nb, example, rect, operation, cost, overlap)
+                        write_experiment(file_nb, rect, operation, cost, overlap, post_split)
                         alpha_experiment(initial, av, rect, operation, cost, overlap, post_split, m, file_nb)
-                        file_nb += 1
+    #file_nb += 1
 
 
 #Perform an experiment for a certain algorithm and a number of alpha values.
@@ -84,18 +86,26 @@ def alpha_experiment(initial, alpha_list, rect, operation, cost, overlap, post_s
         time_spent = (toc - tic)
         write_alpha_experiment(file_nb,alpha,len(shapes),mean_size,median_size,max_size,min_size,mean_complex,median_complex,max_complex,min_complex,identical,time_spent)
 
-
-#Write the initial specifications of an experiment to disk.
-def write_experiment(file_nb, example, rect, operation, cost, overlap):
+def write_example(file_nb):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
     file_to_open = __location__ + "\evaluation\experiment%s.txt" % file_nb
     file = open(file_to_open, "w")
-    file.write("Example: " + str(example) +"\n")
+    file.write("Example number: " + str(file_nb))
+    file.write("\n")
+    file.close()
+
+#Write the initial specifications of an experiment to disk.
+def write_experiment(file_nb, rect, operation, cost, overlap, post_split):
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    file_to_open = __location__ + "\evaluation\experiment%s.txt" % file_nb
+    file = open(file_to_open, "a")
     file.write("Rect(0), same plane(1) or 3D shapes(2): " + str(rect) +"\n")
     file.write("Merge(0), split(1) or both(2): " + str(operation) +"\n")
     file.write("Cost function: " + str(cost) +"\n")
     file.write("Overlap allowed: " + str(overlap) +"\n")
+    file.write("Post split: " + str(post_split) +"\n")
     file.write("\n")
     file.close()
 

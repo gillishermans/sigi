@@ -41,7 +41,14 @@ def perform(level, box, options):
 
     m = io.scan_structure(level, box)
     shapes = io.initial_shapes(m)
-    shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"], options["Merge(0), split(1) or both(2):"], options["Cost function:"], float(options["Alpha:"]), m)
+    if options["Cost function:"] == 2:
+        shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"],
+                                   options["Merge(0), split(1) or both(2):"], options["Cost function:"],
+                                   float(options["Alpha:"]), m, shp.get_duplicate_shapes(shapes))
+    else:
+        shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"],
+                                   options["Merge(0), split(1) or both(2):"], options["Cost function:"],
+                                   float(options["Alpha:"]), m)
     print("Hill climbing done")
     if options["Overlap allowed:"]:
         shapes = shp.filter_final_shapes_overlap(shapes, m)
@@ -80,28 +87,27 @@ def perform(level, box, options):
             i += 1
         i += 2
 
-    return
+    if options["Number of production shapes:"] != 0:
+        if options["Split grammar:"]:
+            final = splt.split_grammar(shp.copy_shapes(shapes), rel)
 
-    if options["Split grammar:"]:
-        final = splt.split_grammar(shp.copy_shapes(shapes), rel)
-
-    else:
-        final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], options["Number of production shapes:"], options["Rotate the first produced shape:"])
-    print("Production shapes done")
-    i = 0
-    if not options["Enclosure:"]:
-        print("Building")
-        for s in final:
-            io.build_shape(s, level, box, options, 1)
-            # build_shape(s, level, box,options,10+i)
-            i = i + 1
-    else:
-        enclosed = encl.enclosure_update_3d(final)
-        print("enclosure done")
-        for s in enclosed:
-            io.build_shape(s, level, box, options, 20)
-            # build_shape(s, level, box,options,10+i)
-            i = i + 1
+        else:
+            final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], options["Number of production shapes:"], options["Rotate the first produced shape:"])
+        print("Production shapes done")
+        i = 0
+        if not options["Enclosure:"]:
+            print("Building")
+            for s in final:
+                io.build_shape(s, level, box, options, 1)
+                # build_shape(s, level, box,options,10+i)
+                i = i + 1
+        else:
+            enclosed = encl.enclosure_update_3d(final)
+            print("enclosure done")
+            for s in enclosed:
+                io.build_shape(s, level, box, options, 1)
+                # build_shape(s, level, box,options,10+i)
+                i = i + 1
 
 def main():
     ms = read_array(0)
