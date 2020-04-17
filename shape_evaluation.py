@@ -24,20 +24,24 @@ def perform(level, box, options):
 
 #Evaluate different algorithms for a set of alpha values.
 def evaluate_alpha(level,box,options):
+    tic = timeit.default_timer()
     m = io.scan_structure(level, box)
-    initial = io.initial_shapes(m)
     av = [0.0,0.25,0.5,0.75,1.0,1.25,1.5,1.75,2,5,10,100]
 
     file_nb = options["Example number: "]
     write_example(file_nb)
 
     for rect in [0,1,2]:
+        initial = io.initial_shapes(m, rect)
         for operation in [0,1,2]:
             for cost in [0,1,2]:
                 for overlap in [True,False]:
                     for post_split in [False, True]:
                         write_experiment(file_nb, rect, operation, cost, overlap, post_split)
                         alpha_experiment(initial, av, rect, operation, cost, overlap, post_split, m, file_nb)
+    toc = timeit.default_timer()
+    print("TIME")
+    print(toc - tic)
     #file_nb += 1
 
 

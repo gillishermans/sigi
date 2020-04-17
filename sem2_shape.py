@@ -688,17 +688,11 @@ def update_shape_duplicate_list(cost,dupe,old,new):
 # Returns the cost of the given set of shapes.
 def shapes_cost(shapes, cost_function=0, alpha=1.1, duplicate_list=None):
     alpha = alpha+0.00001
-    # Standard entropy + DL cost function
-    if cost_function == 0:
-        cost = (1.0 + dl(shapes)) * alpha
-        for s in shapes:
-            cost = cost + entropy(s)
-        return cost
     # Cost function for largest possible shapes
-    elif cost_function == -1:
+    if cost_function == -1:
         cost = (1.0 + dl(shapes))
         return cost
-    # Cost grows for every block type
+    # Cost grows more for every block type
     elif cost_function == 1:
         cost = (1.0 + dl(shapes)) * alpha
         for s in shapes:
@@ -707,6 +701,7 @@ def shapes_cost(shapes, cost_function=0, alpha=1.1, duplicate_list=None):
                 add_block(len(s), prob, b.id, b.dmg)
             cost = cost + entropy(s) * len(prob)
         return cost
+    # Cost discount for identical shapes
     elif cost_function == 2:
         no_duplicates = []
         for d in duplicate_list:
@@ -715,11 +710,11 @@ def shapes_cost(shapes, cost_function=0, alpha=1.1, duplicate_list=None):
         for s in no_duplicates:
             cost = cost + entropy(s) #+ len(s)/10
         return cost
+    # Standard entropy + DL cost function
     else:
-        # alpha = 150
-        cost = (1 + dl(shapes)) * alpha
+        cost = (1.0 + dl(shapes)) * alpha
         for s in shapes:
-            cost = cost + other_entropy(s)
+            cost = cost + entropy(s)
         return cost
 
 
@@ -735,20 +730,6 @@ def entropy(s):
         e = e + p[2] * math.log(p[2], 2)
     e = - e
     return e + 0.00001
-
-
-# returns the entropy of a shape
-def other_entropy(s):
-    e = 0
-    prob = []
-    # sum block types = for
-    for b in s:
-        add_block(len(s), prob, b.id, b.dmg)
-    # Probability of certain block type * log of prob
-    for p in prob:
-        e = e + p[2] * math.log(p[2], 2)
-    e = - e * math.exp(len(prob))
-    return e
 
 
 # The description length of a set of shapes.
