@@ -300,16 +300,18 @@ def merge_shape(s1, s2):
 def just_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_list=None):
     shapes = copy_shapes(shapes)
     for s in shapes:
-        if len(s) % 2 != 0:
-            continue
         if rect == 0:
+            if len(s) % 2 != 0:
+                continue
             splits = split_shape_2d(s)
         elif rect == 1:
             splits = split_shape_2d(s)
             splits = legal_splits(splits)
         else:
-            splits = split_shape_3d(s)
+            splits = split_shape_3d_new(s)
             splits = legal_splits(splits)
+            print("3d Splits")
+            print(splits)
         for split in splits:
             if s.__eq__(split[0]) and s.__eq__(split[1]):
                 continue
@@ -415,6 +417,44 @@ def legal_shape(s):
     if len(not_found) != 0:
         return False
     return True
+
+
+def split_shape_3d_new(s):
+    possible_splits = []
+    for w in range(s.min[0] + 1, s.max[0] + 1):
+        one = []
+        two = []
+        for b in s:
+            if b.x < w:
+                one.append(b)
+            else:
+                two.append(b)
+        if len(one) == 0 or len(two) == 0:
+            continue
+        possible_splits.append([shape_from_blocks(one, s.plane), shape_from_blocks(two, s.plane)])
+    for h in range(s.min[1] + 1, s.max[1] + 1):
+        one = []
+        two = []
+        for b in s:
+            if b.y < h:
+                one.append(b)
+            else:
+                two.append(b)
+        if len(one) == 0 or len(two) == 0:
+            continue
+        possible_splits.append([shape_from_blocks(one, s.plane), shape_from_blocks(two, s.plane)])
+    for d in range(s.min[2] + 1, s.max[2] + 1):
+        one = []
+        two = []
+        for b in s:
+            if b.z < d:
+                one.append(b)
+            else:
+                two.append(b)
+        if len(one) == 0 or len(two) == 0:
+            continue
+        possible_splits.append([shape_from_blocks(one, s.plane), shape_from_blocks(two, s.plane)])
+    return possible_splits
 
 
 #Returns all 3d splits for a 3d shape.
@@ -647,6 +687,7 @@ def update_shape_duplicate_list(cost,dupe,old,new):
 
 # Returns the cost of the given set of shapes.
 def shapes_cost(shapes, cost_function=0, alpha=1.1, duplicate_list=None):
+    alpha = alpha+0.00001
     # Standard entropy + DL cost function
     if cost_function == 0:
         cost = (1.0 + dl(shapes)) * alpha
@@ -664,7 +705,7 @@ def shapes_cost(shapes, cost_function=0, alpha=1.1, duplicate_list=None):
             prob = []
             for b in s:
                 add_block(len(s), prob, b.id, b.dmg)
-            cost = cost + len(prob) * len(prob)
+            cost = cost + entropy(s) * len(prob)
         return cost
     elif cost_function == 2:
         no_duplicates = []

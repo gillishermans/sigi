@@ -125,19 +125,23 @@ def read_shapes(i):
     return shapes
 
 # Start with every block a shape of length 1 in every plane.
-def initial_shapes(m):
+def initial_shapes(m, rect):
     shapes = []
     for row in m:
         for col in row:
             for b in col:
                 # If block is not air.
                 if b.id != 0:
-                    s = Shape(b, 'xy')
-                    shapes.append(s)
-                    s = Shape(b, 'xz')
-                    shapes.append(s)
-                    s = Shape(b, 'zy')
-                    shapes.append(s)
+                    if rect != 2:
+                        s = Shape(b, 'xy')
+                        shapes.append(s)
+                        s = Shape(b, 'xz')
+                        shapes.append(s)
+                        s = Shape(b, 'zy')
+                        shapes.append(s)
+                    else:
+                        s = Shape(b, 'xy')
+                        shapes.append(s)
     return shapes
 
 # Build a shape. Place it in the world at it's position.

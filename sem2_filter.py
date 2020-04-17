@@ -40,7 +40,7 @@ def perform(level, box, options):
     #return
 
     m = io.scan_structure(level, box)
-    shapes = io.initial_shapes(m)
+    shapes = io.initial_shapes(m, options["Rect(0), same plane(1) or 3D shapes(2):"])
     if options["Cost function:"] == 2:
         shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"],
                                    options["Merge(0), split(1) or both(2):"], options["Cost function:"],
