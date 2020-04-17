@@ -15,7 +15,13 @@ import in_out as io
 inputs = (
     ("Evaluate procedural models.", "label"),
     ("Creator: Gillis Hermans", "label"),
-    ("Example number: ", 0)
+    ("Example number: ", 0),
+    ("Restart: ", True),
+    ("Rect start: ", 0),
+    ("Operation start: ", 0),
+    ("Cost start: ", 0),
+    ("Overlap start: ", True),
+    ("Post split start: ", True)
 )
 
 def perform(level, box, options):
@@ -29,16 +35,34 @@ def evaluate_alpha(level,box,options):
     av = [0.0,0.25,0.5,0.75,1.0,1.25,1.5,1.75,2,5,10,100]
 
     file_nb = options["Example number: "]
-    write_example(file_nb)
+    write_example(file_nb, options["Restart: "])
 
+    e = 0
     for rect in [0,1,2]:
+        if options["Rect start: "] < rect:
+            print("skip rect")
+            continue
         initial = io.initial_shapes(m, rect)
         for operation in [0,1,2]:
+            if options["Operation start: "] < operation:
+                print("skip op")
+                continue
             for cost in [0,1,2]:
+                if options["Cost start: "] < cost:
+                    print("skip cost")
+                    continue
                 for overlap in [True,False]:
+                    if options["Overlap start: "] == False and overlap == True:
+                        print("skip overlap")
+                        continue
                     for post_split in [False, True]:
+                        if options["Post split start: "] == True and overlap == False:
+                            print("skip post split")
+                            continue
                         write_experiment(file_nb, rect, operation, cost, overlap, post_split)
                         alpha_experiment(initial, av, rect, operation, cost, overlap, post_split, m, file_nb)
+                        e += 1
+                        print("Progress: " + str(e/(108*len(av))))
     toc = timeit.default_timer()
     print("TIME")
     print(toc - tic)
@@ -90,11 +114,14 @@ def alpha_experiment(initial, alpha_list, rect, operation, cost, overlap, post_s
         time_spent = (toc - tic)
         write_alpha_experiment(file_nb,alpha,len(shapes),mean_size,median_size,max_size,min_size,mean_complex,median_complex,max_complex,min_complex,identical,time_spent)
 
-def write_example(file_nb):
+def write_example(file_nb, restart):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
     file_to_open = __location__ + "\evaluation\experiment%s.txt" % file_nb
-    file = open(file_to_open, "w")
+    if restart:
+        file = open(file_to_open, "w")
+    else:
+        file = open(file_to_open, "a")
     file.write("Example number: " + str(file_nb))
     file.write("\n")
     file.close()
