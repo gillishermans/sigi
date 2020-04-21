@@ -15,6 +15,91 @@ def add_block(nb, prob, block_id, dmg):
             return
     prob.append([block_id, 1.0, 1.0 / nb, dmg])
 
+def add_block_type(nb,prob,block_id,dmg):
+    for b in prob:
+        if same_type(b[0],b[3],block_id,dmg):
+            b[1] = b[1] + 1.0
+            b[2] = b[1] / nb
+            return
+    prob.append([block_id, 1.0, 1.0 / nb, dmg])
+
+def same_type(id1, d1, id2, d2):
+    gen = [50, 53, 64, 65,66,67,68,69,71,77,78,96,107,
+           108,109,114,128,134,135,136,143,156,163,164,
+           167,170,183,184,185,186,187,193,194,195,196,
+           197,198,202,203]
+    if id1 != id2:
+        return False
+    elif d1 == d2:
+        return True
+    elif id1 == 17:
+        jungle = [11, 15, 3, 7]
+        spruce = [13, 1, 5, 9]
+        birch = [10, 14, 2, 6]
+        oak = [12, 0, 4, 8]
+        if jungle.__contains__(d1) and jungle.__contains__(d2):
+            return True
+        if spruce.__contains__(d1) and spruce.__contains__(d2):
+            return True
+        if birch.__contains__(d1) and birch.__contains__(d2):
+            return True
+        if oak.__contains__(d1) and oak.__contains__(d2):
+            return True
+    elif id1 == 43:
+        cobble = [11,3]
+        wood = [10,2]
+        stonebr = [13,5]
+        brick = [12,4]
+        quartz = [15,7]
+        nether = [14,6]
+        sandstone = [1,9]
+        stone = [0,8]
+        types = [cobble,wood,stonebr,brick,quartz,nether,sandstone,stone]
+        for t in types:
+            if t.__contains__(d1) and t.__contains__(d2):
+                return True
+    elif id1 == 44:
+        cobble = [11,3]
+        wood = [10,2]
+        stonebr = [13,5]
+        brick = [12,4]
+        quartz = [15,7]
+        nether = [14,6]
+        sandstone = [1,9]
+        stone = [0,8]
+        types = [cobble,wood,stonebr,brick,quartz,nether,sandstone,stone]
+        for t in types:
+            if t.__contains__(d1) and t.__contains__(d2):
+                return True
+    elif id1 == 126:
+        jungle = [11,3]
+        birch = [10,2]
+        dark = [13,5]
+        acacia = [12,4]
+        spruce = [1,9]
+        oak = [0,8]
+        types = [jungle,birch,dark,acacia,spruce,oak]
+        for t in types:
+            if t.__contains__(d1) and t.__contains__(d2):
+                return True
+    elif id1 == 155:
+        pillar = [3,2,4]
+        types = [pillar]
+        for t in types:
+            if t.__contains__(d1) and t.__contains__(d2):
+                return True
+    elif id1 == 162:
+        dark = [13,1,5,9]
+        acacia = [12,0,4,8]
+        types = [dark,acacia]
+        for t in types:
+            if t.__contains__(d1) and t.__contains__(d2):
+                return True
+    elif gen.__contains__(id1):
+        return True
+    else:
+        return False
+
 
 # A single block class.
 class Block:
@@ -310,8 +395,6 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_
         else:
             splits = split_shape_3d_new(s)
             splits = legal_splits(splits)
-            print("3d Splits")
-            print(splits)
         for split in splits:
             if s.__eq__(split[0]) and s.__eq__(split[1]):
                 continue
@@ -325,12 +408,11 @@ def just_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_
             else:
                 copy_list = duplicate_list
             new_cost = shapes_cost(new_shapes, cost_function, alpha, copy_list)
-            print("New split")
-            print(split)
-            print(new_cost)
-            print(prev_cost)
+            #print("New split")
+            #print(split)
+            #print(new_cost)
+            #print(prev_cost)
             if prev_cost - new_cost >= 0:
-                print("Split succ")
                 duplicate_list = copy_list
                 return new_shapes, new_cost, duplicate_list
     return shapes, prev_cost, duplicate_list
@@ -364,10 +446,6 @@ def best_split(shapes, prev_cost, cost_function=0, alpha=1.1, rect=0, duplicate_
             else:
                 copy_list = duplicate_list
             new_cost = shapes_cost(new_shapes, cost_function, alpha, copy_list)
-            # print("New split")
-            # print(split)
-            # print(new_cost)
-            # print(prev_cost)
             if prev_cost - new_cost >= 0:
                 if saved_cost < prev_cost - new_cost:
                     saved_cost = prev_cost - new_cost
@@ -698,7 +776,7 @@ def shapes_cost(shapes, cost_function=0, alpha=1.1, duplicate_list=None):
         for s in shapes:
             prob = []
             for b in s:
-                add_block(len(s), prob, b.id, b.dmg)
+                add_block_type(len(s), prob, b.id, b.dmg)
             cost = cost + entropy(s) * len(prob)
         return cost
     # Cost discount for identical shapes
@@ -724,7 +802,7 @@ def entropy(s):
     prob = []
     # sum block types = for
     for b in s:
-        add_block(len(s), prob, b.id, b.dmg)
+        add_block_type(len(s), prob, b.id, b.dmg)
     # Probability of certain block type * log of prob
     for p in prob:
         e = e + p[2] * math.log(p[2], 2)
@@ -921,8 +999,6 @@ def relation_learning(shapes):
 
 def relation_learning_prob(shapes):
     shape_dupe_list = get_duplicate_shapes(shapes)
-    print("dupe")
-    print(shape_dupe_list)
     relations = []
     for s in shapes:
         for dupe in shape_dupe_list:
@@ -1173,7 +1249,7 @@ def is_duplicate_shape(s1, s2):
     m = len(s1)
     for b1 in s1:
         for b2 in s2:
-            if b1.id == b2.id and b1.dmg == b2.dmg and b1.basic_rel_pos(s1.plane) == b2.basic_rel_pos(s2.plane):
+            if same_type(b1.id, b1.dmg, b2.id, b2.dmg) and b1.basic_rel_pos(s1.plane) == b2.basic_rel_pos(s2.plane):
                 m = m - 1
                 break
     if m == 0:

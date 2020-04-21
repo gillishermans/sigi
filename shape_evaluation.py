@@ -21,7 +21,7 @@ inputs = (
     ("Operation start: ", 0),
     ("Cost start: ", 0),
     ("Overlap start: ", True),
-    ("Post split start: ", True)
+    ("Post split start: ", False)
 )
 
 def perform(level, box, options):
@@ -39,16 +39,16 @@ def evaluate_alpha(level,box,options):
 
     e = 0
     for rect in [0,1,2]:
-        if options["Rect start: "] < rect:
+        if options["Rect start: "] > rect:
             print("skip rect")
             continue
         initial = io.initial_shapes(m, rect)
         for operation in [0,1,2]:
-            if options["Operation start: "] < operation:
+            if options["Operation start: "] > operation:
                 print("skip op")
                 continue
             for cost in [0,1,2]:
-                if options["Cost start: "] < cost:
+                if options["Cost start: "] > cost:
                     print("skip cost")
                     continue
                 for overlap in [True,False]:
@@ -56,7 +56,7 @@ def evaluate_alpha(level,box,options):
                         print("skip overlap")
                         continue
                     for post_split in [False, True]:
-                        if options["Post split start: "] == True and overlap == False:
+                        if options["Post split start: "] == True and post_split == False:
                             print("skip post split")
                             continue
                         write_experiment(file_nb, rect, operation, cost, overlap, post_split)
