@@ -55,26 +55,24 @@ def perform(level, box, options):
     else:
         shapes = shp.filter_final_shapes_no_overlap(shapes)
     print("overlap filter done")
-    i = 0
-    for s in shapes:
-        io.build_shape(s, level, box, options, 10 + i)
-        i = i + 1
     print("Hill climbing done")
     print(shapes)
     if options["Apply post split operation:"]:
         shapes = shp.post_plane_split(shapes, 'xz')
         shapes = shp.post_plane_split(shapes, 'xy')
         shapes = shp.post_plane_split(shapes, 'zy')
-        for s in shapes:
-            io.build_shape(s, level, box, options, 25 + i)
-            i = i + 1
         #print("Post split results:")
         #print(shapes)
+    i = 0
+    for s in shapes:
+        io.build_shape(s, level, box, options, 10 + i)
+        i = i + 1
     #io.write_shapes(shapes)
     #default = io.read_shapes(0)
     #print(default)
     #print("SCORE")
     #print(shp.similarity_shape_sets(default,shapes))
+    shapes = shp.normalize_relative(shapes)
     rel = shp.relation_learning(shp.copy_shapes(shapes))
     print("Relation learning done")
     print(rel)
@@ -87,27 +85,30 @@ def perform(level, box, options):
             i += 1
         i += 2
 
-    if options["Number of production shapes:"] != 0:
-        if options["Split grammar:"]:
-            final = splt.split_grammar(shp.copy_shapes(shapes), rel)
+    for p in range(1):
+        print("prodcution")
+        print(p)
+        if options["Number of production shapes:"] != 0:
+            if options["Split grammar:"]:
+                final = splt.split_grammar(shp.copy_shapes(shapes), rel)
 
-        else:
-            final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], options["Number of production shapes:"], options["Rotate the first produced shape:"])
-        print("Production shapes done")
-        i = 0
-        if not options["Enclosure:"]:
-            print("Building")
-            for s in final:
-                io.build_shape(s, level, box, options, 1)
-                # build_shape(s, level, box,options,10+i)
-                i = i + 1
-        else:
-            enclosed = encl.enclosure_update_3d(final)
-            print("enclosure done")
-            for s in enclosed:
-                io.build_shape(s, level, box, options, 1)
-                # build_shape(s, level, box,options,10+i)
-                i = i + 1
+            else:
+                final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], options["Number of production shapes:"], options["Rotate the first produced shape:"])
+            print("Production shapes done")
+            i = 0
+            if not options["Enclosure:"]:
+                print("Building")
+                for s in final:
+                    io.build_shape(s, level, box, options, 1 + (p*2))
+                    # build_shape(s, level, box,options,10+i)
+                    i = i + 1
+            else:
+                enclosed = encl.enclosure_update_3d(final)
+                print("enclosure done")
+                for s in enclosed:
+                    io.build_shape(s, level, box, options, 1)
+                    # build_shape(s, level, box,options,10+i)
+                    i = i + 1
 
 def main():
     ms = read_array(0)

@@ -150,6 +150,11 @@ def build_shape(s, level, box, options, i=0, j=0):
     # print(s)
     y = box.miny
     for b in s:
+        if b.y +y < 0:
+            print("UNDER")
+            print(y)
+            print(b.y)
+            print(s)
         if options["Visualize overlap:"] == 1 and level.blockAt(box.minx + b.x + j, y + b.y,
                                                                 box.minz + b.z + 10 + (i * 6)) != 0:
             utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x + j, y + b.y, box.minz + b.z + 10 + (i * 6))

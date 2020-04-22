@@ -126,10 +126,9 @@ class Block:
         return str(self)
 
     def __str__(self):
-        # return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
-        #return str(float(self.id + float(self.dmg) / 100)) + "(" + str(self.rx) + "," + str(self.ry) + "," + str(
-        #    self.rz) + ")"
-        # return str("(" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")")
+        #return str(float(self.id + float(self.dmg) / 100)) + " pos (" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")"+ " rel pos (" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
+        #return str(float(self.id + float(self.dmg) / 100)) + "(" + str(self.rx) + "," + str(self.ry) + "," + str(self.rz) + ")"
+        return str(float(self.id + float(self.dmg) / 100)) + str("(" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ")")
         return str(float(self.id + float(self.dmg) / 100))
 
     def write_str(self):
@@ -250,12 +249,21 @@ class Shape:
             b.set_relative(f)
 
     def edit_pos(self, p):
-        self.f = [self.f[0] - p[0], self.f[1] - p[1], self.f[2] - p[2]]
+        #self.f = [self.f[0] - p[0], self.f[1] - p[1], self.f[2] - p[2]]
         for b in self.list:
             b.x = b.x - p[0]
             b.y = b.y - p[1]
             b.z = b.z - p[2]
-            b.set_relative(self.f)
+            #b.set_relative(self.f)
+        self.normalize_relative()
+
+    def normalize_relative(self):
+        f = self.f
+        for b in self.list:
+            if f[0] + f[1] + f[2] >= b.x + b.y + b.z:
+                f = [b.x, b.y, b.z]
+        self.set_relative(f)
+
 
     def edit_min_max(self, p):
         if p[0] < self.min[0]: self.min[0] = p[0]
@@ -275,10 +283,8 @@ class Shape:
         return self.max[1] - self.min[1]
 
     def new_relative(self, b):
-        if self.f[0] >= b.x and self.f[1] >= b.y and self.f[2] >= b.z:
-            self.f = [b.x, b.y, b.z]
-            for block in self.list:
-                block.set_relative(self.f)
+        if self.f[0] + self.f[1] + self.f[2] >= b.x + b.y + b.z:
+            self.set_relative([b.x,b.y,b.z])
 
 
 # Compare two shape sets and return a score for their similarity.
@@ -1135,9 +1141,10 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first=False):
                 min = tempmin
                 max = tempmax
                 tries = tries + 1
+                print("limited")
                 continue
             else:
-                # if final.__contains__(shape):
+                #if final.__contains__(shape):
                 #    tries = tries + 1
                 #    continue
                 # if check_overlap(final,shape):
@@ -1148,6 +1155,8 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first=False):
                 # if shape.plane == 'xz':
                 #    continue
                 final.append(shape)  # final.append(random_rotate(f,shape))
+                print("append")
+                print(shape)
         else:
             continue
         n = n - 1
@@ -1227,17 +1236,32 @@ def rotate_shape_n(s,w,og):
 # Edit the position of a new shape according to the position, and orientation of the shape that produced it.
 def edit_pos_relation(w, og, shape):
     copy = shape.copy()
+    w.normalize_relative()
+    og.normalize_relative()
     p = [0, 0, 0]
     if w.plane == 'xz' and w.rotated and w.plane == og.plane:
-        #print("rotate xz")
+        print("rotate xz")
         copy = rotate_shape(copy)
     elif w.plane == og.plane:
+        print("same plane")
         p[0] = og.f[0] - w.f[0]
         p[1] = og.f[1] - w.f[1]
+        print("og")
+        print(og)
+        print(og.f)
+        print("w")
+        print(w)
+        print(w.f)
         p[2] = og.f[2] - w.f[2]
+        print("p")
+        print(p)
+        print("og copy")
+        print(copy)
         copy.edit_pos(p)
+        print("edit copy")
+        print(copy)
     else:
-        #print("not og plane")
+        print("not og plane")
         copy = rotate_shape_n(copy,w,og)
     return copy
 
@@ -1267,7 +1291,7 @@ def to_xz(s):
             b.y = b.z
             b.z = temp
         sd.plane = 'xz'
-        sd.set_relative([sd.list[0].x, sd.list[0].y, sd.list[0].z])
+        sd.normalize_relative()
         return sd
     if s.plane == 'zy':
         sd = s.copy()
@@ -1276,7 +1300,7 @@ def to_xz(s):
             b.y = b.x
             b.x = temp
         sd.plane = 'xz'
-        sd.set_relative([sd.list[0].x, sd.list[0].y, sd.list[0].z])
+        sd.normalize_relative()
         return s
 
 
@@ -1290,7 +1314,7 @@ def to_xy(s):
             b.y = b.z
             b.z = temp
         sd.plane = 'xy'
-        sd.set_relative([sd.list[0].x, sd.list[0].y, sd.list[0].z])
+        sd.normalize_relative()
         return sd
     if s.plane == 'zy':
         sd = s.copy()
@@ -1299,7 +1323,7 @@ def to_xy(s):
             b.z = b.x
             b.x = temp
         sd.plane = 'xy'
-        sd.set_relative([sd.list[0].x, sd.list[0].y, sd.list[0].z])
+        sd.normalize_relative()
         return sd
 
 
@@ -1313,7 +1337,7 @@ def to_zy(s):
             b.y = b.x
             b.x = temp
         sd.plane = 'zy'
-        sd.set_relative([sd.list[0].x, sd.list[0].y, sd.list[0].z])
+        sd.normalize_relative()
         return sd
     if s.plane == 'xy':
         sd = s.copy()
@@ -1322,7 +1346,7 @@ def to_zy(s):
             b.z = b.x
             b.x = temp
         sd.plane = 'zy'
-        sd.set_relative([sd.list[0].x, sd.list[0].y, sd.list[0].z])
+        sd.normalize_relative()
         return sd
 
 
@@ -1427,3 +1451,9 @@ def extend_shape(s, l=1):
     print("res")
     print(s)
     return s
+
+
+def normalize_relative(shapes):
+    for s in shapes:
+        s.normalize_relative()
+    return shapes
