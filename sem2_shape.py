@@ -1200,35 +1200,31 @@ def rotate_shape(s):
 
 #Rotate a shape.
 def rotate_shape_n(s,w,og):
-    #print(s)
-    #print(s.plane)
-    #p = [0, 0, 0]
+    if w.plane == 'xy':
+        og_copy = to_xy(og)
+    else:
+        og_copy = to_zy(og)
+    p = [0, 0, 0]
     if s.plane == 'xy':
         rs = s.copy()
         rs = to_zy(rs)
-        #p[0] = og.f[0] - w.f[0]
-        #p[1] = og.f[1] - w.f[1]
-        #p[2] = og.f[2] - w.f[2]
+        p[0] = og_copy.f[0] - w.f[0]
+        p[1] = og_copy.f[1] - w.f[1]
+        p[2] = og_copy.f[2] - w.f[2]
         #print("edit p")
         #print(p)
         #print(og.f)
         #print(w.f)
-        #rs.edit_pos(p)
-        #rs[5].id = 14
-        #rs[5].dmg = 0
+        rs.edit_pos(p)
     elif s.plane == 'zy':
         rs = s.copy()
         rs = to_xy(rs)
-        #p[0] = og.f[2] - w.f[2]
-        #p[1] = og.f[1] - w.f[1]
-        #p[2] = -(og.f[0] - w.f[0])
-        #rs.edit_pos(p)
-        #rs[5].id = 16
-        #rs[5].dmg = 0
+        p[0] = og_copy.f[0] - w.f[0]
+        p[1] = og_copy.f[1] - w.f[1]
+        p[2] = og_copy.f[2] - w.f[2]
+        rs.edit_pos(p)
     else:
         rs = rotate_xz(s)
-    #print(rs)
-    #print(rs.plane)
     rs.rotated = True
     return rs
 
@@ -1246,20 +1242,18 @@ def edit_pos_relation(w, og, shape):
         print("same plane")
         p[0] = og.f[0] - w.f[0]
         p[1] = og.f[1] - w.f[1]
-        print("og")
-        print(og)
-        print(og.f)
-        print("w")
-        print(w)
-        print(w.f)
+        #print("og")
+        #print(og)
+        #print(og.f)
+        #print("w")
+        #print(w)
+        #print(w.f)
         p[2] = og.f[2] - w.f[2]
-        print("p")
-        print(p)
-        print("og copy")
-        print(copy)
+        #print("p")
+        #print(p)
+        #print("og copy")
+        #print(copy)
         copy.edit_pos(p)
-        print("edit copy")
-        print(copy)
     else:
         print("not og plane")
         copy = rotate_shape_n(copy,w,og)
@@ -1320,7 +1314,7 @@ def to_xy(s):
         sd = s.copy()
         for b in sd:
             temp = b.z
-            b.z = b.x
+            b.z = -b.x
             b.x = temp
         sd.plane = 'xy'
         sd.normalize_relative()
@@ -1343,7 +1337,7 @@ def to_zy(s):
         sd = s.copy()
         for b in sd:
             temp = b.z
-            b.z = b.x
+            b.z = -b.x
             b.x = temp
         sd.plane = 'zy'
         sd.normalize_relative()

@@ -145,7 +145,7 @@ def initial_shapes(m, rect):
     return shapes
 
 # Build a shape. Place it in the world at it's position.
-def build_shape(s, level, box, options, i=0, j=0):
+def build_shape(s, level, box, viz, i=0, j=0, fill=False):
     # print("BUILD")
     # print(s)
     y = box.miny
@@ -155,8 +155,12 @@ def build_shape(s, level, box, options, i=0, j=0):
             print(y)
             print(b.y)
             print(s)
-        if options["Visualize overlap:"] == 1 and level.blockAt(box.minx + b.x + j, y + b.y,
+        if viz and level.blockAt(box.minx + b.x + j, y + b.y,
                                                                 box.minz + b.z + 10 + (i * 6)) != 0:
             utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x + j, y + b.y, box.minz + b.z + 10 + (i * 6))
         else:
-            utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x + j, y + b.y, box.minz + b.z + 10 + (i * 6))
+            if fill:
+                utilityFunctions.setBlock(level, (35, b.dmg), box.minx + b.x + j, y + b.y, box.minz + b.z + 10 + (i * 6))
+            else:
+                utilityFunctions.setBlock(level, (b.id, b.dmg), box.minx + b.x + j, y + b.y,
+                                          box.minz + b.z + 10 + (i * 6))

@@ -1003,3 +1003,2932 @@ Min complexity: 1
 Number of 'redundant' identical shapes: 60
 Time spent: 2501.2246952
 
+Alpha: 0.5
+Number of shapes: 98
+Mean shape size: 3.9489795918367347
+Median shape size: 2.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 60
+Time spent: 2448.5663047
+
+Alpha: 0.75
+Number of shapes: 98
+Mean shape size: 3.9489795918367347
+Median shape size: 2.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 60
+Time spent: 2415.0225408
+
+Alpha: 1.0
+Number of shapes: 101
+Mean shape size: 3.762376237623762
+Median shape size: 2.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.0297029702970297
+Median complexity: 1.0
+Max complexity: 2
+Min complexity: 1
+Number of 'redundant' identical shapes: 62
+Time spent: 2435.9974529
+
+Alpha: 1.25
+Number of shapes: 101
+Mean shape size: 3.762376237623762
+Median shape size: 2.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.0297029702970297
+Median complexity: 1.0
+Max complexity: 2
+Min complexity: 1
+Number of 'redundant' identical shapes: 62
+Time spent: 2453.1831758
+
+Alpha: 1.5
+Number of shapes: 119
+Mean shape size: 3.2941176470588234
+Median shape size: 2.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.0672268907563025
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 86
+Time spent: 2429.089261
+
+Alpha: 1.75
+Number of shapes: 116
+Mean shape size: 3.3793103448275863
+Median shape size: 2.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.0948275862068966
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 82
+Time spent: 2274.697864
+
+Alpha: 2
+Number of shapes: 56
+Mean shape size: 6.446428571428571
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6428571428571428
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 18
+Time spent: 456.2014001
+
+Alpha: 5
+Number of shapes: 54
+Mean shape size: 6.851851851851852
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7037037037037037
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 19
+Time spent: 346.311469
+
+Alpha: 10
+Number of shapes: 54
+Mean shape size: 6.851851851851852
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7037037037037037
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 19
+Time spent: 351.2229945
+
+Alpha: 100
+Number of shapes: 54
+Mean shape size: 6.851851851851852
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7037037037037037
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 19
+Time spent: 347.3143418
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 0
+Cost function: 1
+Overlap allowed: False
+Post split: True
+
+Alpha: 0.0
+Number of shapes: 135
+Mean shape size: 3.1185185185185187
+Median shape size: 2.0
+Largest shape: 12
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 94
+Time spent: 3125.1247514
+
+Alpha: 0.25
+Number of shapes: 135
+Mean shape size: 3.1185185185185187
+Median shape size: 2.0
+Largest shape: 12
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 94
+Time spent: 2950.1223664
+
+Alpha: 0.5
+Number of shapes: 135
+Mean shape size: 3.1185185185185187
+Median shape size: 2.0
+Largest shape: 12
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 94
+Time spent: 2510.2259457
+
+Alpha: 0.75
+Number of shapes: 135
+Mean shape size: 3.1185185185185187
+Median shape size: 2.0
+Largest shape: 12
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 94
+Time spent: 2399.7443136
+
+Alpha: 1.0
+Number of shapes: 129
+Mean shape size: 3.124031007751938
+Median shape size: 2.0
+Largest shape: 12
+Smallest shape: 1
+Mean complexity: 1.0155038759689923
+Median complexity: 1.0
+Max complexity: 2
+Min complexity: 1
+Number of 'redundant' identical shapes: 86
+Time spent: 2417.3898231
+
+Alpha: 1.25
+Number of shapes: 127
+Mean shape size: 3.15748031496063
+Median shape size: 2.0
+Largest shape: 12
+Smallest shape: 1
+Mean complexity: 1.015748031496063
+Median complexity: 1.0
+Max complexity: 2
+Min complexity: 1
+Number of 'redundant' identical shapes: 83
+Time spent: 2403.085978
+
+Alpha: 1.5
+Number of shapes: 139
+Mean shape size: 3.0719424460431655
+Median shape size: 2.0
+Largest shape: 28
+Smallest shape: 1
+Mean complexity: 1.079136690647482
+Median complexity: 1.0
+Max complexity: 3
+Min complexity: 1
+Number of 'redundant' identical shapes: 102
+Time spent: 2370.161762
+
+Alpha: 1.75
+Number of shapes: 134
+Mean shape size: 3.171641791044776
+Median shape size: 2.0
+Largest shape: 28
+Smallest shape: 1
+Mean complexity: 1.1044776119402986
+Median complexity: 1.0
+Max complexity: 3
+Min complexity: 1
+Number of 'redundant' identical shapes: 94
+Time spent: 2268.6334081
+
+Alpha: 2
+Number of shapes: 65
+Mean shape size: 6.230769230769231
+Median shape size: 4.0
+Largest shape: 24
+Smallest shape: 1
+Mean complexity: 1.676923076923077
+Median complexity: 2.0
+Max complexity: 3
+Min complexity: 1
+Number of 'redundant' identical shapes: 21
+Time spent: 452.2044179
+
+Alpha: 5
+Number of shapes: 57
+Mean shape size: 6.578947368421052
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6842105263157894
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 340.9046137
+
+Alpha: 10
+Number of shapes: 57
+Mean shape size: 6.578947368421052
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6842105263157894
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 341.5197429
+
+Alpha: 100
+Number of shapes: 57
+Mean shape size: 6.578947368421052
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6842105263157894
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 341.5664186
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 0
+Cost function: 2
+Overlap allowed: True
+Post split: False
+
+Alpha: 0.0
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.4734576
+
+Alpha: 0.25
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.387195
+
+Alpha: 0.5
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.4281854
+
+Alpha: 0.75
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.5254324
+
+Alpha: 1.0
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.37871040001
+
+Alpha: 1.25
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.50741619999
+
+Alpha: 1.5
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.50750190001
+
+Alpha: 1.75
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.4503458
+
+Alpha: 2
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.4795972
+
+Alpha: 5
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.5283437
+
+Alpha: 10
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.4458839
+
+Alpha: 100
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.5035239
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 0
+Cost function: 2
+Overlap allowed: True
+Post split: True
+
+Alpha: 0.0
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.77630879999
+
+Alpha: 0.25
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.86115709999
+
+Alpha: 0.5
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8094199
+
+Alpha: 0.75
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.7379219
+
+Alpha: 1.0
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8592029
+
+Alpha: 1.25
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8226383
+
+Alpha: 1.5
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8191274
+
+Alpha: 1.75
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8489536
+
+Alpha: 2
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.81792830001
+
+Alpha: 5
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8053639
+
+Alpha: 10
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8215054
+
+Alpha: 100
+Number of shapes: 393
+Mean shape size: 1.005089058524173
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.81307009999
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 0
+Cost function: 2
+Overlap allowed: False
+Post split: False
+
+Alpha: 0.0
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.47913590001
+
+Alpha: 0.25
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.55076310001
+
+Alpha: 0.5
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.3402773
+
+Alpha: 0.75
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.4741579
+
+Alpha: 1.0
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.5102017
+
+Alpha: 1.25
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.4358698
+
+Alpha: 1.5
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.49186760001
+
+Alpha: 1.75
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.47309409999
+
+Alpha: 2
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.4374769
+
+Alpha: 5
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.4898679
+
+Alpha: 10
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.48791479999
+
+Alpha: 100
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.44637989999
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 0
+Cost function: 2
+Overlap allowed: False
+Post split: True
+
+Alpha: 0.0
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.80176059999
+
+Alpha: 0.25
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.79003379999
+
+Alpha: 0.5
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.82251049999
+
+Alpha: 0.75
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.7824384
+
+Alpha: 1.0
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8021953
+
+Alpha: 1.25
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.9196214
+
+Alpha: 1.5
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.7296407
+
+Alpha: 1.75
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.80092950001
+
+Alpha: 2
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8419568
+
+Alpha: 5
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.7205106
+
+Alpha: 10
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.81783120001
+
+Alpha: 100
+Number of shapes: 393
+Mean shape size: 1.0025445292620865
+Median shape size: 1.0
+Largest shape: 2
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 381
+Time spent: 8.8023345
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 0
+Overlap allowed: True
+Post split: False
+
+Alpha: 0.0
+Number of shapes: 68
+Mean shape size: 8.088235294117647
+Median shape size: 5.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.75
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 343.9890705
+
+Alpha: 0.25
+Number of shapes: 64
+Mean shape size: 8.75
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84375
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 18
+Time spent: 342.642883
+
+Alpha: 0.5
+Number of shapes: 63
+Mean shape size: 8.88888888888889
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8888888888888888
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 18
+Time spent: 341.4061762
+
+Alpha: 0.75
+Number of shapes: 63
+Mean shape size: 9.11111111111111
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.9682539682539681
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 338.2825073
+
+Alpha: 1.0
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 336.3897673
+
+Alpha: 1.25
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 336.8914403
+
+Alpha: 1.5
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 336.8019037
+
+Alpha: 1.75
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 335.9730297
+
+Alpha: 2
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 336.2339608
+
+Alpha: 5
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 336.3597006
+
+Alpha: 10
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 335.2808233
+
+Alpha: 100
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 337.2872119
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 0
+Overlap allowed: True
+Post split: True
+
+Alpha: 0.0
+Number of shapes: 151
+Mean shape size: 4.576158940397351
+Median shape size: 3.0
+Largest shape: 35
+Smallest shape: 1
+Mean complexity: 1.5629139072847682
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 77
+Time spent: 343.5685181
+
+Alpha: 0.25
+Number of shapes: 149
+Mean shape size: 4.718120805369128
+Median shape size: 4.0
+Largest shape: 35
+Smallest shape: 1
+Mean complexity: 1.604026845637584
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 76
+Time spent: 341.5733796
+
+Alpha: 0.5
+Number of shapes: 148
+Mean shape size: 4.75
+Median shape size: 3.5
+Largest shape: 35
+Smallest shape: 1
+Mean complexity: 1.6216216216216217
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 76
+Time spent: 340.5423121
+
+Alpha: 0.75
+Number of shapes: 161
+Mean shape size: 4.6894409937888195
+Median shape size: 4.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.6770186335403727
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 86
+Time spent: 337.5677172
+
+Alpha: 1.0
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 337.7700928
+
+Alpha: 1.25
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 338.4661941
+
+Alpha: 1.5
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 336.8290006
+
+Alpha: 1.75
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 337.4870898
+
+Alpha: 2
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 336.1790301
+
+Alpha: 5
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 336.2363047
+
+Alpha: 10
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 337.4448845
+
+Alpha: 100
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 338.6688555
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 0
+Overlap allowed: False
+Post split: False
+
+Alpha: 0.0
+Number of shapes: 37
+Mean shape size: 7.45945945945946
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.4324324324324325
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 6
+Time spent: 345.0380838
+
+Alpha: 0.25
+Number of shapes: 29
+Mean shape size: 9.310344827586206
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6551724137931034
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 342.6317279
+
+Alpha: 0.5
+Number of shapes: 30
+Mean shape size: 9.1
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6333333333333333
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 342.847379
+
+Alpha: 0.75
+Number of shapes: 27
+Mean shape size: 9.925925925925926
+Median shape size: 7.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7037037037037037
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 343.9490731
+
+Alpha: 1.0
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 338.2633728
+
+Alpha: 1.25
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 335.9781152
+
+Alpha: 1.5
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 337.3451501
+
+Alpha: 1.75
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 338.0939329
+
+Alpha: 2
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 336.0688161
+
+Alpha: 5
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 336.8676962
+
+Alpha: 10
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 336.2303202
+
+Alpha: 100
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 336.4624647
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 0
+Overlap allowed: False
+Post split: True
+
+Alpha: 0.0
+Number of shapes: 37
+Mean shape size: 7.45945945945946
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.4324324324324325
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 6
+Time spent: 343.7100745
+
+Alpha: 0.25
+Number of shapes: 29
+Mean shape size: 9.310344827586206
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6551724137931034
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 339.7726503
+
+Alpha: 0.5
+Number of shapes: 31
+Mean shape size: 9.064516129032258
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6774193548387097
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 340.0334232
+
+Alpha: 0.75
+Number of shapes: 27
+Mean shape size: 9.925925925925926
+Median shape size: 7.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7037037037037037
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 336.392293
+
+Alpha: 1.0
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 335.34044
+
+Alpha: 1.25
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 336.8005455
+
+Alpha: 1.5
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 335.7116695
+
+Alpha: 1.75
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 336.1067815
+
+Alpha: 2
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 335.0946289
+
+Alpha: 5
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 335.5848837
+
+Alpha: 10
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 335.8721042
+
+Alpha: 100
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 336.9412313
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 1
+Overlap allowed: True
+Post split: False
+
+Alpha: 0.0
+Number of shapes: 69
+Mean shape size: 7.913043478260869
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7391304347826086
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 19
+Time spent: 347.06072
+
+Alpha: 0.25
+Number of shapes: 69
+Mean shape size: 8.057971014492754
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7681159420289856
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 19
+Time spent: 346.2068774
+
+Alpha: 0.5
+Number of shapes: 68
+Mean shape size: 8.176470588235293
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7647058823529411
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 18
+Time spent: 347.1071354
+
+Alpha: 0.75
+Number of shapes: 67
+Mean shape size: 8.194029850746269
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7462686567164178
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 19
+Time spent: 350.5799551
+
+Alpha: 1.0
+Number of shapes: 67
+Mean shape size: 8.194029850746269
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7462686567164178
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 19
+Time spent: 349.3376568
+
+Alpha: 1.25
+Number of shapes: 67
+Mean shape size: 8.298507462686567
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7611940298507462
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 19
+Time spent: 349.4396288
+
+Alpha: 1.5
+Number of shapes: 66
+Mean shape size: 8.575757575757576
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8181818181818181
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 347.4270915
+
+Alpha: 1.75
+Number of shapes: 65
+Mean shape size: 8.707692307692307
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8461538461538463
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 345.2680642
+
+Alpha: 2
+Number of shapes: 65
+Mean shape size: 8.753846153846155
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.876923076923077
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 344.7553762
+
+Alpha: 5
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 337.4054406
+
+Alpha: 10
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 336.7594382
+
+Alpha: 100
+Number of shapes: 63
+Mean shape size: 9.174603174603174
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 2.015873015873016
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 17
+Time spent: 337.4300933
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 1
+Overlap allowed: True
+Post split: True
+
+Alpha: 0.0
+Number of shapes: 148
+Mean shape size: 4.533783783783784
+Median shape size: 3.0
+Largest shape: 35
+Smallest shape: 1
+Mean complexity: 1.5472972972972974
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 69
+Time spent: 348.0354952
+
+Alpha: 0.25
+Number of shapes: 154
+Mean shape size: 4.525974025974026
+Median shape size: 3.0
+Largest shape: 35
+Smallest shape: 1
+Mean complexity: 1.5584415584415585
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 78
+Time spent: 346.0482358
+
+Alpha: 0.5
+Number of shapes: 153
+Mean shape size: 4.555555555555555
+Median shape size: 3.0
+Largest shape: 35
+Smallest shape: 1
+Mean complexity: 1.5620915032679739
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 78
+Time spent: 347.1934009
+
+Alpha: 0.75
+Number of shapes: 150
+Mean shape size: 4.6
+Median shape size: 3.0
+Largest shape: 35
+Smallest shape: 1
+Mean complexity: 1.5666666666666667
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 77
+Time spent: 351.2113458
+
+Alpha: 1.0
+Number of shapes: 150
+Mean shape size: 4.6
+Median shape size: 3.0
+Largest shape: 35
+Smallest shape: 1
+Mean complexity: 1.5666666666666667
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 77
+Time spent: 347.7430072
+
+Alpha: 1.25
+Number of shapes: 150
+Mean shape size: 4.6466666666666665
+Median shape size: 3.0
+Largest shape: 35
+Smallest shape: 1
+Mean complexity: 1.5733333333333333
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 77
+Time spent: 349.8456279
+
+Alpha: 1.5
+Number of shapes: 159
+Mean shape size: 4.622641509433962
+Median shape size: 4.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.6037735849056605
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 82
+Time spent: 347.5103366
+
+Alpha: 1.75
+Number of shapes: 158
+Mean shape size: 4.651898734177215
+Median shape size: 4.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.6139240506329113
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 82
+Time spent: 344.6906752
+
+Alpha: 2
+Number of shapes: 161
+Mean shape size: 4.645962732919255
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.639751552795031
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 81
+Time spent: 344.8413634
+
+Alpha: 5
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 339.6527258
+
+Alpha: 10
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 339.7165417
+
+Alpha: 100
+Number of shapes: 164
+Mean shape size: 4.689024390243903
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7073170731707317
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 87
+Time spent: 338.7217544
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 1
+Overlap allowed: False
+Post split: False
+
+Alpha: 0.0
+Number of shapes: 37
+Mean shape size: 7.513513513513513
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.4864864864864864
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 6
+Time spent: 349.3585745
+
+Alpha: 0.25
+Number of shapes: 36
+Mean shape size: 7.722222222222222
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 6
+Time spent: 347.2425425
+
+Alpha: 0.5
+Number of shapes: 35
+Mean shape size: 7.942857142857143
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5142857142857142
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 5
+Time spent: 348.999244
+
+Alpha: 0.75
+Number of shapes: 34
+Mean shape size: 8.117647058823529
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 5
+Time spent: 348.6044636
+
+Alpha: 1.0
+Number of shapes: 34
+Mean shape size: 8.117647058823529
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 5
+Time spent: 349.1009684
+
+Alpha: 1.25
+Number of shapes: 34
+Mean shape size: 8.117647058823529
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 5
+Time spent: 349.6841291
+
+Alpha: 1.5
+Number of shapes: 31
+Mean shape size: 8.838709677419354
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5806451612903225
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 349.0473001
+
+Alpha: 1.75
+Number of shapes: 30
+Mean shape size: 9.133333333333333
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6333333333333333
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 347.3222761
+
+Alpha: 2
+Number of shapes: 29
+Mean shape size: 9.448275862068966
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6896551724137931
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 343.8286892
+
+Alpha: 5
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 338.2135054
+
+Alpha: 10
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 339.5421805
+
+Alpha: 100
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 337.7001452
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 1
+Overlap allowed: False
+Post split: True
+
+Alpha: 0.0
+Number of shapes: 37
+Mean shape size: 7.513513513513513
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.4864864864864864
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 6
+Time spent: 348.5974207
+
+Alpha: 0.25
+Number of shapes: 36
+Mean shape size: 7.722222222222222
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 6
+Time spent: 345.8345041
+
+Alpha: 0.5
+Number of shapes: 35
+Mean shape size: 7.942857142857143
+Median shape size: 4.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5142857142857142
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 5
+Time spent: 346.9776089
+
+Alpha: 0.75
+Number of shapes: 34
+Mean shape size: 8.117647058823529
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 5
+Time spent: 348.1888327
+
+Alpha: 1.0
+Number of shapes: 34
+Mean shape size: 8.117647058823529
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 5
+Time spent: 348.4488757
+
+Alpha: 1.25
+Number of shapes: 34
+Mean shape size: 8.117647058823529
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 5
+Time spent: 350.2569036
+
+Alpha: 1.5
+Number of shapes: 31
+Mean shape size: 8.838709677419354
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.5806451612903225
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 347.6210875
+
+Alpha: 1.75
+Number of shapes: 30
+Mean shape size: 9.133333333333333
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6333333333333333
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 350.7672214
+
+Alpha: 2
+Number of shapes: 29
+Mean shape size: 9.448275862068966
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.6896551724137931
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 345.2689036
+
+Alpha: 5
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 337.7753905
+
+Alpha: 10
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 337.3237875
+
+Alpha: 100
+Number of shapes: 25
+Mean shape size: 10.72
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.84
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 2
+Time spent: 339.0461258
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 2
+Overlap allowed: True
+Post split: False
+
+Alpha: 0.0
+Number of shapes: 65
+Mean shape size: 8.661538461538461
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.9538461538461538
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 353.9824037
+
+Alpha: 0.25
+Number of shapes: 62
+Mean shape size: 8.935483870967742
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.967741935483871
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 349.5729144
+
+Alpha: 0.5
+Number of shapes: 62
+Mean shape size: 8.935483870967742
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.967741935483871
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 348.8550723
+
+Alpha: 0.75
+Number of shapes: 63
+Mean shape size: 8.793650793650794
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.9523809523809523
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 21
+Time spent: 352.9292357
+
+Alpha: 1.0
+Number of shapes: 62
+Mean shape size: 8.935483870967742
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.967741935483871
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 349.1199898
+
+Alpha: 1.25
+Number of shapes: 62
+Mean shape size: 8.935483870967742
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.967741935483871
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 349.190019
+
+Alpha: 1.5
+Number of shapes: 62
+Mean shape size: 8.935483870967742
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.967741935483871
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 348.7063924
+
+Alpha: 1.75
+Number of shapes: 62
+Mean shape size: 8.935483870967742
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.967741935483871
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 350.514496
+
+Alpha: 2
+Number of shapes: 62
+Mean shape size: 8.935483870967742
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.967741935483871
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 349.5418503
+
+Alpha: 5
+Number of shapes: 65
+Mean shape size: 8.615384615384615
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.9538461538461538
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 21
+Time spent: 360.9171947
+
+Alpha: 10
+Number of shapes: 62
+Mean shape size: 8.935483870967742
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.967741935483871
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 349.7296026
+
+Alpha: 100
+Number of shapes: 62
+Mean shape size: 8.935483870967742
+Median shape size: 6.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.967741935483871
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 20
+Time spent: 349.5499453
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 2
+Overlap allowed: True
+Post split: True
+
+Alpha: 0.0
+Number of shapes: 155
+Mean shape size: 4.748387096774193
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7096774193548387
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 73
+Time spent: 354.6479702
+
+Alpha: 0.25
+Number of shapes: 149
+Mean shape size: 4.791946308724833
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 349.8236431
+
+Alpha: 0.5
+Number of shapes: 149
+Mean shape size: 4.791946308724833
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 349.4464219
+
+Alpha: 0.75
+Number of shapes: 149
+Mean shape size: 4.785234899328859
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 71
+Time spent: 353.2418517
+
+Alpha: 1.0
+Number of shapes: 149
+Mean shape size: 4.791946308724833
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 349.7118026
+
+Alpha: 1.25
+Number of shapes: 149
+Mean shape size: 4.791946308724833
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 350.9733864
+
+Alpha: 1.5
+Number of shapes: 149
+Mean shape size: 4.791946308724833
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 350.3864668
+
+Alpha: 1.75
+Number of shapes: 149
+Mean shape size: 4.791946308724833
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 349.5116239
+
+Alpha: 2
+Number of shapes: 149
+Mean shape size: 4.791946308724833
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 350.4191627
+
+Alpha: 5
+Number of shapes: 154
+Mean shape size: 4.746753246753247
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.7207792207792207
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 75
+Time spent: 361.4035471
+
+Alpha: 10
+Number of shapes: 149
+Mean shape size: 4.791946308724833
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 350.3410619
+
+Alpha: 100
+Number of shapes: 149
+Mean shape size: 4.791946308724833
+Median shape size: 4.0
+Largest shape: 18
+Smallest shape: 1
+Mean complexity: 1.6845637583892616
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 350.0489195
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 2
+Overlap allowed: False
+Post split: False
+
+Alpha: 0.0
+Number of shapes: 27
+Mean shape size: 10.074074074074074
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8518518518518519
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 353.3670208
+
+Alpha: 0.25
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 348.9076192
+
+Alpha: 0.5
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 348.3098995
+
+Alpha: 0.75
+Number of shapes: 25
+Mean shape size: 10.84
+Median shape size: 8.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.92
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 354.0593503
+
+Alpha: 1.0
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 352.7892666
+
+Alpha: 1.25
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 352.9076714
+
+Alpha: 1.5
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 351.7706491
+
+Alpha: 1.75
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 348.9609154
+
+Alpha: 2
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 350.5927117
+
+Alpha: 5
+Number of shapes: 29
+Mean shape size: 9.724137931034482
+Median shape size: 7.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.896551724137931
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 7
+Time spent: 361.2784104
+
+Alpha: 10
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 348.2382205
+
+Alpha: 100
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 349.8287809
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 1
+Cost function: 2
+Overlap allowed: False
+Post split: True
+
+Alpha: 0.0
+Number of shapes: 33
+Mean shape size: 8.424242424242424
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7575757575757576
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 4
+Time spent: 357.0140211
+
+Alpha: 0.25
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 354.0990042
+
+Alpha: 0.5
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 352.3678191
+
+Alpha: 0.75
+Number of shapes: 31
+Mean shape size: 8.935483870967742
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8064516129032258
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 4
+Time spent: 354.2286123
+
+Alpha: 1.0
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 363.8389246
+
+Alpha: 1.25
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 373.3353066
+
+Alpha: 1.5
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 370.4887953
+
+Alpha: 1.75
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 370.083581
+
+Alpha: 2
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 353.10128
+
+Alpha: 5
+Number of shapes: 34
+Mean shape size: 8.441176470588236
+Median shape size: 5.0
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.7941176470588236
+Median complexity: 2.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 7
+Time spent: 360.1669197
+
+Alpha: 10
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 348.8122227
+
+Alpha: 100
+Number of shapes: 26
+Mean shape size: 10.307692307692308
+Median shape size: 7.5
+Largest shape: 56
+Smallest shape: 1
+Mean complexity: 1.8076923076923077
+Median complexity: 1.0
+Max complexity: 4
+Min complexity: 1
+Number of 'redundant' identical shapes: 3
+Time spent: 350.0393585
+
+Rect(0), same plane(1) or 3D shapes(2): 0
+Merge(0), split(1) or both(2): 2
+Cost function: 0
+Overlap allowed: True
+Post split: False
+
+Alpha: 0.0
+Number of shapes: 113
+Mean shape size: 5.115044247787611
+Median shape size: 3.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 71
+Time spent: 2940.1746246
+
+Alpha: 0.25
+Number of shapes: 113
+Mean shape size: 5.115044247787611
+Median shape size: 3.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.0
+Median complexity: 1.0
+Max complexity: 1
+Min complexity: 1
+Number of 'redundant' identical shapes: 71
+Time spent: 2846.0270169
+
+Alpha: 0.5
+Number of shapes: 112
+Mean shape size: 5.285714285714286
+Median shape size: 3.0
+Largest shape: 20
+Smallest shape: 1
+Mean complexity: 1.0535714285714286
+Median complexity: 1.0
+Max complexity: 2
+Min complexity: 1
+Number of 'redundant' identical shapes: 70
+Time spent: 2866.1067697
+

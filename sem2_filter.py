@@ -33,10 +33,10 @@ def perform(level, box, options):
 
     #default = io.read_shapes(1)
     #for s in default:
-    #    io.build_shape(s, level, box, options, 1)
+    #    io.build_shape(s, level, box, options["Visualize overlap:"], 1)
     #enclosed = encl.enclosure_update_3d(default)
     #for s in enclosed:
-    #    io.build_shape(s, level, box, options, 10)
+    #    io.build_shape(s, level, box, options["Visualize overlap:"], 10)
     #return
 
     m = io.scan_structure(level, box)
@@ -65,7 +65,7 @@ def perform(level, box, options):
         #print(shapes)
     i = 0
     for s in shapes:
-        io.build_shape(s, level, box, options, 10 + i)
+        io.build_shape(s, level, box, options["Visualize overlap:"], 10 + i)
         i = i + 1
     #io.write_shapes(shapes)
     #default = io.read_shapes(0)
@@ -78,11 +78,26 @@ def perform(level, box, options):
     print(rel)
     i = 0
     for r in rel:
+        j = 0
+
+        #if r[2].plane == 'xy':
+        #    og_copy = shp.to_zy(r[2])
+        #    s_copy = shp.to_xy(r[1])
+        #else:
+        #    og_copy = shp.to_xy(r[2])
+        #    s_copy = shp.to_zy(r[1])
+        #io.build_shape(og_copy, level, box, options["Visualize overlap:"], 10 + i -1, -15, True)
+        #io.build_shape(s_copy, level, box, options["Visualize overlap:"], 10 + i - 1, -15, False)
+
         for f in r[0]:
             s = shp.edit_pos_relation(f, r[2], r[1])
-            io.build_shape(f, level, box, options, 10+i,-15)
-            io.build_shape(s, level, box, options, 10 + i,-15)
+            if r[2].eq_production(f):
+                io.build_shape(f, level, box, options["Visualize overlap:"], 10+i,-15, True)
+            else:
+                io.build_shape(f, level, box, options["Visualize overlap:"], 10 + i, -15)
+            io.build_shape(s, level, box, options["Visualize overlap:"], 10 + i,-15)
             i += 1
+            j +=1
         i += 2
 
     for p in range(1):
@@ -99,15 +114,15 @@ def perform(level, box, options):
             if not options["Enclosure:"]:
                 print("Building")
                 for s in final:
-                    io.build_shape(s, level, box, options, 1 + (p*2))
-                    # build_shape(s, level, box,options,10+i)
+                    io.build_shape(s, level, box, options["Visualize overlap:"], 1 + (p*2))
+                    # build_shape(s, level, box,options["Visualize overlap:"],10+i)
                     i = i + 1
             else:
                 enclosed = encl.enclosure_update_3d(final)
                 print("enclosure done")
                 for s in enclosed:
-                    io.build_shape(s, level, box, options, 1)
-                    # build_shape(s, level, box,options,10+i)
+                    io.build_shape(s, level, box, options["Visualize overlap:"], 1)
+                    # build_shape(s, level, box,options["Visualize overlap:"],10+i)
                     i = i + 1
 
 def main():

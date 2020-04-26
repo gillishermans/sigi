@@ -404,17 +404,66 @@ def cost_experiment(exp,sep):
                         median_complex_2,
                         max_complex_2, min_complex_2, identical_2, time_spent_2)
 
+            new_identical = []
+            new_identical_1 = []
+            new_identical_2 = []
+            new_nbshapes = []
+            new_nbshapes_1 = []
+            new_nbshapes_2 = []
+            i = 0
+            print(largest_2)
+            print(mean_size_2)
+            for l in mean_size_2:
+                if l >= 1.5:
+                    new_identical.append(identical[i])
+                    new_identical_1.append(identical_1[i])
+                    new_identical_2.append(identical_2[i])
+                    new_nbshapes.append(nbshapes[i])
+                    new_nbshapes_1.append(nbshapes_1[i])
+                    new_nbshapes_2.append(nbshapes_2[i])
+                i += 1
+
+
             print("COST 0 (BASIC COST) AVERAGES")
             print_basic_results(nbshapes, mean_size, median_size, largest, smallest, mean_complex, median_complex,
                                     max_complex, min_complex, identical, time_spent)
+
+            i = 0
+            copy = new_identical.copy()
+            for n in new_nbshapes:
+                copy[i] = copy[i] / n
+                i += 1
+            print("Removed largest 1 Avg identical percentage ", average(copy))
+            print("Removed largest 1 Median identical percentage ", median(copy))
+            print("Removed largest 1 Avg number of shapes", average(new_nbshapes))
+            print(len(new_nbshapes))
 
             print("COST 1 (GROWS MORE FOR MORE TYPES) AVERAGES")
             print_basic_results(nbshapes_1, mean_size_1, median_size_1, largest_1, smallest_1, mean_complex_1,
                                     median_complex_1, max_complex_1, min_complex_1, identical_1, time_spent_1)
 
+            i = 0
+            copy = new_identical_1.copy()
+            for n in new_nbshapes_1:
+                copy[i] = copy[i] / n
+                i += 1
+            print("Removed largest 1 Avg identical percentage ", average(copy))
+            print("Removed largest 1 Median identical percentage ", median(copy))
+            print("Removed largest 1 Avg number of shapes", average(new_nbshapes_1))
+
             print("COST 2 (IDENTICAL DISCOUNT) AVERAGES")
             print_basic_results(nbshapes_2, mean_size_2, median_size_2, largest_2, smallest_2, mean_complex_2,
                                     median_complex_2, max_complex_2, min_complex_2, identical_2, time_spent_2)
+
+            i = 0
+            copy = new_identical_2.copy()
+            for n in new_nbshapes_2:
+                copy[i] = copy[i] / n
+                i += 1
+            print("Removed largest 1 Avg identical percentage ", average(copy))
+            print("Removed largest 1 Median identical percentage ", median(copy))
+            print("Removed largest 1 Avg number of shapes", average(new_nbshapes_2))
+            print(len(new_nbshapes_2))
     else:
         nbshapes = []
         nbshapes_1 = []
@@ -824,9 +873,9 @@ def median(lst):
 
 def main():
     #overlap_experiment([0,1,2],True)
-    post_split_experiment([0,1,2],True)
+    #post_split_experiment([0,1,2],True)
     #representation_experiment([0,1,2],False)
-    #cost_experiment([0,1,2], True)
+    cost_experiment([0,1,2], True)
     #operation_experiment([0,1,2],True)
 
 if __name__ == "__main__":
