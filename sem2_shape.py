@@ -4,6 +4,7 @@ import math as math
 from itertools import combinations
 import itertools
 import random
+import enclosure as encl
 
 
 # Updates a list of probabilities for blocks.
@@ -1095,6 +1096,11 @@ def check_overlap(final, s):
                 smin = [b.x, b.y, b.z]
             if smax[0] < b.x or smax[1] < b.y or smax[2] < b.z:
                 smax = [b.x, b.y, b.z]
+        print("check overlap")
+        print(fmin)
+        print(fmax)
+        print(smin)
+        print(smax)
         if smin[0] >= fmin[0] and smin[1] >= fmin[1] and smin[2] >= fmin[2] and smax[0] <= fmax[0] and smax[1] <= fmax[
             1] and smax[2] <= fmax[2]:
             return True
@@ -1147,9 +1153,9 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first=False):
                 #if final.__contains__(shape):
                 #    tries = tries + 1
                 #    continue
-                # if check_overlap(final,shape):
-                #    tries = tries + 1
-                #    continue
+                if check_overlap(final,shape):
+                    tries = tries + 1
+                    continue
                 tries = 0
                 blocked = []
                 # if shape.plane == 'xz':
@@ -1161,6 +1167,38 @@ def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first=False):
             continue
         n = n - 1
     return final
+
+
+def fill_production(shapes, rel, n=100):
+    not_enclosed = encl.enclosure_find_3d(shapes)
+    print("fill not enclosed")
+    print(not_enclosed)
+    tries = 0
+    while tries < n:
+        if len(not_enclosed) == 0:
+            print("Fully enclosed", tries)
+            return shapes
+        f = random.choice(not_enclosed)
+        rrel = []
+        for r in rel:  # of the form [[s1, possible identical s], s2, s1]
+            for s in r[0]:
+                if s.eq_production(f):
+                    rrel.append(r)
+        if len(rrel) != 0:
+            r = random.choice(rrel)
+            og = r[2]
+            shape = r[1].copy()
+            shape = edit_pos_relation(f, og, shape)
+
+            copy = copy_shapes(shapes)
+            copy.append(shape)
+            new_not_enclosed = encl.enclosure_find_3d(copy)
+            if len(not_enclosed) > len(new_not_enclosed):
+                shapes = copy
+                not_enclosed = new_not_enclosed
+            else:
+                tries += 1
+    return shapes
 
 
 # Rotate s if w is rotated.

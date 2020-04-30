@@ -299,6 +299,34 @@ def enclosure_update_3d(shapes):
     return [x for x in shapes if not remove.__contains__(x)]
 
 # Find all enclosures in just one path finding sweep.
+def enclosure_find_3d(shapes):
+    shapes_space, minx, miny, minz = build_production_space_3d(shapes)
+    ends = []
+    for s in shapes:
+        start = []
+        end = []
+        if s.plane == 'xy':
+            for i in range(len(s.list)):
+                start = [s.list[i].x - minx + 1, s.list[i].y - miny, s.list[i].z + 1 - minz + 1]
+                end = [s.list[i].x - minx + 1, s.list[i].y - miny, s.list[i].z - 1 - minz + 1]
+                if shapes_space[start[0]][start[1]][start[2]] == 0 and shapes_space[end[0]][end[1]][end[2]] == 0: break
+        elif s.plane == 'xz':
+            for i in range(len(s.list)):
+                start = [s.list[i].x - minx + 1, s.list[i].y + 1 - miny, s.list[i].z - minz + 1]
+                end = [s.list[i].x - minx + 1, s.list[i].y - 1 - miny, s.list[i].z - minz + 1]
+                if shapes_space[start[0]][start[1]][start[2]] == 0 and shapes_space[end[0]][end[1]][end[2]] == 0: break
+        elif s.plane == 'zy':
+            for i in range(len(s.list)):
+                start = [s.list[i].x + 1 - minx + 1, s.list[i].y - miny, s.list[i].z - minz + 1]
+                end = [s.list[i].x - 1 - minx + 1, s.list[i].y - miny, s.list[i].z - minz + 1]
+                if shapes_space[start[0]][start[1]][start[2]] == 0 and shapes_space[end[0]][end[1]][end[2]] == 0: break
+        ends.append([start, end])
+    remove = search_for_3d(shapes_space, shapes, ends)
+    print("Not enclosed: ")
+    print(remove)
+    return remove
+
+# Find all enclosures in just one path finding sweep.
 def enclosure_update(shapes):
     shapes_space, minx, minz = build_production_space(shapes)
     ends = []

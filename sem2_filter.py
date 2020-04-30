@@ -101,7 +101,7 @@ def perform(level, box, options):
         i += 2
 
     for p in range(1):
-        print("prodcution")
+        print("production")
         print(p)
         if options["Number of production shapes:"] != 0:
             if options["Split grammar:"]:
@@ -112,11 +112,21 @@ def perform(level, box, options):
             print("Production shapes done")
             i = 0
             if not options["Enclosure:"]:
+
                 print("Building")
                 for s in final:
                     io.build_shape(s, level, box, options["Visualize overlap:"], 1 + (p*2))
                     # build_shape(s, level, box,options["Visualize overlap:"],10+i)
                     i = i + 1
+
+                #final = shp.fill_production(final, rel, 100)
+                #print("Building")
+                #for s in final:
+                #    io.build_shape(s, level, box, options["Visualize overlap:"], 1 + ((p+5) * 2))
+                #    # build_shape(s, level, box,options["Visualize overlap:"],10+i)
+                #    i = i + 1
+
+
             else:
                 enclosed = encl.enclosure_update_3d(final)
                 print("enclosure done")
