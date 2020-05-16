@@ -142,6 +142,10 @@ def initial_shapes(m, rect):
                     else:
                         s = Shape(b, 'xy')
                         shapes.append(s)
+                        s = Shape(b, 'xz')
+                        shapes.append(s)
+                        s = Shape(b, 'zy')
+                        shapes.append(s)
     return shapes
 
 # Build a shape. Place it in the world at it's position.

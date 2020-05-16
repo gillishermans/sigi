@@ -15,17 +15,18 @@ import in_out as io
 inputs = (
     ("Generate procedural model for example structure.", "label"),
     ("Creator: Gillis Hermans", "label"),
-    ("Merge(0), split(1) or both(2):", 0),
-    ("Rect(0), same plane(1) or 3D shapes(2):", 0),
-    ("Cost function:", 0),
+    ("---------Shape Inference---------", "label"),
+    ("Operation: merge(0), split(1) or both(2):", 0),
+    ("Specification: rectangular(0), planar(1) or 3D shapes(2):", 0),
+    ("Cost function: basic(0), complex(1) or matching discount(2):", 0),
     ("Alpha:", 1.5),
-    ("Number of production shapes:", 100),
-    ("Split grammar:", False),
-    ("Apply post split operation:", False),
     ("Overlap allowed:", True),
-    ("Visualize overlap:", False),
-    ("Rotate the first produced shape:", False),
-    ("Enclosure:", False)
+    ("Apply post split operation:", False),
+    ("-----------Generation-----------", "label"),
+    ("Number of rule derivations:", 100),
+    ("Apply enclosure constraint:", False),
+    ("Split grammar (experimental):", False),
+    ("Visualize overlap (experimental):", False)
 )
 
 
@@ -40,14 +41,14 @@ def perform(level, box, options):
     #return
 
     m = io.scan_structure(level, box)
-    shapes = io.initial_shapes(m, options["Rect(0), same plane(1) or 3D shapes(2):"])
-    if options["Cost function:"] == 2:
-        shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"],
-                                   options["Merge(0), split(1) or both(2):"], options["Cost function:"],
+    shapes = io.initial_shapes(m, options["Specification: rectangular(0), planar(1) or 3D shapes(2):"])
+    if options["Cost function: basic(0), complex(1) or matching discount(2):"] == 2:
+        shapes = shp.hill_climbing(shapes, options["Specification: rectangular(0), planar(1) or 3D shapes(2):"],
+                                   options["Operation: merge(0), split(1) or both(2):"], options["Cost function: basic(0), complex(1) or matching discount(2):"],
                                    float(options["Alpha:"]), m, shp.get_duplicate_shapes(shapes))
     else:
-        shapes = shp.hill_climbing(shapes, options["Rect(0), same plane(1) or 3D shapes(2):"],
-                                   options["Merge(0), split(1) or both(2):"], options["Cost function:"],
+        shapes = shp.hill_climbing(shapes, options["Specification: rectangular(0), planar(1) or 3D shapes(2):"],
+                                   options["Operation: merge(0), split(1) or both(2):"], options["Cost function: basic(0), complex(1) or matching discount(2):"],
                                    float(options["Alpha:"]), m)
     print("Hill climbing done")
     if options["Overlap allowed:"]:
@@ -65,7 +66,7 @@ def perform(level, box, options):
         #print(shapes)
     i = 0
     for s in shapes:
-        io.build_shape(s, level, box, options["Visualize overlap:"], 10 + i)
+        #io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 10 + i)
         i = i + 1
     #io.write_shapes(shapes)
     #default = io.read_shapes(0)
@@ -79,23 +80,13 @@ def perform(level, box, options):
     i = 0
     for r in rel:
         j = 0
-
-        #if r[2].plane == 'xy':
-        #    og_copy = shp.to_zy(r[2])
-        #    s_copy = shp.to_xy(r[1])
-        #else:
-        #    og_copy = shp.to_xy(r[2])
-        #    s_copy = shp.to_zy(r[1])
-        #io.build_shape(og_copy, level, box, options["Visualize overlap:"], 10 + i -1, -15, True)
-        #io.build_shape(s_copy, level, box, options["Visualize overlap:"], 10 + i - 1, -15, False)
-
         for f in r[0]:
             s = shp.edit_pos_relation(f, r[2], r[1])
-            if r[2].eq_production(f):
-                io.build_shape(f, level, box, options["Visualize overlap:"], 10+i,-15, True)
-            else:
-                io.build_shape(f, level, box, options["Visualize overlap:"], 10 + i, -15)
-            io.build_shape(s, level, box, options["Visualize overlap:"], 10 + i,-15)
+            #if r[2].eq_production(f):
+            #    io.build_shape(f, level, box, options["Visualize overlap (experimental):"], 10+i,-15, True)
+            #else:
+            #io.build_shape(f, level, box, options["Visualize overlap (experimental):"], 10 + i, -15)
+            #io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 10 + i,-15)
             i += 1
             j +=1
         i += 2
@@ -103,36 +94,38 @@ def perform(level, box, options):
     for p in range(1):
         print("production")
         print(p)
-        if options["Number of production shapes:"] != 0:
-            if options["Split grammar:"]:
+        if options["Number of rule derivations:"] != 0:
+            if options["Split grammar (experimental):"]:
                 final = splt.split_grammar(shp.copy_shapes(shapes), rel)
 
             else:
-                final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], options["Number of production shapes:"], options["Rotate the first produced shape:"])
+                final = shp.production_limit(shp.copy_shapes(shapes), rel, [25, 25, 25], options["Number of rule derivations:"], False)
             print("Production shapes done")
             i = 0
-            if not options["Enclosure:"]:
+            if not options["Apply enclosure constraint:"]:
 
                 print("Building")
                 for s in final:
-                    io.build_shape(s, level, box, options["Visualize overlap:"], 1 + (p*2))
-                    # build_shape(s, level, box,options["Visualize overlap:"],10+i)
+                    io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 4 + (p*2))
+                    # build_shape(s, level, box,options["Visualize overlap (experimental):"],10+i)
                     i = i + 1
+
+
+            else:
 
                 #final = shp.fill_production(final, rel, 100)
                 #print("Building")
                 #for s in final:
-                #    io.build_shape(s, level, box, options["Visualize overlap:"], 1 + ((p+5) * 2))
-                #    # build_shape(s, level, box,options["Visualize overlap:"],10+i)
-                #    i = i + 1
+                #  io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 1 + ((p+5) * 2))
+                   # build_shape(s, level, box,options["Visualize overlap (experimental):"],10+i)
+                #  i = i + 1
 
 
-            else:
                 enclosed = encl.enclosure_update_3d(final)
                 print("enclosure done")
                 for s in enclosed:
-                    io.build_shape(s, level, box, options["Visualize overlap:"], 1)
-                    # build_shape(s, level, box,options["Visualize overlap:"],10+i)
+                    io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 1)
+                    # build_shape(s, level, box,options["Visualize overlap (experimental):"],10+i)
                     i = i + 1
 
 def main():

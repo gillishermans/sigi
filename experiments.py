@@ -1,6 +1,8 @@
 import sys
 import os
 import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
 
 def overlap_experiment(exp,sep):
     if sep:
@@ -56,6 +58,8 @@ def overlap_experiment(exp,sep):
                 print("WITH OVERLAP")
                 print_basic_results(nbshapes_1, mean_size_1, median_size_1, largest_1, smallest_1, mean_complex_1,
                                 median_complex_1, max_complex_1, min_complex_1, identical_1, time_spent_1)
+
+                #plot_identical_percentage(nbshapes, nbshapes_1, identical, identical_1)
     else:
         nbshapes = []
         nbshapes_1 = []
@@ -103,6 +107,8 @@ def overlap_experiment(exp,sep):
         print("WITH OVERLAP")
         print_basic_results(nbshapes_1, mean_size_1, median_size_1, largest_1, smallest_1, mean_complex_1,
                             median_complex_1, max_complex_1, min_complex_1, identical_1, time_spent_1)
+
+        #plot_identical_percentage(nbshapes, nbshapes_1, identical, identical_1)
 
 
 def post_split_experiment(exp,sep):
@@ -871,12 +877,43 @@ def average(lst):
 def median(lst):
     return np.median(lst)
 
+def plot_identical_percentage(nbshapes, nbshapes_1, identical, identical_1):
+    fig, (ax,ax2) = plt.subplots(1,2)
+    #ax.plot(nbshapes, identical)
+    #ax.plot(nbshapes_1, identical_1)
+
+    i = 0
+    copy = identical.copy()
+    for n in nbshapes:
+        copy[i] = copy[i] / n
+        i += 1
+    i = 0
+    copy_1 = identical_1.copy()
+    for n in nbshapes_1:
+        copy_1[i] = copy_1[i] / n
+        i += 1
+    expr = list(range(0, len(nbshapes)))
+
+    ax.plot(expr, copy)
+    ax2.plot(expr, copy_1)
+    plt.show()
+
+def plot_identical_percentage_2(percentage,percentage_1):
+    fig, ax = plt.subplots()
+    ex = list(range(0, len(percentage)))
+    ax.plot(ex, percentage)
+    ax.plot(ex, percentage_1)
+    plt.show()
+
+
 def main():
-    #overlap_experiment([0,1,2],True)
+    overlap_experiment([0,1,2,3,6],True)
     #post_split_experiment([0,1,2],True)
     #representation_experiment([0,1,2],False)
-    cost_experiment([0,1,2], True)
+    #cost_experiment([0,1,2], True)
     #operation_experiment([0,1,2],True)
+    plot_identical_percentage_2([0.34158406256221185,0.46610180549893243,0.3420555131516893,0.43137178879616134,0.480878670587517],
+                                [0.44612042131382657,0.5041287921726759,0.4229240027823339,0.39121635755795703,0.5452200468129594])
 
 if __name__ == "__main__":
     main()

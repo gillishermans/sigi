@@ -1109,6 +1109,8 @@ def check_overlap(final, s):
 
 # Return a production of shapes with a size limitation.
 def production_limit(shapes, rel, limit=[10, 10, 10], n=5, rotate_first=False):
+    if len(rel) == 0:
+        return shapes
     f = None
     if rotate_first:
         w = random_rotate(f, shapes[2])  # random.choice(shapes))
@@ -1489,3 +1491,35 @@ def normalize_relative(shapes):
     for s in shapes:
         s.normalize_relative()
     return shapes
+
+def main():
+    b1 = Block(2, 0, 0, 0, 0)
+    b2 = Block(1, 0, 1, 0, 0)
+    b3 = Block(1, 0, 2, 0, 0)
+    b4 = Block(1, 0, 0, 1, 0)
+    b5 = Block(1, 0, 1, 1, 0)
+
+    b6 = Block(1, 0, 2, 1, 0)
+    b7 = Block(1, 0, 0, 2, 0)
+    b8 = Block(1, 0, 1, 2, 0)
+    b9 = Block(1, 0, 2, 2, 0)
+    b10 = Block(1, 0, 2, 2, 0)
+
+    b11 = Block(1, 0, 2, 1, 0)
+    b12 = Block(1, 0, 0, 2, 0)
+    b13 = Block(1, 0, 1, 2, 0)
+    b14 = Block(1, 0, 2, 2, 0)
+    b15 = Block(1, 0, 2, 2, 0)
+
+    b16 = Block(1, 0, 2, 1, 0)
+    b17 = Block(1, 0, 0, 2, 0)
+    b18 = Block(1, 0, 1, 2, 0)
+    b19 = Block(1, 0, 2, 2, 0)
+    b20 = Block(1, 0, 2, 2, 0)
+
+    s = shape_from_blocks([b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,b18,b19,b20],'xy')
+
+    print(entropy(s))
+
+if __name__ == "__main__":
+    main()
