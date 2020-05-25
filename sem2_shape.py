@@ -830,14 +830,17 @@ def hill_climbing(shapes, rect, merge_split, cost_function=0, alpha=1.1, m=None,
         cpy = shapes[:]  # shapes.copy()
         if merge_split == 2:
             new_m, cost_m, duplicate_list = just_merge(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
-
-            new_s, cost_s, duplicate_list = just_split(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
-            if cost_m < cost_s:
+            if cost_m == prev_shape_cost:
+                new_s, cost_s, duplicate_list = just_split(cpy, prev_shape_cost, cost_function, alpha, rect, duplicate_list)
+                if cost_m < cost_s:
+                    new = new_m
+                    cost = cost_m
+                else:
+                    new = new_s
+                    cost = cost_s
+            else:
                 new = new_m
                 cost = cost_m
-            else:
-                new = new_s
-                cost = cost_s
             # print(cost)
             # print(new)
         elif merge_split == 1:
