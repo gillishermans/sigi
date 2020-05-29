@@ -155,8 +155,8 @@ class Beam():
 
 
 def split_grammar(shapes, rules):
-    print("SPLIT")
-    b = Beam(0, 0, 0, 9, -4, 9)  # b = Beam(-10,0,0,6,3,3)#
+    #print("SPLIT")
+    #b = Beam(0, 0, 0, 9, -4, 9)  # b = Beam(-10,0,0,6,3,3)#
     # print(b)
     # b = b.split_y(-4)
     # bb = []
@@ -166,28 +166,28 @@ def split_grammar(shapes, rules):
     # bbb = []
     # for b in bb:
     #    bbb.extend(b.split_z(5))
-    final = []
+    #final = []
     # i=0
-    bb = []
+    #bb = []
     # bb.append(Beam(0,0,0,5,-4,5))
-    bb.append(b)
-    for beam in bb:
+    #bb.append(b)
+    #for beam in bb:
         # if(i>2): break
-        print("BEAM")
-        print(beam)
-        final.extend(beam.fill_beam(shapes, rules))
-        print(final)
+    #    print("BEAM")
+    #    print(beam)
+    #    final.extend(beam.fill_beam(shapes, rules))
+    #    print(final)
         # i = i+1
 
-    #final = []
-    #list = automatic_split()
-    #i = 0
-    #e = random.randrange(1, len(list))
-    #for beam in list:
-    #    if (i > e): break
-    #    if (random.randrange(0, 10) == 0): continue
-    #    final.extend(beam.fill_beam(shapes, rules))
-    #    i = i + 1
+    final = []
+    list = automatic_split()
+    i = 0
+    e = random.randrange(1, len(list))
+    for beam in list:
+        if (i > e): break
+        if (random.randrange(0, 10) == 0): continue
+        final.extend(beam.fill_beam(shapes, rules))
+        i = i + 1
     return final
 
 

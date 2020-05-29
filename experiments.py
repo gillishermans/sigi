@@ -899,8 +899,8 @@ def parse_file(e,experiment_on,nbshapes, mean_size, median_size,largest, smalles
                     skip = True
                 else:
                     skip = False
-            if skip:
-                continue
+            #if skip:
+            #    continue
             if split[0] == "Number of shapes":
                 if rep == 0:
                     nbshapes.append(int(split[1]))
@@ -1000,7 +1000,7 @@ def parse_file_2(e, experiment_on,nbshapes, mean_size, median_size,largest, smal
             #if split[0] == "Rect(0), same plane(1) or 3D shapes(2)":
             #if split[0] == "Cost function":
             if split[0] == "Merge(0), split(1) or both(2)":
-                if int(split[1]) != 1:
+                if int(split[1]) != 2:
                     skip = True
                 else:
                     skip = False
@@ -1229,24 +1229,25 @@ def print_basic_results(nbshapes, mean_size, median_size,largest, smallest,mean_
     #print("Avg identical shapes ", average(identical))
     #print("Median identical shapes ", median(identical))
     i = 0
-    copy = identical.copy()
+    copy_id = identical.copy()
     for n in nbshapes:
-        copy[i] = copy[i] / n
+        copy_id[i] = copy_id[i] / n
         i += 1
-    #print("Avg identical percentage ", average(copy))
+    print("Avg identical percentage ", average(copy_id))
 
     #print("Time spent ", average(time_spent))
-    #print("Avg mean shape size ", average(mean_size))
-    #print("Avg mean complexity ", average(mean_complex))
-    copy = mean_size.copy()
+    print("Avg mean shape size ", average(mean_size))
+    print("Avg mean complexity ", average(mean_complex))
+    copy_c = mean_size.copy()
     i = 0
     for c in mean_complex:
-        copy[i] = c / copy[i]
+        copy_c[i] = c / copy_c[i]
         i += 1
     # print(copy)
-    print("Avg complex/size", average(copy))
+    print("Avg complex/size", average(copy_c))
+    print("\n")
     print("Median nb shapes ", median(nbshapes))
-    print("Median identical percentage ", median(copy))
+    print("Median identical percentage ", median(copy_id))
     print("Avg median shape size ", median(mean_size))
     print("Median mean complexity ", median(mean_complex))
     print("\n")
@@ -1300,13 +1301,14 @@ def plot_alpha_nbshapes():
 def main():
     examples = [0,1,2,3,6,7,8]
     examples_all = [0,1,2,3,4,5,6,7,8,9]
-    overlap_experiment(examples,False)
+    ex = [0,1,2,3,5,6,7,8,9]
+    #overlap_experiment(ex,False)
     #post_split_experiment(examples_all,True)
     #post_split_sizes_experiment(examples,False)
-    #representation_experiment(examples_all,False)
-    #cost_experiment(examples, False)
-    #operation_experiment(examples,False)
-    #alpha_experiment(examples,False)
+    #representation_experiment(ex,False)
+    #cost_experiment(ex, False)
+    #operation_experiment(ex,False)
+    alpha_experiment(ex,False)
     #plot_alpha_nbshapes()
 
     #percentage

@@ -1099,11 +1099,11 @@ def check_overlap(final, s):
                 smin = [b.x, b.y, b.z]
             if smax[0] < b.x or smax[1] < b.y or smax[2] < b.z:
                 smax = [b.x, b.y, b.z]
-        print("check overlap")
-        print(fmin)
-        print(fmax)
-        print(smin)
-        print(smax)
+        #print("check overlap")
+        #print(fmin)
+        #print(fmax)
+        #print(smin)
+        #print(smax)
         if smin[0] >= fmin[0] and smin[1] >= fmin[1] and smin[2] >= fmin[2] and smax[0] <= fmax[0] and smax[1] <= fmax[
             1] and smax[2] <= fmax[2]:
             return True

@@ -58,20 +58,20 @@ def perform(level, box, options):
     print("overlap filter done")
     print("Hill climbing done")
     print(shapes)
-    i = 0
-    for s in shapes:
-        io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 3 + i)
-        i = i + 1
+    #i = 0
+    #for s in shapes:
+    #    io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 3 + i)
+    #    i = i + 1
     if options["Apply post split operation:"]:
         shapes = shp.post_plane_split(shapes, 'xz')
         shapes = shp.post_plane_split(shapes, 'xy')
         shapes = shp.post_plane_split(shapes, 'zy')
         #print("Post split results:")
         #print(shapes)
-    i = 0
-    for s in shapes:
-        io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 3 + i,-15)
-        i = i + 1
+    #i = 0
+    #for s in shapes:
+    #    io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 3 + i,-15)
+    #    i = i + 1
     #io.write_shapes(shapes)
     #default = io.read_shapes(0)
     #print(default)
@@ -128,7 +128,7 @@ def perform(level, box, options):
                 enclosed = encl.enclosure_update_3d(final)
                 print("enclosure done")
                 for s in enclosed:
-                    io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 1)
+                    io.build_shape(s, level, box, options["Visualize overlap (experimental):"], 4)
                     # build_shape(s, level, box,options["Visualize overlap (experimental):"],10+i)
                     i = i + 1
 
