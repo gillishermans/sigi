@@ -6,8 +6,8 @@ from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
 from mcplatform import *
 import utilityFunctions as utilityFunctions
 import sys
-from sem2_shape import Block, Shape
-import sem2_shape as shp
+from shape import Block, Shape
+import shape as shp
 import split_grammar as splt
 
 # Scan the box for a structure and the probabilities of the blocks used in the structure.
