@@ -1,4 +1,4 @@
-# Shape inference and grammar induction from voxel structures
+# Shape Inference and Grammar Induction from Voxel Structures
 MCEdit filters for thesis: Example-based Procedural Generation: Shape Inference and Grammar Induction from Voxel Structures.
 
 
