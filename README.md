@@ -2,8 +2,8 @@
 Implementation, examples and results for paper: Shape Inference and Grammar Induction for Example-based Procedural Generation
 
 ## Examples and Results
-Examples used for testing and experiments are present in the folder /examples.
-We generated 10 new buildings for each example with and without enclosure for 20,50 and 100 production steps.
+Examples used for testing and experiments are present in the folder /examples/.
+We generated 10 new buildings for each example with and without enclosure for 20,50 and 100 production steps in the folder /results/.
 These results were not cherry-picked and serve as a qualitative evaluation of the generative capabilities of the shape grammar.
 
 Notes:
