@@ -2,8 +2,11 @@
 Implementation, examples and results for paper: Shape Inference and Grammar Induction for Example-based Procedural Generation
 
 <p align="center"> 
-    <img src="https://github.com/gillishermans/SIGI/blob/master/examples/example1.png" alt="">
+    <img src="https://github.com/gillishermans/SIGI/blob/master/multiple_merged_outline.png" alt="">
+     SIGI infers shapes (b) from example buildings (a) and forms a shape grammar capable of generating new structures in a similar style (c).
+    When multiple examples share shapes (d), the resulting shape grammar defines a shared style over these examples.
  </p>
+ 
 
 ## Examples and Results
 Examples used for testing and experiments are present in the folder /examples/.
