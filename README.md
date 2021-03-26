@@ -6,6 +6,10 @@ Examples used for testing and experiments are present in the folder /examples/.
 We generated 10 new buildings for each example with and without enclosure for 20,50 and 100 production steps in the folder /results/.
 These results were not cherry-picked and serve as a qualitative evaluation of the generative capabilities of the shape grammar.
 
+<p align="center"> 
+    <img src="https://github.com/gillishermans/SIGI/blob/master/results/Example1_50steps_enclosed/2021-03-20_23.44.37.png" alt="">
+ </p>
+
 Notes:
  - Some enclosed buildings contain buildings seperate from each other. These were connected by one or multiple uncenclosed shapes that were removed during enclosure.
 
