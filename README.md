@@ -1,5 +1,5 @@
 # Shape Inference and Grammar Induction (SIGI) from Three-Dimensional Buildings
-Implementation, examples and results for paper: Shape Inference and Grammar Induction for Example-based Procedural Generation
+Implementation paper: Shape Inference and Grammar Induction for Example-based Procedural Generation
 
 <p align="center"> 
     <img src="https://github.com/gillishermans/SIGI/blob/master/multiple_merged_outline.png" alt="">
