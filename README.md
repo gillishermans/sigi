@@ -1,5 +1,5 @@
 # Shape Inference and Grammar Induction (SIGI) from Three-Dimensional Buildings
-Implementation paper: Shape Inference and Grammar Induction for Example-based Procedural Generation
+Implementation of paper: Shape Inference and Grammar Induction for Example-based Procedural Generation
 
 <p align="center"> 
     <img src="https://github.com/gillishermans/SIGI/blob/master/multiple_merged_outline.png" alt="">
@@ -34,3 +34,16 @@ The **infer_and_generate** filter has a number of parameters:
 - is the enclosure constraint enforced: true or false
 - experimental split grammar option: true or false (no results guaranteed)
 - visualization of overlapping generated shapes
+
+### Paper Citation
+This work was published in [the following paper](https://arxiv.org/abs/2109.10217):
+```
+@article{hermans2021sigi,
+    title={Shape Inference and Grammar Induction for Example-based Procedural Generation},
+    author={Hermans, Gillis and Winters, Thomas and De Raedt, Luc},
+    journal={Proceedings of the 12th International Conference on Computational Creativity},
+    pages = {342-349},
+    year={2021},
+    publisher={Association for Computational Creativity}
+}
+```
